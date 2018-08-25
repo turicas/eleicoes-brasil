@@ -1,0 +1,18 @@
+nome_final,descricao
+ano_eleicao,Ano da eleição. Aparece no TSE como: ANO_ELEICAO (2006).
+codigo_eleicao,Código da eleição. Aparece no TSE como: CD_ELEICAO (2018). Coluna adicionada em 2018.
+codigo_tipo_eleicao,Código do tipo de eleição. Aparece no TSE como: CD_TIPO_ELEICAO (2018). Coluna adicionada em 2018.
+data_eleicao,Data em que ocorreu a eleição. Aparece no TSE como: DT_ELEICAO (2018). Coluna adicionada em 2018.
+descricao_eleicao,"Descrição da eleição. Aparece no TSE como: DESCRICAO_ELEICAO (2006), DS_ELEICAO (2018)."
+nome_tipo_eleicao,Nome do tipo de eleição. Aparece no TSE como: NM_TIPO_ELEICAO (2018). Coluna adicionada em 2018.
+nome_ue,Nome da Unidade Eleitoral do candidato (em caso de eleição majoritária é a sigla da UF que o candidato concorre e em caso de eleição municipal é o código TSE do município). Aparece no TSE como: NM_UE (2018). Coluna adicionada em 2018.
+sigla_ue,Sigla da Unidade Eleitoral do candidato (em caso de eleição majoritária é a sigla da UF que o candidato concorre e em caso de eleição municipal é o código TSE do município). Aparece no TSE como: SG_UE (2018). Coluna adicionada em 2018.
+sigla_uf,"Sigla da Unidade da Federação em que ocorreu a eleição. Aparece no TSE como: SIGLA_UF (2006), SG_UF (2018)."
+numero_sequencial,Número sequencial do candidato gerado internamente pelos sistemas eleitorais. Não é o número de campanha do candidato.. Aparece no TSE como: SQ_CANDIDATO (2006).
+codigo_tipo,Código do tipo do bem do candidato. Aparece no TSE como: CD_TIPO_BEM_CANDIDATO (2006).
+data_ultima_atualizacao,"Data da última atualização do registro do bem. Aparece no TSE como: DATA_ULTIMA_ATUALIZACAO (2006), DT_ULTIMA_ATUALIZACAO (2018)."
+descricao_tipo,Descrição do tipo do bem do candidato. Aparece no TSE como: DS_TIPO_BEM_CANDIDATO (2006).
+detalhe,"Detalhe do bem do candidato. Aparece no TSE como: DETALHE_BEM (2006), DS_BEM_CANDIDATO (2018)."
+hora_ultima_atualizacao,"Hora da última atualização do registro do bem. Aparece no TSE como: HORA_ULTIMA_ATUALIZACAO (2006), HH_ULTIMA_ATUALIZACAO (2018)."
+numero_ordem,Número da ordem do bem declarado do candidato. Aparece no TSE como: NR_ORDEM_CANDIDATO (2018). Coluna adicionada em 2018.
+valor,"Valor declarado do bem do candidato. Aparece no TSE como: VALOR_BEM (2006), VR_BEM_CANDIDATO (2018)."

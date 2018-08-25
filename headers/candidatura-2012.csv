@@ -1,0 +1,45 @@
+nome_tse,nome_final,descricao
+DATA_GERACAO,,Data de geração do arquivo (data da extração)
+HORA_GERACAO,,Hora de geração do arquivo (hora da extração) - Horário de Brasília
+ANO_ELEICAO,ano_eleicao,Ano da eleição
+NUM_TURNO,numero_turno,Número do turno
+DESCRICAO_ELEICAO,descricao_eleicao,Descrição da eleição
+SIGLA_UF,sigla_uf,Sigla da Unidade da Federação em que ocorreu a eleição
+SIGLA_UE,sigla_ue,"Sigla da Unidade Eleitoral (Em caso de eleição majoritária é a sigla da UF que o candidato concorre (texto) e em caso de eleição municipal é o código TSE do município (número)). Assume os valores especiais BR, ZZ e VT para designar, respectivamente, o Brasil, Exterior e Voto em Trânsito"
+DESCRICAO_UE,descricao_ue,Descrição da Unidade Eleitoral
+CODIGO_CARGO,codigo_cargo,Código do cargo a que o candidato concorre
+DESCRICAO_CARGO,descricao_cargo,Descrição do cargo a que o candidato concorre
+NOME_CANDIDATO,nome,Nome completo do candidato
+SEQUENCIAL_CANDIDATO,numero_sequencial,Número sequencial do candidato gerado internamente pelos sistemas eleitorais. Não é o número de campanha do candidato.
+NUMERO_CANDIDATO,numero_urna,Número do candidato na urna
+CPF_CANDIDATO,cpf,CPF do candidato
+NOME_URNA_CANDIDATO,nome_urna,Nome de urna do candidato
+COD_SITUACAO_CANDIDATURA,codigo_situacao_candidatura,Código da situação de candidatura
+DES_SITUACAO_CANDIDATURA,descricao_situacao_candidatura,Descrição da situação de candidatura
+NUMERO_PARTIDO,numero_partido,Número do partido
+SIGLA_PARTIDO,sigla_partido,Sigla do partido
+NOME_PARTIDO,nome_partido,Nome do partido
+CODIGO_LEGENDA,codigo_legenda,Código sequencial da legenda gerado pela Justiça Eleitoral
+SIGLA_LEGENDA,sigla_legenda,Sigla da legenda
+COMPOSICAO_LEGENDA,composicao_legenda,Composição da legenda
+NOME_LEGENDA,nome_legenda,Nome da legenda
+CODIGO_OCUPACAO,codigo_ocupacao,Código da ocupação do candidato
+DESCRICAO_OCUPACAO,descricao_ocupacao,Descrição da ocupação do candidato
+DATA_NASCIMENTO,data_nascimento,Data de nascimento do candidato
+NUM_TITULO_ELEITORAL_CANDIDATO,titulo_eleitoral,Número do título eleitoral do candidato
+IDADE_DATA_ELEICAO,idade_data_eleicao,Idade do candidato da data da eleição
+CODIGO_SEXO,codigo_genero,Código do sexo do candidato
+DESCRICAO_SEXO,descricao_genero,Descrição do sexo do candidato
+COD_GRAU_INSTRUCAO,codigo_grau_instrucao,Código do grau de instrução do candidato. Gerado internamente pelos sistemas eleitorais
+DESCRICAO_GRAU_INSTRUCAO,descricao_grau_instrucao,Descrição do grau de instrução do candidato
+CODIGO_ESTADO_CIVIL,codigo_estado_civil,Código do estado civil do candidato
+DESCRICAO_ESTADO_CIVIL,descricao_estado_civil,Descrição do estado civil do candidato
+CODIGO_NACIONALIDADE,codigo_nacionalidade,Código da nacionalidade do candidato
+DESCRICAO_NACIONALIDADE,descricao_nacionalidade,Descrição da nacionalidade do candidato
+SIGLA_UF_NASCIMENTO,sigla_uf_nascimento,Sigla da UF de nascimento do candidato
+CODIGO_MUNICIPIO_NASCIMENTO,codigo_municipio_nascimento,Código TSE do município da nascimento do candidato
+NOME_MUNICIPIO_NASCIMENTO,nome_municipio_nascimento,Nome do município de nascimento do candidato
+DESPESA_MAX_CAMPANHA,despesa_maxima_campanha,Despesa máxima de campanha declarada pelo partido para aquele cargo. Valores em Reais.
+COD_SIT_TOT_TURNO,codigo_totalizacao_turno,Código da situação de totalização do candidato naquele turno
+DESC_SIT_TOT_TURNO,descricao_totalizacao_turno,Descrição da situação de totalização do candidato naquele turno
+NM_EMAIL,email,E-mail para comunicação com o candidato

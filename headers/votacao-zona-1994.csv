@@ -1,0 +1,30 @@
+nome_tse,nome_final,descricao
+DATA_GERACAO,,Data de geração do arquivo (data da extração)
+HORA_GERACAO,,Hora de geração do arquivo (hora da extração) - Horário de Brasília
+ANO_ELEICAO,ano_eleicao,Ano da eleição
+NUM_TURNO,numero_turno,Número do turno
+DESCRICAO_ELEICAO,descricao_eleicao,Descrição da eleição
+SIGLA_UF,sigla_uf,Sigla da Unidade da Federação em que ocorreu a eleição
+SIGLA_UE,sigla_ue,"Sigla da Unidade Eleitoral (Em caso de eleição majoritária é a sigla da UF que o candidato concorre (texto) e em caso de eleição municipal é o código TSE do município (número)). Assume os valores especiais BR, ZZ e VT para designar, respectivamente, o Brasil, Exterior e Voto em Trânsito"
+CODIGO_MUNICIPIO,codigo_municipio,Código TSE do município onde ocorreu a eleição
+NOME_MUNICIPIO,nome_municipio,Nome do município onde ocorreu a eleição
+NUMERO_ZONA,numero_zona,Número da Zona Eleitoral
+CODIGO_CARGO,codigo_cargo,Código do cargo a que o candidato concorre
+NUMERO_CAND,numero_urna,Número do candidato na urna
+SQ_CANDIDATO,numero_sequencial,Número sequencial do candidato gerado internamente pelos sistemas eleitorais. Não é o número de campanha do candidato.
+NOME_CANDIDATO,nome,Nome completo do candidato
+NOME_URNA_CANDIDATO,nome_urna,Nome de urna do candidato
+DESCRICAO_CARGO,descricao_cargo,Descrição do cargo a que o candidato concorre
+COD_SIT_CAND_SUPERIOR,codigo_situacao_candidatura_superior,Código da situação de totalização do candidato superior naquele turno. Esta variável deve ser considerada apenas quando o cargo do candidato for vice ou suplente.
+DESC_SIT_CAND_SUPERIOR,descricao_situacao_candidatura_superior,Descrição da situação de totalização do candidato superior naquele turno. Esta variável deve ser considerada apenas quando o cargo do candidato for vice ou suplente.
+CODIGO_SIT_CANDIDATO,codigo_situacao_candidatura,Código da situação do registro de candidatura do candidato
+DESC_SIT_CANDIDATO,descricao_situacao_candidatura,Descrição da situação de registro de candidatura do candidato
+CODIGO_SIT_CAND_TOT,codigo_totalizacao_turno,Código da situação de totalização do candidato naquele turno
+DESC_SIT_CAND_TOT,descricao_totalizacao_turno,Descrição da situação de totalização do candidato naquele turno
+NUMERO_PARTIDO,numero_partido,Número do partido
+SIGLA_PARTIDO,sigla_partido,Sigla do partido
+NOME_PARTIDO,nome_partido,Nome do partido
+SEQUENCIAL_LEGENDA,numero_sequencial_legenda,Código sequencial da legenda gerado pela Justiça Eleitoral
+NOME_COLIGACAO,nome_coligacao,Nome da legenda
+COMPOSICAO_LEGENDA,composicao_legenda,Composição da legenda
+TOTAL_VOTOS,total_votos,Quantidade de votos nominais totalizados para aquele candidato naquele município e zona

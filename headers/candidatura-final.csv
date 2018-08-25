@@ -1,0 +1,59 @@
+nome_final,descricao
+ano_eleicao,Ano da eleição. Aparece no TSE como: ANO_ELEICAO (1994-BR).
+codigo_eleicao,Código da eleição. Aparece no TSE como: CD_ELEICAO (2018). Coluna adicionada em 2018.
+codigo_tipo_eleicao,Código do tipo de eleição. Aparece no TSE como: CD_TIPO_ELEICAO (2018). Coluna adicionada em 2018.
+data_eleicao,Data em que ocorreu a eleição. Aparece no TSE como: DT_ELEICAO (2018). Coluna adicionada em 2018.
+descricao_eleicao,"Descrição da eleição. Aparece no TSE como: DESCRICAO_ELEICAO (1994-BR), DS_ELEICAO (2018)."
+nome_tipo_eleicao,Nome do tipo de eleição. Aparece no TSE como: NM_TIPO_ELEICAO (2018). Coluna adicionada em 2018.
+tipo_abrangencia_eleicao,Tipo de abrangência da eleição. Aparece no TSE como: TP_ABRANGENCIA (2018). Coluna adicionada em 2018.
+codigo_totalizacao_turno,"Código da situação de totalização do candidato naquele turno. Aparece no TSE como: COD_SIT_TOT_TURNO (1994-BR), CD_SIT_TOT_TURNO (2018)."
+descricao_totalizacao_turno,"Descrição da situação de totalização do candidato naquele turno. Aparece no TSE como: DESC_SIT_TOT_TURNO (1994-BR), DS_SIT_TOT_TURNO (2018)."
+numero_turno,"Número do turno. Aparece no TSE como: NUM_TURNO (1994-BR), NR_TURNO (2018)."
+descricao_ue,"Descrição da Unidade Eleitoral. Aparece no TSE como: DESCRICAO_UE (1994-BR), NM_UE (2018)."
+sigla_ue,"Sigla da Unidade Eleitoral (Em caso de eleição majoritária é a sigla da UF que o candidato concorre (texto) e em caso de eleição municipal é o código TSE do município (número)). Assume os valores especiais BR, ZZ e VT para designar, respectivamente, o Brasil, Exterior e Voto em Trânsito. Aparece no TSE como: SIGLA_UE (1994-BR), SG_UE (2018)."
+sigla_uf,"Sigla da Unidade da Federação em que ocorreu a eleição. Aparece no TSE como: SIGLA_UF (1994-BR), SG_UF (2018)."
+codigo_cor_raca,"Código da cor/raça do candidato (auto declaração). Aparece no TSE como: CODIGO_COR_RACA (2014), CD_COR_RACA (2018). Coluna adicionada em 2014."
+codigo_estado_civil,"Código do estado civil do candidato. Aparece no TSE como: CODIGO_ESTADO_CIVIL (1994-BR), CD_ESTADO_CIVIL (2018)."
+codigo_genero,"Código do sexo do candidato. Aparece no TSE como: CODIGO_SEXO (1994-BR), CD_GENERO (2018)."
+codigo_grau_instrucao,"Código do grau de instrução do candidato. Gerado internamente pelos sistemas eleitorais. Aparece no TSE como: COD_GRAU_INSTRUCAO (1994-BR), CD_GRAU_INSTRUCAO (2018)."
+codigo_municipio_nascimento,"Código TSE do município da nascimento do candidato. Aparece no TSE como: CODIGO_MUNICIPIO_NASCIMENTO (1994-BR), CD_MUNICIPIO_NASCIMENTO (2018)."
+codigo_nacionalidade,"Código da nacionalidade do candidato. Aparece no TSE como: CODIGO_NACIONALIDADE (1994-BR), CD_NACIONALIDADE (2018)."
+codigo_ocupacao,"Código da ocupação do candidato. Aparece no TSE como: CODIGO_OCUPACAO (1994-BR), CD_OCUPACAO (2018)."
+cpf,"CPF do candidato. Aparece no TSE como: CPF_CANDIDATO (1994-BR), NR_CPF_CANDIDATO (2018)."
+data_nascimento,"Data de nascimento do candidato. Aparece no TSE como: DATA_NASCIMENTO (1994-BR), DT_NASCIMENTO (2018)."
+descricao_cor_raca,"Descrição da cor/raça do candidato (auto declaração). Aparece no TSE como: DESCRICAO_COR_RACA (2014), DS_COR_RACA (2018). Coluna adicionada em 2014."
+descricao_estado_civil,"Descrição do estado civil do candidato. Aparece no TSE como: DESCRICAO_ESTADO_CIVIL (1994-BR), DS_ESTADO_CIVIL (2018)."
+descricao_genero,"Descrição do sexo do candidato. Aparece no TSE como: DESCRICAO_SEXO (1994-BR), DS_GENERO (2018)."
+descricao_grau_instrucao,"Descrição do grau de instrução do candidato. Aparece no TSE como: DESCRICAO_GRAU_INSTRUCAO (1994-BR), DS_GRAU_INSTRUCAO (2018)."
+descricao_nacionalidade,"Descrição da nacionalidade do candidato. Aparece no TSE como: DESCRICAO_NACIONALIDADE (1994-BR), DS_NACIONALIDADE (2018)."
+descricao_ocupacao,"Descrição da ocupação do candidato. Aparece no TSE como: DESCRICAO_OCUPACAO (1994-BR), DS_OCUPACAO (2018)."
+email,E-mail para comunicação com o candidato. Aparece no TSE como: NM_EMAIL (2012). Coluna adicionada em 2012.
+nome,"Nome completo do candidato. Aparece no TSE como: NOME_CANDIDATO (1994-BR), NM_CANDIDATO (2018)."
+nome_municipio_nascimento,"Nome do município de nascimento do candidato. Aparece no TSE como: NOME_MUNICIPIO_NASCIMENTO (1994-BR), NM_MUNICIPIO_NASCIMENTO (2018)."
+nome_social,Nome social do candidato. Aparece no TSE como: NM_SOCIAL_CANDIDATO (2018). Coluna adicionada em 2018.
+sigla_uf_nascimento,"Sigla da UF de nascimento do candidato. Aparece no TSE como: SIGLA_UF_NASCIMENTO (1994-BR), SG_UF_NASCIMENTO (2018)."
+titulo_eleitoral,"Número do título eleitoral do candidato. Aparece no TSE como: NUM_TITULO_ELEITORAL_CANDIDATO (1994-BR), NR_TITULO_ELEITORAL_CANDIDATO (2018)."
+codigo_legenda,"Código sequencial da legenda gerado pela Justiça Eleitoral. Aparece no TSE como: CODIGO_LEGENDA (1994-BR), SQ_COLIGACAO (2018)."
+composicao_legenda,"Composição da legenda. Aparece no TSE como: COMPOSICAO_LEGENDA (1994-BR), DS_COMPOSICAO_COLIGACAO (2018)."
+nome_legenda,"Nome da legenda. Aparece no TSE como: NOME_LEGENDA (1994-BR), NM_COLIGACAO (2018)."
+nome_partido,"Nome do partido. Aparece no TSE como: NOME_PARTIDO (1994-BR), NM_PARTIDO (2018)."
+numero_partido,"Número do partido. Aparece no TSE como: NUMERO_PARTIDO (1994-BR), NR_PARTIDO (2018)."
+sigla_legenda,Sigla da legenda. Aparece no TSE como: SIGLA_LEGENDA (1994-BR).
+sigla_partido,"Sigla do partido. Aparece no TSE como: SIGLA_PARTIDO (1994-BR), SG_PARTIDO (2018)."
+tipo_agremiacao,Tipo de agremiação - pode assumir os valores “coligação” (quando o candidato concorre por coligação) e “partido isolado” (quando o candidato concorre somente pelo partido). Aparece no TSE como: TP_AGREMIACAO (2018). Coluna adicionada em 2018.
+codigo_cargo,"Código do cargo a que o candidato concorre. Aparece no TSE como: CODIGO_CARGO (1994-BR), CD_CARGO (2018)."
+codigo_detalhe_situacao_candidatura,Código do detalhe da situação do registro de candidatura do candidato. Aparece no TSE como: CD_DETALHE_SITUACAO_CAND (2018). Coluna adicionada em 2018.
+codigo_situacao_candidatura,"Código da situação de candidatura. Aparece no TSE como: COD_SITUACAO_CANDIDATURA (1994-BR), CD_SITUACAO_CANDIDATURA (2018)."
+concorre_reeleicao,"O indicativo de que o candidato está concorrendo ou não à reeleição - pode assumir os valores “S” (sim) e “N” (não) -apenas para os cargos de presidente, governador e prefeito é possível candidatura à reeleição. Aparece no TSE como: ST_REELEICAO (2018). Coluna adicionada em 2018."
+declara_bens,O indicativo de que o candidato tem ou não bens a declarar - pode assumiar os valores “S” (em caso positivo) e “N” (em caso negativo). Aparece no TSE como: ST_DECLARAR_BENS (2018). Coluna adicionada em 2018.
+descricao_cargo,"Descrição do cargo a que o candidato concorre. Aparece no TSE como: DESCRICAO_CARGO (1994-BR), DS_CARGO (2018)."
+descricao_detalhe_situacao_candidatura,Descrição do detalhe da situação do registro de candidatura do candidato. Aparece no TSE como: DS_DETALHE_SITUACAO_CAND (2018). Coluna adicionada em 2018.
+descricao_situacao_candidatura,"Descrição da situação de candidatura. Aparece no TSE como: DES_SITUACAO_CANDIDATURA (1994-BR), DS_SITUACAO_CANDIDATURA (2018)."
+despesa_maxima_campanha,"Despesa máxima de campanha declarada pelo partido para aquele cargo. Valores em Reais.. Aparece no TSE como: DESPESA_MAX_CAMPANHA (1994-BR), NR_DESPESA_MAX_CAMPANHA (2018)."
+idade_data_eleicao,Idade do candidato da data da eleição. Aparece no TSE como: IDADE_DATA_ELEICAO (1994-BR).
+idade_data_posse,Idade do candidato na data da posse (consultar a data de posse para cada cargo e unidade eleitoral nos arquivos de vagas). Aparece no TSE como: NR_IDADE_DATA_POSSE (2018). Coluna adicionada em 2018.
+nome_urna,"Nome de urna do candidato. Aparece no TSE como: NOME_URNA_CANDIDATO (1994-BR), NM_URNA_CANDIDATO (2018)."
+numero_processo_candidatura,Número do processo de registro de candidatura do candidato. Aparece no TSE como: NR_PROCESSO (2018). Coluna adicionada em 2018.
+numero_protocolo_candidatura,Número do protocolo de registro de candidatura do candidato. Aparece no TSE como: NR_PROTOCOLO_CANDIDATURA (2018). Coluna adicionada em 2018.
+numero_sequencial,"Número sequencial do candidato gerado internamente pelos sistemas eleitorais. Não é o número de campanha do candidato.. Aparece no TSE como: SEQUENCIAL_CANDIDATO (1994-BR), SQ_CANDIDATO (2018)."
+numero_urna,"Número do candidato na urna. Aparece no TSE como: NUMERO_CANDIDATO (1994-BR), NR_CANDIDATO (2018)."
