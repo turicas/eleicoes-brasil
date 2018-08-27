@@ -1,0 +1,5 @@
+git+https://github.com/turicas/rows.git@develop#egg=rows
+requests
+click
+cached-property
+tqdm
