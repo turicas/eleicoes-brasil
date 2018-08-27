@@ -1,5 +1,6 @@
 git+https://github.com/turicas/rows.git@develop#egg=rows
 requests
+requests-cache
 click
 cached-property
 tqdm
