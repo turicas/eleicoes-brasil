@@ -18,4 +18,5 @@ MANIFEST
 build/*
 data/*
 dist/*
+fotos/*
 reg_settings.py

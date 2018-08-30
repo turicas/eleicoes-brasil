@@ -4,3 +4,4 @@ requests-cache
 click
 cached-property
 tqdm
+lxml
