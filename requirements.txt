@@ -1,7 +1,8 @@
+cached-property
+click
 git+https://github.com/turicas/rows.git@develop#egg=rows
+lxml
 requests
 requests-cache
-click
-cached-property
+scrapy
 tqdm
-lxml

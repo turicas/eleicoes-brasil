@@ -141,17 +141,20 @@ class Extractor:
             internal_filename = file_info.filename
             if self.valid_filename(internal_filename):
                 fobj = TextIOWrapper(
-                    zfile.open(internal_filename),
-                    encoding=self.encoding,
+                    zfile.open(internal_filename), encoding=self.encoding
                 )
                 fobj = self.fix_fobj(fobj)
                 reader = csv.reader(fobj, dialect=utils.TSEDialect)
                 header_meta = self.get_headers(year, filename, internal_filename)
-                year_fields = [field.nome_final or field.nome_tse
-                               for field in header_meta['year_fields']]
-                final_fields = [field.nome_final
-                                for field in header_meta['final_fields']
-                                if field.nome_final]
+                year_fields = [
+                    field.nome_final or field.nome_tse
+                    for field in header_meta["year_fields"]
+                ]
+                final_fields = [
+                    field.nome_final
+                    for field in header_meta["final_fields"]
+                    if field.nome_final
+                ]
                 convert_function = self.convert_row(year_fields, final_fields)
                 for index, row in enumerate(reader):
                     if index == 0 and 'ANO_ELEICAO' in row:
@@ -159,8 +162,10 @@ class Extractor:
                         # use the information to get field ordering (better
                         # trust it then our headers files, TSE may change the
                         # order)
-                        field_map = {field.nome_tse: field.nome_final or field.nome_tse
-                                     for field in header_meta['year_fields']}
+                        field_map = {
+                            field.nome_tse: field.nome_final or field.nome_tse
+                            for field in header_meta["year_fields"]
+                        }
                         year_fields = [field_map[field_name] for field_name in row]
                         convert_function = self.convert_row(year_fields, final_fields)
                         continue

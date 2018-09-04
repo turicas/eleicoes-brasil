@@ -9,8 +9,12 @@ from rows.utils import CsvLazyDictWriter
 from tqdm import tqdm
 
 import settings
-from extractors import (read_header, CandidaturaExtractor,
-                        BemDeclaradoExtractor, VotacaoZonaExtractor)
+from extractors import (
+    read_header,
+    CandidaturaExtractor,
+    BemDeclaradoExtractor,
+    VotacaoZonaExtractor,
+)
 
 REGEXP_HEADER_YEAR = re.compile('([0-9]{4}.*)\.csv')
 

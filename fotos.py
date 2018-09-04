@@ -13,6 +13,7 @@ for path in (data_path, download_path, output_path):
     if not path.exists():
         path.mkdir()
 
+
 def download_photos(year):
     year = str(year)
     url = f'http://agencia.tse.jus.br/estatistica/sead/eleicoes/eleicoes{year}/fotos/'
