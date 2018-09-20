@@ -182,7 +182,8 @@ class CandidaturaExtractor(Extractor):
         return settings.DOWNLOAD_PATH / f'candidatura-{year}.zip'
 
     def valid_filename(self, filename):
-        return filename.startswith('consulta_cand_')
+        name = filename.lower()
+        return name.startswith('consulta_cand_') and '_brasil.csv' not in name
 
     def fix_fobj(self, fobj):
         """Fix wrong-escaped lines from the TSE's CSVs
@@ -210,9 +211,7 @@ class CandidaturaExtractor(Extractor):
             header_year = '1996'
         elif year == 2012:
             header_year = '2012'
-        elif 2014 <= year <= 2016:
-            header_year = '2014'
-        elif year == 2018:
+        elif 2014 <= year <= 2018:
             header_year = '2018'
         else:
             raise ValueError(f'Unrecognized year ({year}, {uf})')
