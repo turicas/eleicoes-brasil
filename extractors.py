@@ -139,38 +139,39 @@ class Extractor:
         zfile = ZipFile(filename)
         for file_info in zfile.filelist:
             internal_filename = file_info.filename
-            if self.valid_filename(internal_filename):
-                fobj = TextIOWrapper(
-                    zfile.open(internal_filename), encoding=self.encoding
-                )
-                fobj = self.fix_fobj(fobj)
-                reader = csv.reader(fobj, dialect=utils.TSEDialect)
-                header_meta = self.get_headers(year, filename, internal_filename)
-                year_fields = [
-                    field.nome_final or field.nome_tse
-                    for field in header_meta["year_fields"]
-                ]
-                final_fields = [
-                    field.nome_final
-                    for field in header_meta["final_fields"]
-                    if field.nome_final
-                ]
-                convert_function = self.convert_row(year_fields, final_fields)
-                for index, row in enumerate(reader):
-                    if index == 0 and 'ANO_ELEICAO' in row:
-                        # It's a header, we should skip it as a data row but
-                        # use the information to get field ordering (better
-                        # trust it then our headers files, TSE may change the
-                        # order)
-                        field_map = {
-                            field.nome_tse: field.nome_final or field.nome_tse
-                            for field in header_meta["year_fields"]
-                        }
-                        year_fields = [field_map[field_name] for field_name in row]
-                        convert_function = self.convert_row(year_fields, final_fields)
-                        continue
+            if not self.valid_filename(internal_filename):
+                continue
+            fobj = TextIOWrapper(
+                zfile.open(internal_filename), encoding=self.encoding
+            )
+            fobj = self.fix_fobj(fobj)
+            reader = csv.reader(fobj, dialect=utils.TSEDialect)
+            header_meta = self.get_headers(year, filename, internal_filename)
+            year_fields = [
+                field.nome_final or field.nome_tse
+                for field in header_meta["year_fields"]
+            ]
+            final_fields = [
+                field.nome_final
+                for field in header_meta["final_fields"]
+                if field.nome_final
+            ]
+            convert_function = self.convert_row(year_fields, final_fields)
+            for index, row in enumerate(reader):
+                if index == 0 and 'ANO_ELEICAO' in row:
+                    # It's a header, we should skip it as a data row but
+                    # use the information to get field ordering (better
+                    # trust it then our headers files, TSE may change the
+                    # order)
+                    field_map = {
+                        field.nome_tse: field.nome_final or field.nome_tse
+                        for field in header_meta["year_fields"]
+                    }
+                    year_fields = [field_map[field_name] for field_name in row]
+                    convert_function = self.convert_row(year_fields, final_fields)
+                    continue
 
-                    yield convert_function(row)
+                yield convert_function(row)
 
 
 class CandidaturaExtractor(Extractor):
@@ -288,14 +289,18 @@ class BemDeclaradoExtractor(Extractor):
         return settings.DOWNLOAD_PATH / f'bemdeclarado-{year}.zip'
 
     def valid_filename(self, filename):
-        return filename.startswith('bem_candidato')
+        name = filename.lower()
+        return (
+            name.startswith('bem_candidato') and
+            '_brasil.csv' not in name
+        )
 
     def get_headers(self, year, filename, internal_filename):
         uf = self.extract_state_from_filename(internal_filename)
-        if 2006 <= year <= 2016:
+        if 2006 <= year <= 2012:
             header_year = '2006'
-        elif year == 2018:
-            header_year = '2018'
+        elif 2014 <= year <= 2018:
+            header_year = '2014'
         else:
             raise ValueError('Unrecognized year')
 
