@@ -64,21 +64,31 @@ python tse.py bemdeclarado
 python tse.py votacao-zona
 ```
 
+Os dados ficarão disponíveis em:
+
+- `data/download/`: arquivos originais baixados, por ano
+- `data/output/`: arquivos extraídos (agrupados por tipo)
+
+### Opções
+
 Opcionalmente você pode passar para quais anos deseja a extração, como em:
 
 ```bash
 python tse.py candidatura --years=2014,2018
 ```
 
-E também especificar o arquivo de saída (que será sempre um CSV, mas pode estar
-compactado):
+Também pode especificar o arquivo de saída (que será sempre um CSV, mas pode
+estar compactado):
 
 ```bash
 python tse.py candidatura --output=candidaturas.csv.gz
 ```
 
-As opções `--years` e `--output` podem ser usadas em conjunto para
-`candidatura`, `bemdeclarado` e `votacao-zona`.
+Por padrão, caso os arquivos necessários para uma extração já existam em
+`data/download/`, eles não serão baixados novamente. Você pode utilizar a opção
+`--force-redownload` para que eles sejam deletados e baixados novamente.
+
+As opções podem ser utilizadas em conjunto.
 
 
 ## Desenvolvendo/contribuindo
