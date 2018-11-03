@@ -12,7 +12,7 @@ numero_turno,"Número do turno. Aparece no TSE como: NUM_TURNO (1994-BR), NR_TUR
 descricao_ue,"Descrição da Unidade Eleitoral. Aparece no TSE como: DESCRICAO_UE (1994-BR), NM_UE (2018)."
 sigla_ue,"Sigla da Unidade Eleitoral (Em caso de eleição majoritária é a sigla da UF que o candidato concorre (texto) e em caso de eleição municipal é o código TSE do município (número)). Assume os valores especiais BR, ZZ e VT para designar, respectivamente, o Brasil, Exterior e Voto em Trânsito. Aparece no TSE como: SIGLA_UE (1994-BR), SG_UE (2018)."
 sigla_uf,"Sigla da Unidade da Federação em que ocorreu a eleição. Aparece no TSE como: SIGLA_UF (1994-BR), SG_UF (2018)."
-codigo_cor_raca,"Código da cor/raça do candidato (auto declaração). Aparece no TSE como: CODIGO_COR_RACA (2014), CD_COR_RACA (2018). Coluna adicionada em 2014."
+codigo_cor_raca,Código da cor/raça do candidato (auto declaração). Aparece no TSE como: CD_COR_RACA (2018). Coluna adicionada em 2018.
 codigo_estado_civil,"Código do estado civil do candidato. Aparece no TSE como: CODIGO_ESTADO_CIVIL (1994-BR), CD_ESTADO_CIVIL (2018)."
 codigo_genero,"Código do sexo do candidato. Aparece no TSE como: CODIGO_SEXO (1994-BR), CD_GENERO (2018)."
 codigo_grau_instrucao,"Código do grau de instrução do candidato. Gerado internamente pelos sistemas eleitorais. Aparece no TSE como: COD_GRAU_INSTRUCAO (1994-BR), CD_GRAU_INSTRUCAO (2018)."
@@ -21,7 +21,7 @@ codigo_nacionalidade,"Código da nacionalidade do candidato. Aparece no TSE como
 codigo_ocupacao,"Código da ocupação do candidato. Aparece no TSE como: CODIGO_OCUPACAO (1994-BR), CD_OCUPACAO (2018)."
 cpf,"CPF do candidato. Aparece no TSE como: CPF_CANDIDATO (1994-BR), NR_CPF_CANDIDATO (2018)."
 data_nascimento,"Data de nascimento do candidato. Aparece no TSE como: DATA_NASCIMENTO (1994-BR), DT_NASCIMENTO (2018)."
-descricao_cor_raca,"Descrição da cor/raça do candidato (auto declaração). Aparece no TSE como: DESCRICAO_COR_RACA (2014), DS_COR_RACA (2018). Coluna adicionada em 2014."
+descricao_cor_raca,Descrição da cor/raça do candidato (auto declaração). Aparece no TSE como: DS_COR_RACA (2018). Coluna adicionada em 2018.
 descricao_estado_civil,"Descrição do estado civil do candidato. Aparece no TSE como: DESCRICAO_ESTADO_CIVIL (1994-BR), DS_ESTADO_CIVIL (2018)."
 descricao_genero,"Descrição do sexo do candidato. Aparece no TSE como: DESCRICAO_SEXO (1994-BR), DS_GENERO (2018)."
 descricao_grau_instrucao,"Descrição do grau de instrução do candidato. Aparece no TSE como: DESCRICAO_GRAU_INSTRUCAO (1994-BR), DS_GRAU_INSTRUCAO (2018)."

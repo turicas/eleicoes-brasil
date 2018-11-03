@@ -105,13 +105,6 @@ def fix_titulo_eleitoral(value):
     return ''.join(REGEXP_NUMBERS.findall(value))
 
 
-def fix_pergunta(value, new_descricao_cargo):
-    if value == '91':  # TODO: check
-        return new_descricao_cargo
-    else:
-        return ''
-
-
 class Extractor:
 
     encoding = 'latin-1'
@@ -361,8 +354,10 @@ class VotacaoZonaExtractor(Extractor):
         uf = self.extract_state_from_filename(internal_filename)
         if year < 2014:
             header_year = '1994'
-        elif 2014 <= year <= 2018:
+        elif 2014 <= year <= 2016:
             header_year = '2014'
+        elif year == 2018:
+            header_year = '2018'
         else:
             raise ValueError('Unrecognized year')
         return {
