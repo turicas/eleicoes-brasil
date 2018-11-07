@@ -71,24 +71,35 @@ Os dados ficarão disponíveis em:
 
 ### Opções
 
-Opcionalmente você pode passar para quais anos deseja a extração, como em:
+As opções listadas abaixo podem ser utilizadas em conjunto.
+
+#### Anos
+
+Você pode especificar para quais anos deseja a extração (separados por
+vírgulas), como em:
 
 ```bash
 python tse.py candidatura --years=2014,2018
 ```
 
-Também pode especificar o arquivo de saída (que será sempre um CSV, mas pode
-estar compactado):
+#### Apenas baixar
 
-```bash
-python tse.py candidatura --output=candidaturas.csv.gz
-```
+Caso queira apenas baixar os arquivos, utilize a opção `--download-only`.
+
+#### Forçar download
 
 Por padrão, caso os arquivos necessários para uma extração já existam em
 `data/download/`, eles não serão baixados novamente. Você pode utilizar a opção
 `--force-redownload` para que eles sejam deletados e baixados novamente.
 
-As opções podem ser utilizadas em conjunto.
+#### Arquivo de saída
+
+Você pode especificar o arquivo de saída (que será sempre um CSV, mas pode
+estar compactado):
+
+```bash
+python tse.py candidatura --output=candidaturas.csv.gz
+```
 
 
 ## Desenvolvendo/contribuindo

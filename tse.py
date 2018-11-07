@@ -19,7 +19,7 @@ from extractors import (
 REGEXP_HEADER_YEAR = re.compile("([0-9]{4}.*)\.csv")
 
 
-def extract_data(ExtractorClass, year_range, output_filename, force_redownload=False):
+def extract_data(ExtractorClass, year_range, output_filename, force_redownload=False, download_only=False):
     extractor_name = ExtractorClass.__name__.replace("Extractor", "")
     extractor = ExtractorClass()
     writer = CsvLazyDictWriter(output_filename)
@@ -31,9 +31,12 @@ def extract_data(ExtractorClass, year_range, output_filename, force_redownload=F
         if not result["downloaded"]:
             print(f" file has already been downloaded.")
 
-        data = extractor.extract(year)
-        for row in tqdm(data, desc="  Extracting..."):
-            writer.writerow(row)
+        if not download_only:
+            data = extractor.extract(year)
+            for row in tqdm(data, desc="  Extracting..."):
+                writer.writerow(row)
+
+        print()
 
 
 def create_final_headers(header_type, order_columns, final_filename):
@@ -122,6 +125,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("type", choices=list(extractors.keys()) + ["headers"])
     parser.add_argument("--force-redownload", action="store_true", default=False)
+    parser.add_argument("--download-only", action="store_true", default=False)
     parser.add_argument("--output")
     parser.add_argument("--years", default="all")
     args = parser.parse_args()
@@ -139,7 +143,6 @@ if __name__ == "__main__":
             years = extractor["years"]
         else:
             years = [int(value) for value in args.years.split(",")]
-        force_redownload = args.force_redownload
         for path in (settings.DATA_PATH, settings.DOWNLOAD_PATH, settings.OUTPUT_PATH):
             if not path.exists():
                 path.mkdir()
@@ -148,5 +151,6 @@ if __name__ == "__main__":
             extractor["extractor_class"],
             years,
             args.output or extractor["output_filename"],
-            force_redownload=force_redownload,
+            force_redownload=args.force_redownload,
+            download_only=args.download_only,
         )
