@@ -2,7 +2,7 @@ import csv
 import re
 from functools import lru_cache
 from io import StringIO, TextIOWrapper
-from os import rename as rename_file
+from shutil import move as move_file
 from pathlib import Path
 from zipfile import ZipFile
 
@@ -115,7 +115,7 @@ class Extractor:
 
         url = self.url(year)
         file_data = download_file(url, progress=True)
-        rename_file(file_data.uri, filename)
+        move_file(file_data.uri, filename)
         return {"downloaded": True, "filename": filename}
 
     def extract_state_from_filename(self, filename):
