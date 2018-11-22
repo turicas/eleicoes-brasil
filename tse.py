@@ -14,6 +14,8 @@ from extractors import (
     CandidaturaExtractor,
     BemDeclaradoExtractor,
     VotacaoZonaExtractor,
+    PrestacaoContasReceitasExtractor,
+    PrestacaoContasDespesasExtractor,
 )
 
 REGEXP_HEADER_YEAR = re.compile("([0-9]{4}.*)\.csv")
@@ -119,6 +121,18 @@ if __name__ == "__main__":
             "extractor_class": VotacaoZonaExtractor,
             "output_filename": settings.OUTPUT_PATH / "votacao-zona.csv.xz",
         },
+        "prestacoes-contas-receitas":
+            {
+             "years": [2004, 2006, 2008, 2010, 2012, 2014, '2014-suplementar', 2016],
+             "extractor_class": PrestacaoContasReceitasExtractor,
+             "output_filename": settings.OUTPUT_PATH / "prestacaoconta-receitas.csv.xz"
+            },
+        "prestacoes-contas-despesas":
+            {
+             "years": [2004, 2006, 2008, 2010, 2012, 2014, '2014-suplementar', 2016],
+             "extractor_class": PrestacaoContasDespesasExtractor,
+             "output_filename": settings.OUTPUT_PATH / "prestacaoconta-despesas.csv.xz"
+            }
     }
     # TODO: clear '##VERIFICAR BASE 1994##' so we can add 1994 too
 
@@ -137,7 +151,6 @@ if __name__ == "__main__":
             final_filename = settings.HEADERS_PATH / f"{header_type}-final.csv"
             print(f"Creating {final_filename}")
             create_final_headers(header_type, extractor.order_columns, final_filename)
-
     else:
         extractor = extractors[args.type]
         if args.years == "all":
