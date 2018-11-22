@@ -105,6 +105,17 @@ def fix_titulo_eleitoral(value):
     return "".join(REGEXP_NUMBERS.findall(value))
 
 
+def get_organization(internal_filename, year):
+    if year == 2010:
+        return internal_filename.split('Receitas')[1].replace('.txt', '').lower()
+    elif year in (2008, 2014, 2016):
+        return internal_filename.split('_')[1]
+    elif year == 2006 or year == 2004:
+        return 'comites' if 'Comit' in internal_filename else 'candidatos'
+    elif year == 2012:
+        return internal_filename.split('_')[1]
+
+
 class Extractor:
 
     base_url = "http://agencia.tse.jus.br/estatistica/sead/odsele/"
@@ -449,3 +460,218 @@ class VotacaoZonaExtractor(Extractor):
         else:
             value = 4
         return value, name
+
+
+class PrestacaoContasExtractor(Extractor):
+    def url(self, year):
+        urls = {
+            2002: f'contas_{year}',
+            2004: f'contas_{year}',
+            2006: f'contas_{year}',
+            2008: f'contas_{year}',
+            2010: f'contas_{year}',
+            2012: f'final_{year}',
+            2014: f'final_{year}',
+            '2014-suplementar': 'contas_final_sup_2014',
+            2016: f'contas_final_{year}',
+            '2016-suplementar': 'contas_final_sup_2016'
+        }
+        return f"http://agencia.tse.jus.br/estatistica/sead/odsele/prestacao_contas/prestacao_{urls[year]}.zip"
+
+    def fix_fobj(self, fobj, year):
+        if year == 2004:
+            fobj = utils.FixQuotes(fobj, encoding=self.encoding)
+        else:
+            fobj = TextIOWrapper(fobj, encoding=self.encoding)
+
+        return fobj
+
+
+    def filename(self, year):
+        return settings.DOWNLOAD_PATH / f"prestacao-contas-{year}.zip"
+
+    def get_headers(self, year, filename, internal_filename, type_mov):
+        if str(year).endswith('suplementar'):
+            header_year = year
+            year = 2014
+        else:
+            header_year = str(year)
+
+        org = get_organization(internal_filename, year)
+
+        return {
+            "year_fields": read_header(
+                settings.HEADERS_PATH / f"prestacoes-contas-{type_mov}-{org}-{header_year}.csv"
+            ),
+            "final_fields": read_header(
+                settings.HEADERS_PATH / f"prestacoes-contas-{type_mov}-final.csv"
+            ),
+        }
+
+    def convert_row(self, row_field_names, final_field_names, year):
+        def convert(row_data):
+            row = dict(zip(row_field_names, row_data))
+            new = {}
+            for key in final_field_names:
+                value = row.get(key, "").strip()
+                if value in ("#NULO", "#NULO#", "#NE#"):
+                    value = ""
+                new[key] = value = utils.unaccent(value).upper()
+
+            # TODO: fix data_nascimento (dd/mm/yyyy, dd/mm/yy, yyyymmdd, xx/xx/)
+            # TODO: fix situacao
+            # TODO: fix totalizacao
+            new['ano_eleicao'] = year
+            return new
+
+        return convert
+
+    def valid_filename(self, filename, type_mov, year):
+        filename = filename.lower()
+        year = str(year)
+        return type_mov in filename and\
+            (filename.endswith('.csv') or filename.endswith('.txt'))\
+            and (('brasil' not in filename and 'sup' not in filename) or
+                  year.endswith('suplementar'))
+
+    def order_columns(self, name):
+        """Order columns according to a (possible) normalization
+
+        The order is:
+        - Geographic Area
+        - Person
+        - Party
+        - Donator
+        - Revenue
+        """
+
+        if name == "uf":
+            value= 0
+        elif "sequencial" in name or 'candidato' in name:
+            value = 1
+        elif 'partido' in name or 'comite' in name:
+            value = 2
+        elif 'doador' in name:
+            value = 3
+        else:
+            value = 4
+        return value, name
+
+
+
+
+class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
+    def extract(self, year):
+        filename = self.filename(year)
+        zfile = ZipFile(filename)
+        for file_info in zfile.filelist:
+            internal_filename = file_info.filename
+            if not self.valid_filename(
+                    internal_filename,
+                    type_mov='receita',
+                    year=year
+            ):
+                continue
+            fobj = zfile.open(internal_filename)
+            fobj = self.fix_fobj(fobj, year)
+            dialect = csv.Sniffer().sniff(fobj.read(1024))
+            fobj.seek(0)
+            reader = csv.reader(fobj, dialect=dialect)
+            if internal_filename == '2004/Comitê/Receita/ReceitaComitê.CSV':
+                import ipdb; ipdb.set_trace()
+            header_meta = self.get_headers(
+                year,
+                filename,
+                internal_filename,
+                type_mov='receitas'
+
+            )
+            year_fields = [
+                field.nome_final or field.nome_tse
+                for field in header_meta["year_fields"]
+            ]
+            final_fields = [
+                field.nome_final
+                for field in header_meta["final_fields"]
+                if field.nome_final
+            ]
+
+            # Add year to final csv
+            final_fields = ['ano_eleicao'] + final_fields
+            convert_function = self.convert_row(year_fields, final_fields, year)
+            for index, row in enumerate(reader):
+                if index == 0 and ("UF" in row or
+                                   'SG_UE_SUP' in row or
+                                   'SITUACAOCADASTRAL' in row):
+                    # It's a header, we should skip it as a data row but
+                    # use the information to get field ordering (better
+                    # trust it then our headers files, TSE may change the
+                    # order)
+                    field_map = {
+                        field.nome_tse: field.nome_final or field.nome_tse
+                        for field in header_meta["year_fields"]
+                    }
+                    try:
+                        year_fields = [field_map[field_name.strip()] for field_name in row]
+                    except:
+                        import ipdb; ipdb.set_trace()
+                    convert_function = self.convert_row(year_fields, final_fields, year)
+                    continue
+
+                yield convert_function(row)
+
+
+class PrestacaoContasDespesasExtractor(PrestacaoContasExtractor):
+    def extract(self, year):
+        filename = self.filename(year)
+        zfile = ZipFile(filename)
+        for file_info in zfile.filelist:
+            internal_filename = file_info.filename
+            if not self.valid_filename(
+                    internal_filename,
+                    type_mov='despesa',
+                    year=year
+            ):
+                continue
+            fobj = zfile.open(internal_filename)
+            fobj = self.fix_fobj(fobj, year)
+            dialect = csv.Sniffer().sniff(fobj.read(1024))
+            fobj.seek(0)
+            reader = csv.reader(fobj, dialect=dialect)
+            header_meta = self.get_headers(
+                year,
+                filename,
+                internal_filename,
+                type_mov='despesas'
+
+            )
+            year_fields = [
+                field.nome_final or field.nome_tse
+                for field in header_meta["year_fields"]
+            ]
+            final_fields = [
+                field.nome_final
+                for field in header_meta["final_fields"]
+                if field.nome_final
+            ]
+
+            # Add year to final csv
+            final_fields = ['ano_eleicao'] + final_fields
+            convert_function = self.convert_row(year_fields, final_fields, year)
+            for index, row in enumerate(reader):
+                if index == 0 and ("UF" in row or
+                                   'SG_UE_SUP' in row or
+                                   'SITUACAOCADASTRAL' in row):
+                    # It's a header, we should skip it as a data row but
+                    # use the information to get field ordering (better
+                    # trust it then our headers files, TSE may change the
+                    # order)
+                    field_map = {
+                        field.nome_tse: field.nome_final or field.nome_tse
+                        for field in header_meta["year_fields"]
+                    }
+                    year_fields = [field_map[field_name.strip()] for field_name in row]
+                    convert_function = self.convert_row(year_fields, final_fields, year)
+                    continue
+
+                yield convert_function(row)
