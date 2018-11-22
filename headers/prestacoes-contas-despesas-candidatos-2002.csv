@@ -1,0 +1,13 @@
+nome_tse,nome_final,descricao
+SEQUENCIAL_CANDIDATO,sequencial_candidato,Número sequencial do candidato gerado internamente pelos sistemas eleitorais. Não é o número de campanha do candidato.
+SG_UF,sigla_uf,Sigla da Unidade da federação do candidato
+SG_PART,sigla_partido,Sigla do partido
+DS_CARGO,descricao_cargo,Descrição do cargo
+NO_CAND,nome_urna,Nome de urna do candidato
+NR_CAND,numero_urna,Número do candidato na urna
+DT_DOC_DESP,data_despesa,Data da despesa
+CD_CPF_CGC,cpf_cnpj_fornecedor,CPF/CNPJ do fornecedor
+SG_UF_FORNECEDOR,sigla_uf_fornecedor,Unidade da federação do fornecedor
+NO_FOR,nome_fornecedor,Nome do fornecedor
+VR_DESPESA,valor_despesa,Valor da despesa
+DS_TITULO,tipo_despesa,Tipo de despesa

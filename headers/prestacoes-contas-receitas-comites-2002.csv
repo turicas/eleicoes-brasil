@@ -1,0 +1,10 @@
+nome_tse,nome_final,descricao
+SG_UF,sigla_uf,Sigla Unidade da federação do comitê
+SG_PART,sigla_partido,Sigla do partido
+DS_ORGAO,descricao_orgao,Tipo de comitê
+DT_RECEITA,data_receita,Data da receita
+CD_CPF_CGC_DOA,cpf_cnpj_doador,CPF/CNPJ do doador
+SG_UF_DOADOR,sigla_uf_doador,Unidade da federação do doador
+NO_DOADOR,nome_doador,Nome do doador
+VR_RECEITA,valor_receita,Valor da receita
+TP_RECURSO,tipo_receurso,"Tipo de recurso (Cheque, TED, Dinheiro, etc)"

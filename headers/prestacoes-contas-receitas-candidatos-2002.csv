@@ -1,0 +1,13 @@
+nome_tse,nome_final,descricao
+SEQUENCIAL_CANDIDATO,sequencial_candidato,Número sequencial do candidato gerado internamente pelos sistemas eleitorais. Não é o número de campanha do candidato.
+SG_UF,sigla_uf,Sigla da Unidade da federação do candidato
+SG_PART,sigla_partido,Sigla do partido
+DS_CARGO,descricao_cargo,Descrição do cargo
+NO_CAND,nome_urna,Nome de urna do candidato
+NR_CAND,numero_urna,Número do candidato na urna
+DT_RECEITA,data_receita,Data da receita
+CD_CPF_CGC,cpf_cnpj_fornecedor,CPF/CNPJ do doador
+SG_UF_DOADOR,sigla_uf_doador,Unidade da federação do doador
+NO_DOADOR,nome_doador,Nome do doador
+VR_RECEITA,valor_receita,Valor da receita
+TP_RECURSO,tipo_receurso,"Tipo de recurso (Cheque, TED, Dinheiro, etc)"
