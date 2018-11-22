@@ -1,0 +1,10 @@
+nome_tse,nome_final,descricao
+SG_UF,sigla_uf,Sigla da Unidade da federação do comitê
+SG_PART,sigla_partido,Sigla do partido
+DS_ORGAO,descricao_orgao,Tipo de comitê
+DT_DOC_DESP,data_despesa,Data da despesa
+CD_CPF_CGC,cpf_cnpj_fornecedor,CPF/CNPJ do fornecedor
+SG_UF_FORNECEDOR,sigla_uf_fornecedor,Unidade da federação do fornecedor
+NO_FOR,nome_fornecedor,Nome do fornecedor
+VR_DESPESA,valor_despesa,Valor da despesa
+DS_TITULO,tipo_despesa,Tipo de despesa
