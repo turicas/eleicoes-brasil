@@ -101,6 +101,8 @@ estar compactado):
 python tse.py candidatura --output=candidaturas.csv.gz
 ```
 
+#### Observações
+Em alguns casos o TSE libera arquivos compactados no formato RAR (mesmo com a extensão ".zip"). Para extrair os dados desses arquivos você precisa instalar em seu sistema o bsdtar ou unrar (em sistemas Debian e derivados: apt install libarchive-tools ou apt install unrar - o último não é software livre).
 
 ## Desenvolvendo/contribuindo
 
