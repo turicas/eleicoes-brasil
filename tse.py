@@ -123,13 +123,13 @@ if __name__ == "__main__":
         },
         "prestacoes-contas-receitas":
             {
-             "years": [2004, 2006, 2008, 2010, 2012, 2014, '2014-suplementar', 2016],
+             "years": [2002, 2004, 2004, 2006, 2008, 2010, 2012, 2014, '2014-suplementar', 2016],
              "extractor_class": PrestacaoContasReceitasExtractor,
              "output_filename": settings.OUTPUT_PATH / "prestacaoconta-receitas.csv.xz"
             },
         "prestacoes-contas-despesas":
             {
-             "years": [2004, 2006, 2008, 2010, 2012, 2014, '2014-suplementar', 2016],
+             "years": [2002, 2004, 2006, 2008, 2010, 2012, 2014, '2014-suplementar', 2016],
              "extractor_class": PrestacaoContasDespesasExtractor,
              "output_filename": settings.OUTPUT_PATH / "prestacaoconta-despesas.csv.xz"
             }
