@@ -108,7 +108,10 @@ def fix_titulo_eleitoral(value):
 
 def get_organization(internal_filename, year):
     if year == 2010:
-        return internal_filename.split('Receitas')[1].replace('.txt', '').lower()
+        if 'Receitas' in internal_filename:
+            return internal_filename.split('Receitas')[1].replace('.txt', '').lower()
+        else:
+            return internal_filename.split('Despesas')[1].replace('.txt', '').lower()
     elif year in (2008, 2014, 2016):
         return internal_filename.split('_')[1]
     elif year == 2006 or year == 2004 or year == 2002:
