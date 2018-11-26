@@ -154,7 +154,10 @@ class Extractor:
             internal_filename = file_info.filename
             if not self.valid_filename(internal_filename):
                 continue
-            fobj = TextIOWrapper(zfile.open(internal_filename), encoding=self.encoding)
+            fobj = TextIOWrapper(
+                zfile.open(internal_filename),
+                encoding=self.encoding
+            )
             fobj = self.fix_fobj(fobj)
             reader = csv.reader(fobj, dialect=utils.TSEDialect)
             header_meta = self.get_headers(year, filename, internal_filename)
@@ -507,7 +510,7 @@ class PrestacaoContasExtractor(Extractor):
         return fobjs, valid_names
 
     def fix_fobj(self, fobj, year):
-        if year == 2004:
+        if year == 2004 or year == 2008:
             fobj = utils.FixQuotes(fobj, encoding=self.encoding)
         else:
             fobj = TextIOWrapper(fobj, encoding=self.encoding)
@@ -557,11 +560,16 @@ class PrestacaoContasExtractor(Extractor):
     def valid_filename(self, filename, type_mov, year):
         filename = filename.lower()
         year = str(year)
-        return type_mov in filename and\
-            (filename.endswith('.csv') or filename.endswith('.txt'))\
-            and ((('brasil' not in filename or year == '2008') and\
-            'sup' not in filename) or
-                  year.endswith('suplementar'))
+
+        is_type_mov = type_mov in filename
+        extension = filename.endswith('.csv') or filename.endswith('.txt')
+        not_brasil = 'br' not in filename
+        is_2008 = year == '2008'
+        is_suplementar = 'sup' not in filename
+        is_year_suplementar = year.endswith('suplementar')
+
+        return (is_type_mov and extension and (((not_brasil or is_2008) and
+                is_suplementar) or is_year_suplementar))
 
     def order_columns(self, name):
         """Order columns according to a (possible) normalization
@@ -574,16 +582,19 @@ class PrestacaoContasExtractor(Extractor):
         - Revenue
         """
 
-        if name == "uf":
-            value= 0
+        if "uf" in name or "ue" in name or name == 'municipio':
+            value = 0
         elif "sequencial" in name or 'candidato' in name:
             value = 1
         elif 'partido' in name or 'comite' in name:
             value = 2
-        elif 'doador' in name:
+        elif 'doador' in name or 'fornecedor' in name:
             value = 3
-        else:
+        elif 'receita' in name or 'despesa' in name or 'recurso' in name:
             value = 4
+        else:
+            value = 5
+
         return value, name
 
 
