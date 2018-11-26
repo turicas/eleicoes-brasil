@@ -1,20 +1,20 @@
 nome_tse,nome_final,descricao
-DS_ORGAO,descricao_orgao,
-NR_PART,numero_partido,
-SG_PART,sigla_partido,
-SG_UE_SUP,sigla_ue_superior,
-NO_UE,nome_ue,
-SG_UE,sigla_ue,
-VR_DESPESA,valor_despesa,
-DT_DOC_DESP,data_despesa,
+DS_ORGAO,descricao_orgao,Tipo de comitê
+NR_PART,numero_partido,Número do partido
+SG_PART,sigla_partido,Sigla do partido
+SG_UE_SUP,sigla_ue_superior,Sigla da unidade eleitoral
+NO_UE,nome_ue,Nome da unidade eleitoral
+SG_UE,sigla_ue,Sigla da unidade eleitoral
+VR_DESPESA,valor_despesa,Valor da despesa
+DT_DOC_DESP,data_despesa,Data da despesa
 RTRIM(LTRIM(DR.CD_TITULO)),descricao_titulo,
-CD_TITULO,codigo_titulo,
+CD_TITULO,codigo_titulo,Código do tipo de despesa
 "DECODE(REC.TP_RECURSO,0,'EMESPÉCIE',1,'CHEQUE',2,'ESTIMADO','NÃOINFORMADO')",dec_tipo_recurso,
-TP_RECURSO,tipo_recurso,
+TP_RECURSO,tipo_recurso,Código da forma de pagamento
 NR_DOC_DESP,numero_documento_despesa,
 DS_TIPO_DOCUMENTO,descricao_tipo_documento,
 CD_DOC,codigo_documento,
 NO_FOR,nome_fornecedor,
-CD_CPF_CGC,cpf_cnpj_fornecedor,
+CD_CPF_CGC,cpf_cnpj_fornecedor,CPF/CNPJ do Fornecedor
 DS_MUNIC,descricao_municipio,
-RV_MEANING,rv_meaning,
+RV_MEANING,forma_pagamento,"Forma de pagamento (EM ESPÉCIE, CHEQUE, ESTIMADO, NÃO INFORMADO)"

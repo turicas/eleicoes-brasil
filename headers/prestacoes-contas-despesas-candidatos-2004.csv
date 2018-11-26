@@ -1,23 +1,23 @@
 nome_tse,nome_final,descricao
-NO_CAND,nome_candidato,
-DS_CARGO,descricao_cargo,
-CD_CARGO,codigo_cargo,
-NR_CAND,numero_candidato,
+NO_CAND,nome_candidato,Nome do candidato
+DS_CARGO,descricao_cargo,Descrição do cargo
+CD_CARGO,codigo_cargo,Código do cargo
+NR_CAND,numero_candidato,Número do candidato
 SG_UE_SUP,sigla_ue_superior,
-NO_UE,nome_ue,
-SG_UE,sigla_ue,
-NR_PART,numero_partido,
-SG_PART,sigla_partido,
-VR_DESPESA,valor_despesa,
-DT_DOC_DESP,data_despesa,
+NO_UE,nome_ue,Nome da unidade eleitoral
+SG_UE,sigla_ue,Sigla da unidade eleitoral
+NR_PART,numero_partido,Número do partido
+SG_PART,sigla_partido,Sigla do partido
+VR_DESPESA,valor_despesa,Valor da despesa
+DT_DOC_DESP,data_despesa,Data da despesa
 RTRIM(LTRIM(DR.DS_TITULO)),descricao_titulo,
 CD_TITULO,codigo_titulo,
 "DECODE(REC.TP_RECURSO,0,'EMESPÉCIE',1,'CHEQUE',2,'ESTIMADO','NÃOINFORMADO')",dec_tipo_recurso,
-TP_RECURSO,tipo_recurso,
-NR_DOC_DESP,numero_documento_despesa,
+TP_RECURSO,tipo_recurso,Código da forma de pagamento
+NR_DOC_DESP,numero_documento_despesa,Número do documento
 DS_TIPO_DOCUMENTO,descricao_tipo_documento,
 CD_DOC,codigo_documento,
-NO_FOR,nome_fornecedor,
-CD_CPF_CGC,codigo_cpf_cgc,
+NO_FOR,nome_fornecedor,Nome do fornecedor
+CD_CPF_CGC,codigo_cpf_cgc,CPF/CNPJ do fornecedor
 DS_MUNIC,descricao_municipio,
 RV_MEANING,rv_meaning,
