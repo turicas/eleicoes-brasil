@@ -2,6 +2,7 @@ cached-property
 click
 git+https://github.com/turicas/rows.git@develop#egg=rows
 lxml
+rarfile
 requests
 requests-cache
 scrapy
