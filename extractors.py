@@ -113,6 +113,10 @@ def fix_titulo_eleitoral(value):
     return "".join(REGEXP_NUMBERS.findall(value))
 
 
+def clean_header(header):
+    return re.sub('"', '', header.strip())
+
+
 def get_organization(internal_filename, year):
     if year == 2010:
         if 'Receitas' in internal_filename:
@@ -527,7 +531,7 @@ class PrestacaoContasExtractor(Extractor):
         return fobjs, valid_names
 
     def fix_fobj(self, fobj, year):
-        if year == 2004 or year == 2008:
+        if year == 2002 or year == 2004 or year == 2008:
             fobj = utils.FixQuotes(fobj, encoding=self.encoding)
         else:
             fobj = TextIOWrapper(fobj, encoding=self.encoding)
@@ -645,8 +649,11 @@ class PrestacaoContasExtractor(Extractor):
             convert_function = self.convert_row(year_fields, final_fields, year)
             for index, row in enumerate(reader):
                 if index == 0 and ("UF" in row or
-                                   "SG_UE_SUP" in row or
-                                   "SITUACAOCADASTRAL" in row):
+                                   'SG_UE_SUP' in row or
+                                   'SITUACAOCADASTRAL' in row or
+                                   'DS_ORGAO' in row or
+                                   'RV_MEANING' in row or
+                                   'SEQUENCIAL_CANDIDATO' in row):
                     # It's a header, we should skip it as a data row but
                     # use the information to get field ordering (better
                     # trust it then our headers files, TSE may change the
@@ -655,7 +662,7 @@ class PrestacaoContasExtractor(Extractor):
                         field.nome_tse: field.nome_final or field.nome_tse
                         for field in header_meta["year_fields"]
                     }
-                    year_fields = [field_map[field_name.strip()] for field_name in row]
+                    year_fields = [field_map[clean_header(field_name)] for field_name in row]
                     convert_function = self.convert_row(year_fields, final_fields, year)
                     continue
 
