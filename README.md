@@ -7,7 +7,7 @@ disponíveis são:
 - Candidaturas (1996 a 2018)
 - Bens declarados (2006 a 2018)
 - Votação por zona eleitoral (1996 a 2018)
-
+- Prestação de contas (2002 a 2016)
 
 ## Metodologia
 
@@ -46,7 +46,7 @@ conversões dos dados, como:
 
 ## Instalando
 
-Os programas requerem Python 3.6+. Instale as dependências executando:
+Os programas requerem Python 3.7+. Instale as dependências executando:
 
 ```bash
 pip install -r requirements.txt
