@@ -85,7 +85,7 @@ def create_final_headers(header_type, order_columns, final_filename):
         final_headers.values(), key=lambda row: order_columns(row["nome_final"])
     )
     for row in header_list:
-        row_data = {"descricao": row["descricao"], "nome_final": row["nome_final"]}
+        row_data = {"descricao": row["descricao"] or "", "nome_final": row["nome_final"]}
         introduced_on = row.get("introduced_on", None)
         original_names = ", ".join(
             f"{item[1]} ({item[0]})" for item in row.get("original_names")
