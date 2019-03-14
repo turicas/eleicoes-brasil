@@ -2,7 +2,8 @@ import csv
 import datetime
 import re
 from functools import lru_cache
-from io import StringIO, TextIOWrapper
+from io import StringIO, TextIOWrapper, BytesIO
+from os import rename as rename_file
 from pathlib import Path
 from shutil import move as move_file
 from urllib.parse import urljoin
@@ -531,7 +532,7 @@ class PrestacaoContasExtractor(Extractor):
         return fobjs, valid_names
 
     def fix_fobj(self, fobj, year):
-        if year == 2002 or year == 2004 or year == 2008:
+        if year == 2002 or year == 2004 or year == 2006 or year == 2008:
             fobj = utils.FixQuotes(fobj, encoding=self.encoding)
         else:
             fobj = TextIOWrapper(fobj, encoding=self.encoding)
