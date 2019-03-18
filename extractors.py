@@ -585,7 +585,7 @@ class PrestacaoContasExtractor(Extractor):
 
         is_type_mov = self.type_mov in filename
         extension = filename.endswith('.csv') or filename.endswith('.txt')
-        not_brasil = 'br' not in filename
+        not_brasil = '_brasil' not in filename
         is_2008 = year == '2008'
         is_suplementar = 'sup' not in filename
         is_year_suplementar = year.endswith('suplementar')
