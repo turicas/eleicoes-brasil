@@ -1,16 +1,16 @@
-nome_tse,nome_final,descricao
-DS_ORGAO,descricao_orgao,
-NR_PART,numero_partido,
-SG_PART,sigla_partido,
-SG_UE_SUP,sigla_ue_superior,
-NO_UE,nome_ue,
-SG_UE,sigla_ue,
-VR_RECEITA,valor_receita,
-DT_RECEITA,data_receita,
-RTRIM(LTRIM(DR.CD_TITULO)),codigo_titulo_trim,
-CD_TITULO,codigo_titulo,
-"DECODE(REC.TP_RECURSO,0,'EMESPÉCIE',1,'CHEQUE',2,'ESTIMADO','NÃOINFORMADO')",rec_tipo_recurso,
-TP_RECURSO,tipo_recurso,
-NO_DOADOR,nome_doador,
-CD_CPF_CGC_DOA,cpf_cnpj_doador,
-RV_MEANING,rv_meaning,
+"nome_tse","nome_final","descricao"
+"DS_ORGAO","descricao_orgao","Tipo de comitê"
+"NR_PART","numero_partido","Número do partido"
+"SG_PART","sigla_partido","Sigla do partido"
+"SG_UE_SUP","sigla_uf","Unidade da federação"
+"NO_UE","nome_ue","Nome da unidade da federação"
+"SG_UE","codigo_ue","Código do município"
+"VR_RECEITA","valor_receita","Valor da receita"
+"DT_RECEITA","data_receita","Data da receita"
+"RTRIM(LTRIM(DR.CD_TITULO))","tipo_receita","Tipo de receita"
+"CD_TITULO","codigo_tipo_receita","Código do tipo de receita"
+"DECODE(REC.TP_RECURSO,0,'EMESPÉCIE',1,'CHEQUE',2,'ESTIMADO','NÃOINFORMADO')","tipo_recurso","Tipo de recurso (Em espécie, Cheque, Estimado, não informado)"
+"TP_RECURSO","codigo_tipo_recurso","Código do tipo de recurso"
+"NO_DOADOR","nome_doador","Nome do doador"
+"CD_CPF_CGC_DOA","cpf_cnpj_doador","CPF/CNPJ doador"
+"RV_MEANING","situacao_cadastral","Batimento Receita Federal do Brasil"
