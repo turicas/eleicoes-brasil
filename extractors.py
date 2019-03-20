@@ -130,6 +130,14 @@ def get_organization(internal_filename, year):
         return 'comites' if 'Comit' in internal_filename else 'candidatos'
     elif year == 2012:
         return internal_filename.split('_')[1]
+    elif year == 2018:
+        cand_or_party = 'candidatos' if 'candidatos' in internal_filename else 'partidos'
+        if 'pagas' in internal_filename:
+            cand_or_party = 'pagas-' + cand_or_party
+        elif 'contratadas' in internal_filename:
+            cand_or_party = 'contratadas-' + cand_or_party
+        origin = 'originarios-' if 'originario' in internal_filename else ''
+        return origin + cand_or_party
 
 
 class Extractor:
@@ -652,6 +660,7 @@ class PrestacaoContasExtractor(Extractor):
             convert_function = self.convert_row(year_fields, final_fields, year)
             for index, row in enumerate(reader):
                 if index == 0 and ("UF" in row or
+                                   "SG_UF" in row or
                                    'SG_UE_SUP' in row or
                                    'SITUACAOCADASTRAL' in row or
                                    'DS_ORGAO' in row or
