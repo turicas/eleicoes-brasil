@@ -148,7 +148,7 @@ class Extractor:
 
         url = self.url(year)
         file_data = download_file(url, progress=True)
-        move_file(file_data.uri, filename)
+        rename_file(file_data.uri, filename)
         return {"downloaded": True, "filename": filename}
 
     def extract_state_from_filename(self, filename):
@@ -489,21 +489,23 @@ class VotacaoZonaExtractor(Extractor):
 
 class PrestacaoContasExtractor(Extractor):
 
-    year_range = (2002, 2004, 2006, 2008, 2010, 2012, 2014, '2014-suplementar', 2016, "2016-suplementar", 2018)
+    year_range = (2002, 2004, 2006, 2008, 2010, 2012, 2014, '2014-suplementar',
+                  2016, "2016-suplementar", '2018-orgaos', '2018-candidatos')
 
     def url(self, year):
         urls = {
-            2002: f"contas_2002",
-            2004: f"contas_2004",
-            2006: f"contas_2006",
-            2008: f"contas_2008",
-            2010: f"contas_2010",
-            2012: f"final_2012",
-            2014: f"final_2014",
+            2002: "contas_2002",
+            2004: "contas_2004",
+            2006: "contas_2006",
+            2008: "contas_2008",
+            2010: "contas_2010",
+            2012: "final_2012",
+            2014: "final_2014",
             "2014-suplementar": "contas_final_sup_2014",
-            2016: f"contas_final_2016",
+            2016: "contas_final_2016",
             "2016-suplementar": "contas_final_sup_2016",
-            2018: "de_contas_eleitorais_candidatos_2018",
+            '2018-orgaos': 'de_contas_eleitorais_orgaos_partidarios_2018',
+            '2018-candidatos': 'de_contas_eleitorais_candidatos_2018'
         }
         return urljoin(self.base_url, f"prestacao_contas/prestacao_{urls[year]}.zip")
 
