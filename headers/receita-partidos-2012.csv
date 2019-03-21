@@ -8,6 +8,7 @@
 "Município","municipio",
 "Tipo diretorio","descricao_orgao",
 "Sigla  Partido","sigla_partido",
+"Tipo do documento","tipo_documento",
 "Número Recibo Eleitoral","numero_recibo_eleitoral",
 "Número do documento","numero_documento",
 "CPF/CNPJ do doador","cpf_cnpj_doador",
