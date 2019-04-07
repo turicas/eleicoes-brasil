@@ -19,9 +19,9 @@ from extractors import (
 REGEXP_HEADER_YEAR = re.compile("([0-9]{4}.*)\.csv")
 
 
-def extract_data(ExtractorClass, year_range, output_filename, force_redownload=False, download_only=False):
+def extract_data(ExtractorClass, year_range, output_filename, base_url, force_redownload=False, download_only=False):
     extractor_name = ExtractorClass.__name__.replace("Extractor", "")
-    extractor = ExtractorClass()
+    extractor = ExtractorClass(base_url)
     writer = CsvLazyDictWriter(output_filename)
     for year in year_range:
         print(f"{extractor_name} {year}")
@@ -128,6 +128,7 @@ if __name__ == "__main__":
     parser.add_argument("--download-only", action="store_true", default=False)
     parser.add_argument("--output")
     parser.add_argument("--years", default="all")
+    parser.add_argument("--base_url", default=None, help="Use the default data repository from TSE or a faster mirror (like https://data.brasil.io/mirror/tse)")
     args = parser.parse_args()
 
     if args.type == "headers":
@@ -148,9 +149,10 @@ if __name__ == "__main__":
                 path.mkdir()
 
         extract_data(
-            extractor["extractor_class"],
-            years,
-            args.output or extractor["output_filename"],
+            ExtractorClass=extractor["extractor_class"],
+            year_range=years,
+            output_filename=args.output or extractor["output_filename"],
+            base_url=args.base_url,
             force_redownload=args.force_redownload,
             download_only=args.download_only,
         )

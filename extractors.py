@@ -2,8 +2,9 @@ import csv
 import re
 from functools import lru_cache
 from io import StringIO, TextIOWrapper
-from shutil import move as move_file
 from pathlib import Path
+from shutil import move as move_file
+from urllib.parse import urljoin
 from zipfile import ZipFile
 
 import rows
@@ -106,7 +107,12 @@ def fix_titulo_eleitoral(value):
 
 class Extractor:
 
+    base_url = "http://agencia.tse.jus.br/estatistica/sead/odsele/"
     encoding = "latin-1"
+
+    def __init__(self, base_url=None):
+        if base_url is not None:
+            self.base_url = base_url
 
     def download(self, year, force=False):
         filename = self.filename(year)
@@ -167,8 +173,9 @@ class Extractor:
 
 
 class CandidaturaExtractor(Extractor):
+
     def url(self, year):
-        return f"http://agencia.tse.jus.br/estatistica/sead/odsele/consulta_cand/consulta_cand_{year}.zip"
+        return urljoin(self.base_url, f"consulta_cand/consulta_cand_{year}.zip")
 
     def filename(self, year):
         return settings.DOWNLOAD_PATH / f"candidatura-{year}.zip"
@@ -292,8 +299,9 @@ class CandidaturaExtractor(Extractor):
 
 
 class BemDeclaradoExtractor(Extractor):
+
     def url(self, year):
-        return f"http://agencia.tse.jus.br/estatistica/sead/odsele/bem_candidato/bem_candidato_{year}.zip"
+        return urljoin(self.base_url, f"bem_candidato/bem_candidato_{year}.zip")
 
     def filename(self, year):
         return settings.DOWNLOAD_PATH / f"bemdeclarado-{year}.zip"
@@ -360,8 +368,9 @@ class BemDeclaradoExtractor(Extractor):
 
 
 class VotacaoZonaExtractor(Extractor):
+
     def url(self, year):
-        return f"http://agencia.tse.jus.br/estatistica/sead/odsele/votacao_candidato_munzona/votacao_candidato_munzona_{year}.zip"
+        return urljoin(self.base_url, f"votacao_candidato_munzona/votacao_candidato_munzona_{year}.zip")
 
     def filename(self, year):
         return settings.DOWNLOAD_PATH / f"votacao-zona-{year}.zip"
