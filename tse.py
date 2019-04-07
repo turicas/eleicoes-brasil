@@ -103,25 +103,25 @@ if __name__ == "__main__":
     extractors = {
         "candidatura": {
             "extractor_class": CandidaturaExtractor,
-            "output_filename": settings.OUTPUT_PATH / "candidatura.csv.xz",
+            "output_filename": settings.OUTPUT_PATH / "candidatura.csv.gz",
         },
         "bem-declarado": {
             "extractor_class": BemDeclaradoExtractor,
-            "output_filename": settings.OUTPUT_PATH / "bem-declarado.csv.xz",
+            "output_filename": settings.OUTPUT_PATH / "bem-declarado.csv.gz",
         },
         "votacao-zona": {
             "extractor_class": VotacaoZonaExtractor,
-            "output_filename": settings.OUTPUT_PATH / "votacao-zona.csv.xz",
+            "output_filename": settings.OUTPUT_PATH / "votacao-zona.csv.gz",
         },
         "receita":
             {
              "extractor_class": PrestacaoContasReceitasExtractor,
-             "output_filename": settings.OUTPUT_PATH / "receita.csv.xz"
+             "output_filename": settings.OUTPUT_PATH / "receita.csv.gz"
             },
         "despesa":
             {
              "extractor_class": PrestacaoContasDespesasExtractor,
-             "output_filename": settings.OUTPUT_PATH / "despesa.csv.xz"
+             "output_filename": settings.OUTPUT_PATH / "despesa.csv.gz"
             }
     }
     # TODO: clear '##VERIFICAR BASE 1994##' so we can add 1994 too
