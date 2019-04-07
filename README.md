@@ -7,7 +7,7 @@ disponíveis são:
 - Candidaturas (1996 a 2018)
 - Bens declarados (2006 a 2018)
 - Votação por zona eleitoral (1996 a 2018)
-- Prestação de contas (2002 a 2016)
+- Prestação de contas (2002 a 2018)
 
 ## Metodologia
 
@@ -60,14 +60,26 @@ tipo de dado quer baixar/tratar/extrair:
 
 ```bash
 python tse.py candidatura
-python tse.py bemdeclarado
+python tse.py bem-declarado
 python tse.py votacao-zona
+python tse.py receita
+python tse.py despesa
 ```
 
 Os dados ficarão disponíveis em:
 
 - `data/download/`: arquivos originais baixados, por ano
 - `data/output/`: arquivos extraídos (agrupados por tipo)
+
+Caso queira converter os arquivos `.csv.gz` gerados em um banco de dados
+SQLite (facilita as análises), execute:
+
+```bash
+./csv2sqlite.sh
+```
+
+Esse script irá rodar o comando `rows csv-to-sqlite` em todos os arquivos
+gerados em `data/output` e criará o arquivo `data/eleicoes-brasil.sqlite`.
 
 ### Opções
 
@@ -107,11 +119,17 @@ Você pode especificar o arquivo de saída (que será sempre um CSV, mas pode
 estar compactado):
 
 ```bash
-python tse.py candidatura --output=candidaturas.csv.gz
+python tse.py candidatura --output=candidatura.csv.gz
 ```
 
 #### Observações
-Em alguns casos o TSE libera arquivos compactados no formato RAR (mesmo com a extensão ".zip"). Para extrair os dados desses arquivos você precisa instalar em seu sistema o bsdtar ou unrar (em sistemas Debian e derivados: apt install libarchive-tools ou apt install unrar - o último não é software livre).
+
+Em alguns casos o TSE libera arquivos compactados no formato RAR (mesmo com a
+extensão ".zip"). Para extrair os dados desses arquivos você precisa instalar
+em seu sistema o bsdtar ou unrar (em sistemas Debian e derivados):
+`apt install libarchive-tools` ou `apt install unrar` - o último não é software
+livre).
+
 
 ## Desenvolvendo/contribuindo
 
