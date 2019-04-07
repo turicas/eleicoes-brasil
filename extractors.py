@@ -483,7 +483,7 @@ class PrestacaoContasExtractor(Extractor):
             2016: f'contas_final_{year}',
             '2016-suplementar': 'contas_final_sup_2016'
         }
-        return f"http://agencia.tse.jus.br/estatistica/sead/odsele/prestacao_contas/prestacao_{urls[year]}.zip"
+        return urljoin(self.base_url, f"prestacao_contas/prestacao_{urls[year]}.zip")
 
     def _get_compressed_fobjs(self, filename, year, type_mov):
         if year == 2002 or year == 2006:
