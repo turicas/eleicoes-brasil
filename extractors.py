@@ -1,4 +1,5 @@
 import csv
+import datetime
 import re
 from functools import lru_cache
 from io import StringIO, TextIOWrapper
@@ -13,6 +14,7 @@ from rows.utils import download_file
 
 import utils
 import settings
+
 
 REGEXP_NUMBERS = re.compile("([0-9]+)")
 REGEXP_WRONGQUOTE = re.compile(r';"([^;\r\n]+"[^;\r\n]*)";')
@@ -59,6 +61,11 @@ MAP_DESCRICAO_CARGO = {
     "VICE-PREFEITO": "VICE-PREFEITO",
     "VEREADOR": "VEREADOR",
 }
+NOW = datetime.datetime.now()
+if NOW >= datetime.datetime(NOW.year, 10, 8, 0, 0, 0):
+    FINAL_VOTATION_YEAR = NOW.year + 1
+else:
+    FINAL_VOTATION_YEAR = NOW.year
 
 
 @lru_cache()
@@ -192,6 +199,8 @@ class Extractor:
 
 class CandidaturaExtractor(Extractor):
 
+    year_range = tuple(range(1996, NOW.year + 1, 2))
+
     def url(self, year):
         return urljoin(self.base_url, f"consulta_cand/consulta_cand_{year}.zip")
 
@@ -318,6 +327,8 @@ class CandidaturaExtractor(Extractor):
 
 class BemDeclaradoExtractor(Extractor):
 
+    year_range = tuple(range(2006, NOW.year + 1, 2))
+
     def url(self, year):
         return urljoin(self.base_url, f"bem_candidato/bem_candidato_{year}.zip")
 
@@ -386,6 +397,8 @@ class BemDeclaradoExtractor(Extractor):
 
 
 class VotacaoZonaExtractor(Extractor):
+
+    year_range = tuple(range(1996, FINAL_VOTATION_YEAR, 2))
 
     def url(self, year):
         return urljoin(self.base_url, f"votacao_candidato_munzona/votacao_candidato_munzona_{year}.zip")
@@ -470,18 +483,20 @@ class VotacaoZonaExtractor(Extractor):
 
 
 class PrestacaoContasExtractor(Extractor):
+
     def url(self, year):
         urls = {
-            2002: f'contas_{year}',
-            2004: f'contas_{year}',
-            2006: f'contas_{year}',
-            2008: f'contas_{year}',
-            2010: f'contas_{year}',
-            2012: f'final_{year}',
-            2014: f'final_{year}',
+            2002: f'contas_2002',
+            2004: f'contas_2004',
+            2006: f'contas_2006',
+            2008: f'contas_2008',
+            2010: f'contas_2010',
+            2012: f'final_2012',
+            2014: f'final_2014',
             '2014-suplementar': 'contas_final_sup_2014',
-            2016: f'contas_final_{year}',
-            '2016-suplementar': 'contas_final_sup_2016'
+            2016: f'contas_final_2016',
+            '2016-suplementar': 'contas_final_sup_2016',
+            2018: 'de_contas_eleitorais_candidatos_2018',
         }
         return urljoin(self.base_url, f"prestacao_contas/prestacao_{urls[year]}.zip")
 
@@ -516,7 +531,6 @@ class PrestacaoContasExtractor(Extractor):
             fobj = TextIOWrapper(fobj, encoding=self.encoding)
 
         return fobj
-
 
     def filename(self, year):
         return settings.DOWNLOAD_PATH / f"prestacao-contas-{year}.zip"
@@ -599,6 +613,10 @@ class PrestacaoContasExtractor(Extractor):
 
 
 class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
+
+    year_range = (2002, 2004, 2006, 2008, 2010, 2012, 2014, '2014-suplementar', 2016, "2016-suplementar", 2018)
+
+
     def extract(self, year):
         filename = self.filename(year)
         fobjs, internal_filenames = self._get_compressed_fobjs(
@@ -650,6 +668,9 @@ class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
 
 
 class PrestacaoContasDespesasExtractor(PrestacaoContasExtractor):
+
+    year_range = (2002, 2004, 2006, 2008, 2010, 2012, 2014, '2014-suplementar', 2016, '2016-suplementar', 2018)
+
     def extract(self, year):
         filename = self.filename(year)
         fobjs, internal_filenames = self._get_compressed_fobjs(
