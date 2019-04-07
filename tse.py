@@ -1,6 +1,6 @@
 import argparse
-import datetime
 import re
+import sys
 from collections import OrderedDict
 from glob import glob
 
@@ -100,38 +100,28 @@ def create_final_headers(header_type, order_columns, final_filename):
 
 
 if __name__ == "__main__":
-    now = datetime.datetime.now()
-    if now >= datetime.datetime(now.year, 10, 8, 0, 0, 0):
-        final_votation_year = now.year + 1
-    else:
-        final_votation_year = now.year
     extractors = {
         "candidatura": {
-            "years": range(1996, now.year + 1, 2),
             "extractor_class": CandidaturaExtractor,
-            "output_filename": settings.OUTPUT_PATH / "candidatos.csv.xz",
+            "output_filename": settings.OUTPUT_PATH / "candidatura.csv.xz",
         },
-        "bemdeclarado": {
-            "years": range(2006, now.year + 1, 2),
+        "bem-declarado": {
             "extractor_class": BemDeclaradoExtractor,
-            "output_filename": settings.OUTPUT_PATH / "bemdeclarado.csv.xz",
+            "output_filename": settings.OUTPUT_PATH / "bem-declarado.csv.xz",
         },
         "votacao-zona": {
-            "years": range(1996, final_votation_year, 2),
             "extractor_class": VotacaoZonaExtractor,
             "output_filename": settings.OUTPUT_PATH / "votacao-zona.csv.xz",
         },
-        "prestacoes-contas-receitas":
+        "receita":
             {
-             "years": [2002, 2004, 2006, 2008, 2010, 2012, 2014, '2014-suplementar', 2016],
              "extractor_class": PrestacaoContasReceitasExtractor,
-             "output_filename": settings.OUTPUT_PATH / "prestacaoconta-receitas.csv.xz"
+             "output_filename": settings.OUTPUT_PATH / "receita.csv.xz"
             },
-        "prestacoes-contas-despesas":
+        "despesa":
             {
-             "years": [2002, 2004, 2006, 2008, 2010, 2012, 2014, '2014-suplementar', 2016],
              "extractor_class": PrestacaoContasDespesasExtractor,
-             "output_filename": settings.OUTPUT_PATH / "prestacaoconta-despesas.csv.xz"
+             "output_filename": settings.OUTPUT_PATH / "despesa.csv.xz"
             }
     }
     # TODO: clear '##VERIFICAR BASE 1994##' so we can add 1994 too
@@ -152,14 +142,21 @@ if __name__ == "__main__":
             print(f"Creating {final_filename}")
             create_final_headers(header_type, extractor.order_columns, final_filename)
     else:
-        extractor = extractors[args.type]
-        if args.years == "all":
-            years = extractor["years"]
-        else:
-            years = [int(value) for value in args.years.split(",")]
         for path in (settings.DATA_PATH, settings.DOWNLOAD_PATH, settings.OUTPUT_PATH):
             if not path.exists():
                 path.mkdir()
+
+        extractor = extractors[args.type]
+        if args.years == "all":
+            years = extractor["extractor_class"].year_range
+        else:
+            years = []
+            for value in args.years.split(","):
+                value = int(value)
+                if value not in extractor["extractor_class"].year_range:
+                    sys.stderr.write(f"ERROR: invalid year '{value}' for {args.type}\n")
+                    exit(1)
+                years.append(value)
 
         extract_data(
             ExtractorClass=extractor["extractor_class"],
