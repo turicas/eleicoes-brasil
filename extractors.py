@@ -333,7 +333,7 @@ class BemDeclaradoExtractor(Extractor):
         return urljoin(self.base_url, f"bem_candidato/bem_candidato_{year}.zip")
 
     def filename(self, year):
-        return settings.DOWNLOAD_PATH / f"bemdeclarado-{year}.zip"
+        return settings.DOWNLOAD_PATH / f"bem-declarado-{year}.zip"
 
     def valid_filename(self, filename):
         name = filename.lower()
@@ -350,10 +350,10 @@ class BemDeclaradoExtractor(Extractor):
 
         return {
             "year_fields": read_header(
-                settings.HEADERS_PATH / f"bemdeclarado-{header_year}.csv"
+                settings.HEADERS_PATH / f"bem-declarado-{header_year}.csv"
             ),
             "final_fields": read_header(
-                settings.HEADERS_PATH / "bemdeclarado-final.csv"
+                settings.HEADERS_PATH / "bem-declarado-final.csv"
             ),
         }
 
