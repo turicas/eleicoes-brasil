@@ -161,7 +161,9 @@ class Extractor:
                     convert_function = self.convert_row(year_fields, final_fields)
                     continue
 
-                yield convert_function(row)
+                data = convert_function(row)
+                if data is not None:
+                    yield data
 
 
 class CandidaturaExtractor(Extractor):
@@ -218,6 +220,9 @@ class CandidaturaExtractor(Extractor):
         # TODO: may add validators for these converter methods
 
         def convert(row_data):
+            if len(row_data) == 1 and "elapsed" in row_data[0].lower():
+                return None
+
             row = dict(zip(row_field_names, row_data))
             new = {}
             for key in final_field_names:
@@ -316,6 +321,7 @@ class BemDeclaradoExtractor(Extractor):
         }
 
     def convert_row(self, row_field_names, final_field_names):
+
         def convert(row_data):
             row = dict(zip(row_field_names, row_data))
             new = {}
@@ -383,6 +389,7 @@ class VotacaoZonaExtractor(Extractor):
         }
 
     def convert_row(self, row_field_names, final_field_names):
+
         def convert(row_data):
             row = dict(zip(row_field_names, row_data))
             new = {}
