@@ -148,7 +148,7 @@ def get_organization(internal_filename, year):
             return internal_filename.split('Despesas')[1].replace('.txt', '').lower()
     elif year in (2008, 2014, 2016):
         return internal_filename.split('_')[1]
-    elif year == 2006 or year == 2004 or year == 2002:
+    elif year in (2002, 2004, 2006):
         return 'comites' if 'Comit' in internal_filename else 'candidatos'
     elif year == 2012:
         return internal_filename.split('_')[1]

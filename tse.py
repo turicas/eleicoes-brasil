@@ -174,7 +174,10 @@ if __name__ == "__main__":
         else:
             years = []
             for value in args.years.split(","):
-                value = int(value)
+                try:
+                    value = int(value)
+                except ValueError:
+                    pass
                 if value not in extractor["extractor_class"].year_range:
                     sys.stderr.write(f"ERROR: invalid year '{value}' for {args.type}\n")
                     exit(1)
