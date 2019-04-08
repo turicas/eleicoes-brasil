@@ -1,0 +1,76 @@
+nome_final,descricao
+municipio,. Aparece no TSE como: Município (2012). Coluna adicionada em 2012.
+nome_ue,"Nome da unidade eleitoral. Aparece no TSE como: NO_UE (2004), NM_UE (2008), Nome da UE (2014-suplementar). Coluna adicionada em 2004."
+nome_ue_1,. Aparece no TSE como: NM_UE_1 (2008). Coluna adicionada em 2008.
+nome_ue_fornecedor,. Aparece no TSE como: NO_UE (2008). Coluna adicionada em 2008.
+numero_ue,. Aparece no TSE como: Número UE (2012). Coluna adicionada em 2012.
+sequencial_candidato,"Número sequencial do candidato gerado internamente pelos sistemas eleitorais. Não é o número de campanha do candidato.. Aparece no TSE como: SEQUENCIAL_CANDIDATO (2002), Sequencial Candidato (2010), Sequencial do Prestador de conta (2014-suplementar)."
+sequencial_comite,. Aparece no TSE como: Sequencial Comite (2012). Coluna adicionada em 2012.
+sequencial_diretorio,. Aparece no TSE como: Sequencial Diretorio (2012). Coluna adicionada em 2012.
+sequencial_prestador_conta,. Aparece no TSE como: Sequencial do Prestador de conta (2016). Coluna adicionada em 2016.
+sigla_ue,"Sigla da unidade eleitoral. Aparece no TSE como: SG_UE (2004), UNIDADE_ELEITORAL_CANDIDATO (2006), SIGLA_UE (2006), Sigla da UE (2014-suplementar). Coluna adicionada em 2004."
+sigla_ue_1,. Aparece no TSE como: SG_UE_1 (2008). Coluna adicionada em 2008.
+sigla_ue_fornecedor,. Aparece no TSE como: UNIDADE_ELEITORAL_FORNECEDOR (2006). Coluna adicionada em 2006.
+sigla_ue_superior,". Aparece no TSE como: SG_UE_SUP (2004), SG_UE_SUPERIOR (2008). Coluna adicionada em 2004."
+sigla_ue_superior_1,. Aparece no TSE como: SG_UE_SUPERIOR_1 (2008). Coluna adicionada em 2008.
+sigla_uf,"Sigla da Unidade da federação do candidato. Aparece no TSE como: SG_UF (2002), UF (2010)."
+sigla_uf_fornecedor,Unidade da federação do fornecedor. Aparece no TSE como: SG_UF_FORNECEDOR (2002).
+cnpj_candidato,. Aparece no TSE como: CNPJ Prestador Conta (2014). Coluna adicionada em 2014.
+cpf_candidato,. Aparece no TSE como: CPF do candidato (2010). Coluna adicionada em 2010.
+cpf_cnpf_candidato,. Aparece no TSE como: CD_NUM_CNPJ (2008). Coluna adicionada em 2008.
+cpf_cnpj_candidato,". Aparece no TSE como: NUMERO_CNPJ_CANDIDATO (2006), CNPJ (2006). Coluna adicionada em 2006."
+nome_candidato,"Nome do candidato. Aparece no TSE como: NO_CAND (2004), NM_CANDIDATO (2008), Nome candidato (2010). Coluna adicionada em 2004."
+numero_candidato,"Número do candidato. Aparece no TSE como: NR_CAND (2004), NR_CANDIDATO (2008), Número candidato (2010). Coluna adicionada em 2004."
+numero_partido,"Número do partido. Aparece no TSE como: NR_PART (2004), NUMERO_PARTIDO (2006), NR_PARTIDO (2006). Coluna adicionada em 2004."
+sigla_partido,"Sigla do partido. Aparece no TSE como: SG_PART (2002), SIGLA_PARTIDO (2006), SG_PARTIDO (2008), Sigla Partido (2010), Sigla  Partido (2012)."
+tipo_comite,". Aparece no TSE como: Tipo comite (2010), Tipo Comite (2014). Coluna adicionada em 2010."
+tipo_partido,. Aparece no TSE como: Tipo partido (2010). Coluna adicionada em 2010.
+codigo_setor_economico_doador,. Aparece no TSE como: Cod setor econômico do doador (2012). Coluna adicionada em 2012.
+codigo_setor_economico_fornecedor,". Aparece no TSE como: Cod setor econômico do doador (2012), Cod setor econômico do fornecedor (2014). Coluna adicionada em 2012."
+cpf_cnpj_fornecedor,"CPF/CNPJ do fornecedor. Aparece no TSE como: CD_CPF_CGC (2002), NUMERO_CPF_CGC_FORNECEDOR (2006), CD_CPF_CNPJ_FORNECEDOR (2008), CPF/CNPJ do fornecedor (2010)."
+nome_fornecedor,"Nome do fornecedor. Aparece no TSE como: NO_FOR (2002), NOME_FORNECEDOR (2006), NM_FORNECEDOR (2008), Nome do fornecedor (2010)."
+nome_fornecedor_receita_federal,. Aparece no TSE como: Nome do fornecedor (Receita Federal) (2012). Coluna adicionada em 2012.
+setor_economico_fornecedor,. Aparece no TSE como: Setor econômico do fornecedor (2012). Coluna adicionada em 2012.
+codigo_especie_recurso,. Aparece no TSE como: CD_ESP_RECURSO (2008). Coluna adicionada em 2008.
+codigo_tipo_despesa,. Aparece no TSE como: CODIGO_TIPO_DESPESA (2006). Coluna adicionada em 2006.
+data_despesa,"Data da despesa. Aparece no TSE como: DT_DOC_DESP (2002), DATA_DESPESA (2006), DT_DESPESA (2008), Data da despesa (2010)."
+dec_tipo_recurso,". Aparece no TSE como: DECODE(REC.TP_RECURSO,0,'EMESPÉCIE',1,'CHEQUE',2,'ESTIMADO','NÃOINFORMADO') (2004). Coluna adicionada em 2004."
+descricao_despesa,". Aparece no TSE como: Descriçao da despesa (2010), Descrição da despesa (2010). Coluna adicionada em 2010."
+especie_recurso,". Aparece no TSE como: DS_ESP_RECURSO (2008), Espécie recurso (2010). Coluna adicionada em 2008."
+fonte_recurso,. Aparece no TSE como: Fonte recurso (2010). Coluna adicionada em 2010.
+numero_document_despesa,. Aparece no TSE como: NR_DOC_DESP (2006). Coluna adicionada em 2006.
+numero_documento_despesa,Número do documento. Aparece no TSE como: NR_DOC_DESP (2004). Coluna adicionada em 2004.
+tipo_despesa,"Tipo de despesa. Aparece no TSE como: DS_TITULO (2002), TIPO_DESPESA (2006), Tipo despesa (2010)."
+tipo_recurso,Código da forma de pagamento. Aparece no TSE como: TP_RECURSO (2004). Coluna adicionada em 2004.
+valor_despesa,"Valor da despesa. Aparece no TSE como: VR_DESPESA (2002), VALOR_DESPESA (2006), Valor despesa (2010)."
+cargo,. Aparece no TSE como: Cargo (2010). Coluna adicionada em 2010.
+cnpj,. Aparece no TSE como: NR_CNPJ (2008). Coluna adicionada em 2008.
+codigo_cargo,"Código do cargo. Aparece no TSE como: CD_CARGO (2004), CODIGO_CARGO (2006). Coluna adicionada em 2004."
+codigo_cpf_cgc,CPF/CNPJ do fornecedor. Aparece no TSE como: CD_CPF_CGC (2004). Coluna adicionada em 2004.
+codigo_documento,. Aparece no TSE como: CD_DOC (2004). Coluna adicionada em 2004.
+codigo_forma_pagamento,. Aparece no TSE como: CODIGO_FORMA_PAGAMENTO (2006). Coluna adicionada em 2006.
+codigo_tipo_documento,". Aparece no TSE como: CODIGO_TIPO_DOCUMENTO (2006), CD_TIPO_DOCUMENTO (2008). Coluna adicionada em 2006."
+codigo_titulo,. Aparece no TSE como: CD_TITULO (2004). Coluna adicionada em 2004.
+cpf_administrador,. Aparece no TSE como: CD_CPF_ADM (2008). Coluna adicionada em 2008.
+cpf_vice_suplente,. Aparece no TSE como: CPF do vice/suplente (2014-suplementar). Coluna adicionada em 2014-suplementar.
+descricao_cargo,"Descrição do cargo. Aparece no TSE como: DS_CARGO (2002), DESCRICAO_CARGO (2006)."
+descricao_eleicao,. Aparece no TSE como: Desc. Eleição (2012). Coluna adicionada em 2012.
+descricao_forma_pagamento,. Aparece no TSE como: DESCRICAO_FORMA_PAGAMENTO (2006). Coluna adicionada em 2006.
+descricao_municipio,. Aparece no TSE como: DS_MUNIC (2004). Coluna adicionada em 2004.
+descricao_numero_documento,. Aparece no TSE como: DS_NR_DOCUMENTO (2008). Coluna adicionada em 2008.
+descricao_orgao,Tipo de comitê. Aparece no TSE como: DS_ORGAO (2002). Coluna adicionada em 2002.
+descricao_tipo_documento,. Aparece no TSE como: DS_TIPO_DOCUMENTO (2004). Coluna adicionada em 2004.
+descricao_titulo,". Aparece no TSE como: RTRIM(LTRIM(DR.DS_TITULO)) (2004), RTRIM(LTRIM(DR.CD_TITULO)) (2004), DS_TITULO (2008). Coluna adicionada em 2004."
+entrega_em_conjuto,. Aparece no TSE como: Entrega em conjunto? (2010). Coluna adicionada em 2010.
+forma_pagamento,"Forma de pagamento (EM ESPÉCIE, CHEQUE, ESTIMADO, NÃO INFORMADO). Aparece no TSE como: RV_MEANING (2004). Coluna adicionada em 2004."
+nome_administrador,. Aparece no TSE como: NM_ADM (2008). Coluna adicionada em 2008.
+nome_membro,. Aparece no TSE como: NM_MEMBRO (2008). Coluna adicionada em 2008.
+nome_urna,"Nome de urna do candidato. Aparece no TSE como: NO_CAND (2002), NOME_CANDIDATO (2006)."
+numero_cpf,. Aparece no TSE como: NR_CPF (2008). Coluna adicionada em 2008.
+numero_documento,". Aparece no TSE como: NUMERO_DOCUMENTO (2006), Número do documento (2010). Coluna adicionada em 2006."
+numero_urna,"Número do candidato na urna. Aparece no TSE como: NR_CAND (2002), NUMERO_CANDIDATO (2006)."
+rv_meaning,. Aparece no TSE como: RV_MEANING (2004). Coluna adicionada em 2004.
+rv_meaning_1,. Aparece no TSE como: RV_MEANING_1 (2006). Coluna adicionada em 2006.
+situacao_cadastral,". Aparece no TSE como: SITUACAO_CADASTRAL (2006), SITUACAOCADASTRAL (2006). Coluna adicionada em 2006."
+tipo_diretorio,. Aparece no TSE como: Tipo diretorio (2012). Coluna adicionada em 2012.
+tipo_documento,". Aparece no TSE como: TIPO_DOCUMENTO (2006), Tipo do documento (2010), Tipo de documento (2014-suplementar). Coluna adicionada em 2006."
