@@ -1,5 +1,7 @@
 import argparse
+import os
 import re
+import stat
 import sys
 from collections import OrderedDict
 from glob import glob
@@ -113,21 +115,19 @@ if __name__ == "__main__":
             "extractor_class": VotacaoZonaExtractor,
             "output_filename": settings.OUTPUT_PATH / "votacao-zona.csv.gz",
         },
-        "receita":
-            {
+        "receita": {
              "extractor_class": PrestacaoContasReceitasExtractor,
              "output_filename": settings.OUTPUT_PATH / "receita.csv.gz"
-            },
-        "despesa":
-            {
+        },
+        "despesa": {
              "extractor_class": PrestacaoContasDespesasExtractor,
              "output_filename": settings.OUTPUT_PATH / "despesa.csv.gz"
-            }
+        },
     }
     # TODO: clear '##VERIFICAR BASE 1994##' so we can add 1994 too
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("type", choices=list(extractors.keys()) + ["headers"])
+    parser.add_argument("type", choices=list(extractors.keys()) + ["headers", "mirror"])
     parser.add_argument("--force-redownload", action="store_true", default=False)
     parser.add_argument("--download-only", action="store_true", default=False)
     parser.add_argument("--output")
@@ -141,6 +141,28 @@ if __name__ == "__main__":
             final_filename = settings.HEADERS_PATH / f"{header_type}-final.csv"
             print(f"Creating {final_filename}")
             create_final_headers(header_type, extractor.order_columns, final_filename)
+
+    elif args.type == "mirror":
+        added_urls = []
+        with open("mirror.sh", mode="w") as fobj:
+            fobj.write("#!/bin/bash\n")
+            fobj.write("mkdir -p data/download\n")
+            for header_type in sorted(extractors.keys()):
+                extractor = extractors[header_type]["extractor_class"]()
+                for year in extractor.year_range:
+                    filename = str(extractor.filename(year)).split("data/download/")[1]
+                    url = extractor.url(year)
+                    if url in added_urls:
+                        continue
+                    else:
+                        added_urls.append(url)
+                    final_name = url.split("sead/odsele/")[1]
+                    fobj.write(f"time aria2c -s 8 -x 8 -k 1M -o 'data/download/{filename}' '{url}'\n")
+                    fobj.write(f"time ./s3upload.py 'data/download/{filename}' mirror/tse/{final_name}\n")
+                fobj.write("\n")
+        # chmod 750 mirror.sh
+        os.chmod("mirror.sh", stat.S_IRUSR + stat.S_IWUSR + stat.S_IXUSR + stat.S_IRGRP + stat.S_IXGRP)
+
     else:
         for path in (settings.DATA_PATH, settings.DOWNLOAD_PATH, settings.OUTPUT_PATH):
             if not path.exists():
