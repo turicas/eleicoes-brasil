@@ -24,6 +24,6 @@
 "DS_ESPECIE_RECURSO","especie_recurso","Descrição da espécie do recurso para pagamnto da despesa"
 "SQ_DESPESA",,"Sequencial de identificação do registro da despesa declarada pelo prestador de contas"
 "SQ_PARCELAMENTO_DESPESA",,"Sequencial de identificação do registro da despesa parcelada paga, declarada pelo prestador de contas"
-"DT_PAGTO_DESPESA","data_pagamento_despesa","Data de pagamento da despesa declarada à Justiça Eleitoral"
+"DT_PAGTO_DESPESA","data_despesa","Data de pagamento da despesa declarada à Justiça Eleitoral"
 "DS_DESPESA","despesa","Descrição da despesa"
 "VR_PAGTO_DESPESA","valor_despesa","Valor pago da despesa em Reais (R$), informada pelo prestador de contas."
