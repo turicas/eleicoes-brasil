@@ -1,0 +1,78 @@
+nome_final,descricao
+municipio,". Aparece no TSE como: Municipio (2012), Município (2012). Coluna adicionada em 2012."
+nome_ue,". Aparece no TSE como: NO_UE (2004), NM_UE (2008), Nome da UE (2014-suplementar). Coluna adicionada em 2004."
+nome_ue_1,. Aparece no TSE como: NM_UE_1 (2008). Coluna adicionada em 2008.
+numero_ue,". Aparece no TSE como: Numero UE (2012), Número UE (2012). Coluna adicionada em 2012."
+sequencia_candidato,. Aparece no TSE como: Sequencial Candidato (2016). Coluna adicionada em 2016.
+sequencial_candidato,"Número sequencial do candidato gerado internamente pelos sistemas eleitorais. Não é o número de campanha do candidato.. Aparece no TSE como: SEQUENCIAL_CANDIDATO (2002), Sequencial Candidato (2010)."
+sequencial_comite,. Aparece no TSE como: Sequencial Comite (2012). Coluna adicionada em 2012.
+sequencial_diretorio,. Aparece no TSE como: Sequencial Diretorio (2012). Coluna adicionada em 2012.
+sequencial_prestador_conta,. Aparece no TSE como: Sequencial prestador conta (2014-suplementar). Coluna adicionada em 2014-suplementar.
+sigla_ue,". Aparece no TSE como: SG_UE (2004), UNIDADE_ELEITORAL_CANDIDATO (2006), Sigla da UE (2014-suplementar). Coluna adicionada em 2004."
+sigla_ue_1,. Aparece no TSE como: SG_UE_1 (2008). Coluna adicionada em 2008.
+sigla_ue_doador,". Aparece no TSE como: UNIDADE_ELEITORAL_DOADOR (2006), Sigla UE doador (2012). Coluna adicionada em 2006."
+sigla_ue_superior,". Aparece no TSE como: SG_UE_SUP (2004), SG_UE_SUPERIOR (2008). Coluna adicionada em 2004."
+sigla_ue_superior_1,. Aparece no TSE como: SG_UE_SUPERIOR_1 (2008). Coluna adicionada em 2008.
+sigla_uf,"Sigla da Unidade da federação do candidato. Aparece no TSE como: SG_UF (2002), UF (2010)."
+sigla_uf_doador,Unidade da federação do doador. Aparece no TSE como: SG_UF_DOADOR (2002).
+cnpj_candidato,". Aparece no TSE como: NUMERO_CNPJ_CANDIDATO (2006), CD_NUM_CNPJ (2008), CNPJ Prestador Conta (2014). Coluna adicionada em 2006."
+cpf_candidato,". Aparece no TSE como: CD_NUM_CPF (2008), CPF do candidato (2010). Coluna adicionada em 2008."
+nome_candidato,". Aparece no TSE como: NO_CAND (2004), NOME_CANDIDATO (2006), NM_CANDIDATO (2008), Nome candidato (2010). Coluna adicionada em 2004."
+numero_candidato,". Aparece no TSE como: NR_CAND (2004), NUMERO_CANDIDATO (2006), NR_CANDIDATO (2008), Número candidato (2010), Numero candidato (2012). Coluna adicionada em 2004."
+numero_candidato_doador,. Aparece no TSE como: Número candidato doador (2012). Coluna adicionada em 2012.
+numero_partido,". Aparece no TSE como: NR_PART (2004), NUMERO_PARTIDO (2006), NR_PARTIDO (2006). Coluna adicionada em 2004."
+numero_partido_doador,. Aparece no TSE como: Número partido doador (2012). Coluna adicionada em 2012.
+numero_partido_eleitoral,. Aparece no TSE como: Número recibo eleitoral (2016). Coluna adicionada em 2016.
+sigla_partido,"Sigla do partido. Aparece no TSE como: SG_PART (2002), SIGLA_PARTIDO (2006), SG_PARTIDO (2008), Sigla Partido (2010), Sigla  Partido (2012)."
+tipo_comite,". Aparece no TSE como: Tipo comite (2010), Tipo Comite (2014). Coluna adicionada em 2010."
+tipo_partido,. Aparece no TSE como: Tipo partido (2010). Coluna adicionada em 2010.
+codigo_setor_economico_doador,. Aparece no TSE como: Cod setor econômico do doador (2012). Coluna adicionada em 2012.
+cpf_cnpj_doador,"CPF/CNPJ do doador. Aparece no TSE como: CD_CPF_CGC_DOA (2002), NUMERO_CPF_CGC_DOADOR (2006), CD_CPF_CNPJ_DOADOR (2008), CPF/CNPJ do doador (2010). Coluna adicionada em 2002."
+cpf_cnpj_doador_originario,. Aparece no TSE como: CPF/CNPJ do doador originário (2014). Coluna adicionada em 2014.
+cpf_cnpj_fornecedor,CPF/CNPJ do doador. Aparece no TSE como: CD_CPF_CGC (2002).
+nome_doador,"Nome do doador. Aparece no TSE como: NO_DOADOR (2002), NOME_DOADOR (2006), NM_DOADOR (2008), Nome do doador (2010)."
+nome_doador_originario,. Aparece no TSE como: Nome do doador originário (2014). Coluna adicionada em 2014.
+nome_doador_originario_receita_federal,. Aparece no TSE como: Nome do doador originário (Receita Federal) (2014). Coluna adicionada em 2014.
+nome_doador_receita_federal,. Aparece no TSE como: Nome do doador (Receita Federal) (2012). Coluna adicionada em 2012.
+setor_economico_doador,. Aparece no TSE como: Setor econômico do doador (2012). Coluna adicionada em 2012.
+setor_economico_doador_originario,. Aparece no TSE como: Setor econômico do doador originário (2014). Coluna adicionada em 2014.
+tipo_doador_originario,. Aparece no TSE como: Tipo doador originário (2014). Coluna adicionada em 2014.
+codigo_especie_recurso,. Aparece no TSE como: CD_ESP_RECURSO (2008). Coluna adicionada em 2008.
+codigo_tipo_receita,. Aparece no TSE como: CODIGO_TIPO_RECEITA (2006). Coluna adicionada em 2006.
+codigo_tipo_recurso,. Aparece no TSE como: CODIGO_TIPO_RECURSO (2006). Coluna adicionada em 2006.
+data_receita,"Data da receita. Aparece no TSE como: DT_RECEITA (2002), DATA_RECEITA (2006), Data da receita (2010)."
+dec_tipo_recurso,". Aparece no TSE como: DECODE(REC.TP_RECURSO,0,'EMESPÉCIE',1,'CHEQUE',2,'ESTIMADO','NÃOINFORMADO') (2004). Coluna adicionada em 2004."
+descricao_receita,". Aparece no TSE como: Descrição da receita (2010), Descricao da receita (2012). Coluna adicionada em 2010."
+descricao_recurso,. Aparece no TSE como: Descrição da receita (2010). Coluna adicionada em 2010.
+descricao_tipo_recurso,. Aparece no TSE como: DESCRICAO_TIPO_RECURSO (2006). Coluna adicionada em 2006.
+especie_recurso,". Aparece no TSE como: DS_ESP_RECURSO (2008), Espécie recurso (2010), Especie recurso (2012). Coluna adicionada em 2008."
+fonte_recurso,. Aparece no TSE como: Fonte recurso (2010). Coluna adicionada em 2010.
+rec_tipo_recurso,". Aparece no TSE como: DECODE(REC.TP_RECURSO,0,'EMESPÉCIE',1,'CHEQUE',2,'ESTIMADO','NÃOINFORMADO') (2004). Coluna adicionada em 2004."
+tipo_receita,". Aparece no TSE como: TIPO_RECEITA (2006), Tipo receita (2010). Coluna adicionada em 2006."
+tipo_recurso,"Tipo de recurso (Cheque, TED, Dinheiro, etc). Aparece no TSE como: TP_RECURSO (2002)."
+valor_receita,"Valor da receita. Aparece no TSE como: VR_RECEITA (2002), VALOR_RECEITA (2006), Valor receita (2010)."
+cargo,. Aparece no TSE como: Cargo (2010). Coluna adicionada em 2010.
+cnpj,". Aparece no TSE como: CNPJ (2006), NR_CNPJ (2008). Coluna adicionada em 2006."
+codigo_cargo,". Aparece no TSE como: CD_CARGO (2004), CODIGO_CARGO (2006). Coluna adicionada em 2004."
+codigo_titulo,. Aparece no TSE como: CD_TITULO (2004). Coluna adicionada em 2004.
+codigo_titulo_trim,. Aparece no TSE como: RTRIM(LTRIM(DR.CD_TITULO)) (2004). Coluna adicionada em 2004.
+cpf_administrador,. Aparece no TSE como: CD_CPF_ADM (2008). Coluna adicionada em 2008.
+cpf_vice_suplente,. Aparece no TSE como: CPF do vice/suplente (2014-suplementar). Coluna adicionada em 2014-suplementar.
+descricao_cargo,"Descrição do cargo. Aparece no TSE como: DS_CARGO (2002), DESCRICAO_CARGO (2006)."
+descricao_eleicao,. Aparece no TSE como: Desc. Eleição (2012). Coluna adicionada em 2012.
+descricao_numero_titulo_eleitor,. Aparece no TSE como: DS_NR_TITULO_ELEITOR (2008). Coluna adicionada em 2008.
+descricao_orgao,Tipo de comitê. Aparece no TSE como: DS_ORGAO (2002). Coluna adicionada em 2002.
+descricao_titulo,". Aparece no TSE como: RTRIM(LTRIM(DR.DS_TITULO)) (2004), DS_TITULO (2008). Coluna adicionada em 2004."
+entrega_em_conjuto,. Aparece no TSE como: Entrega em conjunto? (2010). Coluna adicionada em 2010.
+nome_administrador,. Aparece no TSE como: NM_ADM (2008). Coluna adicionada em 2008.
+nome_membro,. Aparece no TSE como: NM_MEMBRO (2008). Coluna adicionada em 2008.
+nome_urna,Nome de urna do candidato. Aparece no TSE como: NO_CAND (2002).
+numero_cpf,. Aparece no TSE como: NR_CPF (2008). Coluna adicionada em 2008.
+numero_documento,". Aparece no TSE como: Número do documento (2010), Numero do documento (2012). Coluna adicionada em 2010."
+numero_recibo_eleitoral,". Aparece no TSE como: Número Recibo Eleitoral (2010), Numero Recibo Eleitoral (2012), Número recibo eleitoral (2014-suplementar). Coluna adicionada em 2010."
+numero_urna,Número do candidato na urna. Aparece no TSE como: NR_CAND (2002).
+rv_meaning,. Aparece no TSE como: RV_MEANING (2004). Coluna adicionada em 2004.
+sexo,. Aparece no TSE como: SEXO (2008). Coluna adicionada em 2008.
+situacao_cadastral,". Aparece no TSE como: SITUACAO_CADASTRAL (2006), SITUACAOCADASTRAL (2006). Coluna adicionada em 2006."
+tipo_diretorio,. Aparece no TSE como: Tipo diretorio (2012). Coluna adicionada em 2012.
+tipo_documento,". Aparece no TSE como: Tipo do documento (2010), Tipo de documento (2014-suplementar). Coluna adicionada em 2010."
