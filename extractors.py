@@ -1,6 +1,8 @@
 import csv
 import datetime
 import re
+
+from datetime import datetime
 from functools import lru_cache
 from io import StringIO, TextIOWrapper, BytesIO
 from os import rename as rename_file
@@ -62,8 +64,8 @@ MAP_DESCRICAO_CARGO = {
     "VICE-PREFEITO": "VICE-PREFEITO",
     "VEREADOR": "VEREADOR",
 }
-NOW = datetime.datetime.now()
-if NOW >= datetime.datetime(NOW.year, 10, 8, 0, 0, 0):
+NOW = datetime.now()
+if NOW >= datetime(NOW.year, 10, 8, 0, 0, 0):
     FINAL_VOTATION_YEAR = NOW.year + 1
 else:
     FINAL_VOTATION_YEAR = NOW.year
@@ -110,8 +112,28 @@ def fix_cpf(value):
     return value
 
 
+def fix_cnpj_cpf(value):
+    return re.sub(r'\s+', '', value)
+
+
 def fix_titulo_eleitoral(value):
     return "".join(REGEXP_NUMBERS.findall(value))
+
+
+def fix_data(value):
+    new_dt = ''
+    value = value.replace('00:00:00', '')
+    value = value.replace('0002', '2002')
+    if value:
+        try:
+            dt = datetime.strptime(value, '%d/%m/%Y')
+        except ValueError:
+            dt = datetime.strptime(value, '%d-%b-%y')
+        finally:
+            new_dt = dt.strftime('%Y-%m-%d')
+
+
+    return new_dt
 
 
 def clean_header(header):
@@ -572,23 +594,6 @@ class PrestacaoContasExtractor(Extractor):
             ),
         }
 
-    def convert_row(self, row_field_names, final_field_names, year):
-
-        def convert(row_data):
-            row = dict(zip(row_field_names, row_data))
-            new = {}
-            for key in final_field_names:
-                value = row.get(key, "").strip()
-                if value in ("#NULO", "#NULO#", "#NE#"):
-                    value = ""
-                new[key] = value = utils.unaccent(value).upper()
-
-            # TODO: may fix situacao_cadastral
-            new['ano_eleicao'] = year
-            return new
-
-        return convert
-
     def valid_filename(self, filename, year):
         filename = filename.lower()
         year = str(year)
@@ -683,9 +688,55 @@ class PrestacaoContasExtractor(Extractor):
 
 class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
 
-    type_mov = "receita"
+    type_mov = 'receita'
+
+    def convert_row(self, row_field_names, final_field_names, year):
+        def convert(row_data):
+            row = dict(zip(row_field_names, row_data))
+            new = {}
+            for key in final_field_names:
+                value = row.get(key, "").strip()
+                if value in ("#NULO", "#NULO#", "#NE#"):
+                    value = ""
+                new[key] = value = utils.unaccent(value).upper()
+
+            new['ano_eleicao'] = year
+            new['valor_receita'] = fix_valor(new['valor_receita'])
+            new['data_receita'] = fix_data(new['data_receita'])
+            new['data_prestacao_contas'] = fix_data(new['data_prestacao_contas'])
+            new['data_eleicao'] = fix_data(new['data_eleicao'])
+            new['cnpj_candidato'] = fix_cnpj_cpf(new['cnpj_candidato'])
+            new['cpf_cnpj_doador'] = fix_cnpj_cpf(new['cpf_cnpj_doador'])
+            new['cpf_cnpj_doador_originario'] =\
+                fix_cnpj_cpf(new['cpf_cnpj_doador_originario'])
+            return new
+
+        return convert
 
 
 class PrestacaoContasDespesasExtractor(PrestacaoContasExtractor):
 
-    type_mov = "despesa"
+    type_mov = 'despesa'
+
+    def convert_row(self, row_field_names, final_field_names, year):
+        def convert(row_data):
+            row = dict(zip(row_field_names, row_data))
+            new = {}
+            for key in final_field_names:
+                value = row.get(key, "").strip()
+                if value in ("#NULO", "#NULO#", "#NE#"):
+                    value = ""
+                new[key] = value = utils.unaccent(value).upper()
+
+            new['ano_eleicao'] = year
+            new['valor_despesa'] = fix_valor(new['valor_despesa'])
+            new['data_despesa'] = fix_data(new['data_despesa'])
+            new['data_prestacao_contas'] = fix_data(new['data_prestacao_contas'])
+            new['data_eleicao'] = fix_data(new['data_eleicao'])
+            new['cnpj_candidato'] = fix_cnpj_cpf(new['cnpj_candidato'])
+            new['cpf_cnpj_fornecedor'] = fix_cnpj_cpf(
+                new['cpf_cnpj_fornecedor']
+            )
+            return new
+
+        return convert
