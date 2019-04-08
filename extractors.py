@@ -484,24 +484,28 @@ class VotacaoZonaExtractor(Extractor):
 
 class PrestacaoContasExtractor(Extractor):
 
+    year_range = (2002, 2004, 2006, 2008, 2010, 2012, 2014, '2014-suplementar', 2016, "2016-suplementar", 2018)
+
     def url(self, year):
         urls = {
-            2002: f'contas_2002',
-            2004: f'contas_2004',
-            2006: f'contas_2006',
-            2008: f'contas_2008',
-            2010: f'contas_2010',
-            2012: f'final_2012',
-            2014: f'final_2014',
-            '2014-suplementar': 'contas_final_sup_2014',
-            2016: f'contas_final_2016',
-            '2016-suplementar': 'contas_final_sup_2016',
-            2018: 'de_contas_eleitorais_candidatos_2018',
+            2002: f"contas_2002",
+            2004: f"contas_2004",
+            2006: f"contas_2006",
+            2008: f"contas_2008",
+            2010: f"contas_2010",
+            2012: f"final_2012",
+            2014: f"final_2014",
+            "2014-suplementar": "contas_final_sup_2014",
+            2016: f"contas_final_2016",
+            "2016-suplementar": "contas_final_sup_2016",
+            2018: "de_contas_eleitorais_candidatos_2018",
         }
         return urljoin(self.base_url, f"prestacao_contas/prestacao_{urls[year]}.zip")
 
-    def _get_compressed_fobjs(self, filename, year, type_mov):
-        if year == 2002 or year == 2006:
+    def _get_compressed_fobjs(self, filename, year):
+        # TODO: may identify reading first bytes and matching the magic numbers
+        # instead of hard-coding the year
+        if year in (2002, 2006):
             rarobj = rarfile.RarFile(str(filename))
             filelist = rarobj.namelist()
             opener = rarobj
@@ -513,11 +517,7 @@ class PrestacaoContasExtractor(Extractor):
         valid_names = []
         fobjs = []
         for internal_filename in filelist:
-            if not self.valid_filename(
-                    internal_filename,
-                    type_mov=type_mov,
-                    year=year
-            ):
+            if not self.valid_filename(internal_filename, year=year):
                 continue
             fobjs.append(opener.open(internal_filename))
             valid_names.append(internal_filename)
@@ -535,8 +535,10 @@ class PrestacaoContasExtractor(Extractor):
     def filename(self, year):
         return settings.DOWNLOAD_PATH / f"prestacao-contas-{year}.zip"
 
-    def get_headers(self, year, filename, internal_filename, type_mov):
-        if str(year).endswith('suplementar'):
+    def get_headers(self, year, filename, internal_filename):
+        if str(year).endswith("suplementar"):
+            # TODO: check if 2016-suplementar should use the same headers as
+            # 2014
             header_year = year
             year = 2014
         else:
@@ -546,14 +548,15 @@ class PrestacaoContasExtractor(Extractor):
 
         return {
             "year_fields": read_header(
-                settings.HEADERS_PATH / f"prestacoes-contas-{type_mov}-{org}-{header_year}.csv"
+                settings.HEADERS_PATH / f"{self.type_mov}-{org}-{header_year}.csv"
             ),
             "final_fields": read_header(
-                settings.HEADERS_PATH / f"prestacoes-contas-{type_mov}-final.csv"
+                settings.HEADERS_PATH / f"{self.type_mov}-final.csv"
             ),
         }
 
     def convert_row(self, row_field_names, final_field_names, year):
+
         def convert(row_data):
             row = dict(zip(row_field_names, row_data))
             new = {}
@@ -563,19 +566,17 @@ class PrestacaoContasExtractor(Extractor):
                     value = ""
                 new[key] = value = utils.unaccent(value).upper()
 
-            # TODO: fix data_nascimento (dd/mm/yyyy, dd/mm/yy, yyyymmdd, xx/xx/)
-            # TODO: fix situacao
-            # TODO: fix totalizacao
+            # TODO: may fix situacao_cadastral
             new['ano_eleicao'] = year
             return new
 
         return convert
 
-    def valid_filename(self, filename, type_mov, year):
+    def valid_filename(self, filename, year):
         filename = filename.lower()
         year = str(year)
 
-        is_type_mov = type_mov in filename
+        is_type_mov = self.type_mov in filename
         extension = filename.endswith('.csv') or filename.endswith('.txt')
         not_brasil = 'br' not in filename
         is_2008 = year == '2008'
@@ -611,18 +612,11 @@ class PrestacaoContasExtractor(Extractor):
 
         return value, name
 
-
-class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
-
-    year_range = (2002, 2004, 2006, 2008, 2010, 2012, 2014, '2014-suplementar', 2016, "2016-suplementar", 2018)
-
-
     def extract(self, year):
         filename = self.filename(year)
         fobjs, internal_filenames = self._get_compressed_fobjs(
                 filename,
                 year,
-                type_mov='receita'
         )
         for fobj, internal_filename in zip(fobjs, internal_filenames):
             fobj = self.fix_fobj(fobj, year)
@@ -633,7 +627,6 @@ class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
                 year,
                 filename,
                 internal_filename,
-                type_mov='receitas'
             )
             year_fields = [
                 field.nome_final or field.nome_tse
@@ -650,8 +643,8 @@ class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
             convert_function = self.convert_row(year_fields, final_fields, year)
             for index, row in enumerate(reader):
                 if index == 0 and ("UF" in row or
-                                   'SG_UE_SUP' in row or
-                                   'SITUACAOCADASTRAL' in row):
+                                   "SG_UE_SUP" in row or
+                                   "SITUACAOCADASTRAL" in row):
                     # It's a header, we should skip it as a data row but
                     # use the information to get field ordering (better
                     # trust it then our headers files, TSE may change the
@@ -665,57 +658,13 @@ class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
                     continue
 
                 yield convert_function(row)
+
+
+class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
+
+    type_mov = "receita"
 
 
 class PrestacaoContasDespesasExtractor(PrestacaoContasExtractor):
 
-    year_range = (2002, 2004, 2006, 2008, 2010, 2012, 2014, '2014-suplementar', 2016, '2016-suplementar', 2018)
-
-    def extract(self, year):
-        filename = self.filename(year)
-        fobjs, internal_filenames = self._get_compressed_fobjs(
-                filename,
-                year,
-                type_mov='despesa'
-        )
-        for fobj, internal_filename in zip(fobjs, internal_filenames):
-            fobj = self.fix_fobj(fobj, year)
-            dialect = csv.Sniffer().sniff(fobj.read(1024))
-            fobj.seek(0)
-            reader = csv.reader(fobj, dialect=dialect)
-            header_meta = self.get_headers(
-                year,
-                filename,
-                internal_filename,
-                type_mov='despesas'
-            )
-            year_fields = [
-                field.nome_final or field.nome_tse
-                for field in header_meta["year_fields"]
-            ]
-            final_fields = [
-                field.nome_final
-                for field in header_meta["final_fields"]
-                if field.nome_final
-            ]
-
-            # Add year to final csv
-            final_fields = ['ano_eleicao'] + final_fields
-            convert_function = self.convert_row(year_fields, final_fields, year)
-            for index, row in enumerate(reader):
-                if index == 0 and ("UF" in row or
-                                   'SG_UE_SUP' in row or
-                                   'SITUACAOCADASTRAL' in row):
-                    # It's a header, we should skip it as a data row but
-                    # use the information to get field ordering (better
-                    # trust it then our headers files, TSE may change the
-                    # order)
-                    field_map = {
-                        field.nome_tse: field.nome_final or field.nome_tse
-                        for field in header_meta["year_fields"]
-                    }
-                    year_fields = [field_map[field_name.strip()] for field_name in row]
-                    convert_function = self.convert_row(year_fields, final_fields, year)
-                    continue
-
-                yield convert_function(row)
+    type_mov = "despesa"
