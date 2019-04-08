@@ -503,16 +503,18 @@ class PrestacaoContasExtractor(Extractor):
         return urljoin(self.base_url, f"prestacao_contas/prestacao_{urls[year]}.zip")
 
     def _get_compressed_fobjs(self, filename, year):
-        # TODO: may identify reading first bytes and matching the magic numbers
-        # instead of hard-coding the year
-        if year in (2002, 2006):
+        with open(filename, mode="rb") as fobj:
+            first_bytes = fobj.read(10)
+        if first_bytes.startswith(b"PK\x03\x04"):  # Zip archive
+            zfile = ZipFile(str(filename))
+            filelist = [fn.filename for fn in zfile.filelist]
+            opener = zfile
+        elif first_bytes.startswith(b"Rar!"):
             rarobj = rarfile.RarFile(str(filename))
             filelist = rarobj.namelist()
             opener = rarobj
         else:
-            zfile = ZipFile(str(filename))
-            filelist = [fn.filename for fn in zfile.filelist]
-            opener = zfile
+            raise RuntimeError(f"Could not extract archive '{filename}'")
 
         valid_names = []
         fobjs = []
