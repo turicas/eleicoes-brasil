@@ -519,7 +519,7 @@ class VotacaoZonaExtractor(Extractor):
 class PrestacaoContasExtractor(Extractor):
 
     year_range = (2002, 2004, 2006, 2008, 2010, 2012, 2014, '2014-suplementar',
-                  2016, "2016-suplementar", '2018-orgaos', '2018-candidatos')
+                  2016, '2018-orgaos', '2018-candidatos')
 
     def url(self, year):
         urls = {
