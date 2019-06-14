@@ -253,7 +253,7 @@ class Extractor:
 class CandidaturaExtractor(Extractor):
 
     year_range = tuple(range(1996, NOW.year + 1, 2))
-    schema_filename = settings.SCHEMA_PATH / "schema-candidatura.csv"
+    schema_filename = settings.SCHEMA_PATH / "candidatura.csv"
 
     def url(self, year):
         return urljoin(self.base_url, f"consulta_cand/consulta_cand_{year}.zip")
@@ -382,7 +382,7 @@ class CandidaturaExtractor(Extractor):
 class BemDeclaradoExtractor(Extractor):
 
     year_range = tuple(range(2006, NOW.year + 1, 2))
-    schema_filename = settings.SCHEMA_PATH / "schema-bem-declarado.csv"
+    schema_filename = settings.SCHEMA_PATH / "bem-declarado.csv"
 
     def url(self, year):
         return urljoin(self.base_url, f"bem_candidato/bem_candidato_{year}.zip")
@@ -454,7 +454,7 @@ class BemDeclaradoExtractor(Extractor):
 class VotacaoZonaExtractor(Extractor):
 
     year_range = tuple(range(1996, FINAL_VOTATION_YEAR, 2))
-    schema_filename = settings.SCHEMA_PATH / "schema-votacao-zona.csv"
+    schema_filename = settings.SCHEMA_PATH / "votacao-zona.csv"
 
     def url(self, year):
         return urljoin(self.base_url, f"votacao_candidato_munzona/votacao_candidato_munzona_{year}.zip")
@@ -712,7 +712,7 @@ class PrestacaoContasExtractor(Extractor):
 class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
 
     type_mov = 'receita'
-    schema_filename = settings.SCHEMA_PATH / "schema-receita.csv"
+    schema_filename = settings.SCHEMA_PATH / "receita.csv"
 
     def convert_row(self, row_field_names, final_field_names, year):
         def convert(row_data):
@@ -741,7 +741,7 @@ class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
 class PrestacaoContasDespesasExtractor(PrestacaoContasExtractor):
 
     type_mov = 'despesa'
-    schema_filename = settings.SCHEMA_PATH / "schema-despesa.csv"
+    schema_filename = settings.SCHEMA_PATH / "despesa.csv"
 
     def convert_row(self, row_field_names, final_field_names, year):
         def convert(row_data):
