@@ -105,14 +105,28 @@ def fix_valor(value):
 
 
 def fix_cpf(value):
+    """
+    >>> fix_cpf("123.456.789-01")
+    '12345678901'
+    >>> fix_cpf("123456789")
+    '00123456789'
+    >>> fix_cpf("000.000.000-00")
+    ''
+    """
+
     value = "".join(REGEXP_NUMBERS.findall(value))
     if len(value) < 11:
         value = "0" * (11 - len(value)) + value
+    if set(value) == {"0"}:
+        value = ""
     return value
 
 
 def fix_cnpj_cpf(value):
-    return re.sub(r'\s+', '', value)
+    value = re.sub(r"\s+", "", value)
+    if set(value) == {"0"}:
+        value = ""
+    return value
 
 
 def fix_titulo_eleitoral(value):
