@@ -2,6 +2,7 @@ from pathlib import Path
 
 
 BASE_PATH = Path(__file__).parent.absolute()
+SCHEMA_PATH = BASE_PATH / "schema"
 DATA_PATH = BASE_PATH / "data"
 DOWNLOAD_PATH = DATA_PATH / "download"
 OUTPUT_PATH = DATA_PATH / "output"

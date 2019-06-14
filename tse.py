@@ -1,4 +1,5 @@
 import argparse
+import csv
 import os
 import re
 import stat
@@ -7,7 +8,7 @@ from collections import OrderedDict
 from glob import glob
 
 import rows
-from rows.utils import CsvLazyDictWriter
+from rows.utils import open_compressed
 from tqdm import tqdm
 
 import settings
@@ -26,7 +27,11 @@ REGEXP_HEADER_YEAR = re.compile("([0-9]{4}.*)\.csv")
 def extract_data(ExtractorClass, year_range, output_filename, base_url, force_redownload=False, download_only=False):
     extractor_name = ExtractorClass.__name__.replace("Extractor", "")
     extractor = ExtractorClass(base_url)
-    writer = CsvLazyDictWriter(output_filename)
+    output_fobj = open_compressed(output_filename, mode="w", encoding="utf-8")
+    writer = csv.DictWriter(
+        output_fobj,
+        fieldnames=list(extractor.schema.keys()),
+    )
     for year in year_range:
         print(f"{extractor_name} {year}")
 
@@ -41,6 +46,7 @@ def extract_data(ExtractorClass, year_range, output_filename, base_url, force_re
                 writer.writerow(row)
 
         print()
+    output_fobj.close()
 
 
 def create_final_headers(header_type, order_columns, final_filename):
