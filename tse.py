@@ -32,6 +32,7 @@ def extract_data(ExtractorClass, year_range, output_filename, base_url, force_re
         output_fobj,
         fieldnames=list(extractor.schema.keys()),
     )
+    writer.writeheader()
     for year in year_range:
         print(f"{extractor_name} {year}")
 
