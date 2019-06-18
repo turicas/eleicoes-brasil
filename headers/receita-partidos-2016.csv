@@ -19,9 +19,9 @@
 "Número candidato doador","numero_candidato_doador","Número do candidato, se doação de candidato a outro candidato e/ou direção partidária"
 "Cod setor econômico do doador","codigo_setor_economico_doador","Código CNAE do doador, se pessoa jurídica"
 "Setor econômico do doador","setor_economico_doador","Descrição do CNAE do doador, se pessoa jurídica"
-"Data da receita","data_receita","Data da doação declarada à Justiça Eleitoral"
-"Valor receita","valor_receita","Valor da doação em Reais (R$)"
-"Tipo receita","tipo_receita","Tipo da doação, podendo ser “Recursos Próprios”, “Recursos de Pessoas Físicas”, “Doações pela internet”, “Recursos de Outros
+"Data da receita","data","Data da doação declarada à Justiça Eleitoral"
+"Valor receita","valor","Valor da doação em Reais (R$)"
+"Tipo receita","tipo","Tipo da doação, podendo ser “Recursos Próprios”, “Recursos de Pessoas Físicas”, “Doações pela internet”, “Recursos de Outros
 Candidatos”, “Recursos de Partidos Políticos”, “Recursos de Origem Não Identificada”, “Comercialização de bens ou realização de
 eventos”, “Rendimentos de aplicações financeiras”"
 "Fonte recurso","fonte_recurso","Fonte do recurso da doação, podendo ser “Fundo Partidário” ou “Outros Recursos”"
