@@ -12,6 +12,7 @@ from zipfile import ZipFile
 
 import rarfile
 import rows
+from cached_property import cached_property
 from rows.utils import download_file, load_schema
 
 import utils
@@ -134,44 +135,45 @@ def fix_titulo_eleitoral(value):
 
 
 def fix_data(value):
-    new_dt = ''
-    value = value.replace('00:00:00', '')
-    value = value.replace('0002', '2002')
+    new_dt = ""
+    value = value.replace("00:00:00", "")
+    value = value.replace("0002", "2002")
     if value:
         try:
-            dt = datetime.strptime(value, '%d/%m/%Y')
+            dt = datetime.strptime(value, "%d/%m/%Y")
         except ValueError:
-            dt = datetime.strptime(value, '%d-%b-%y')
+            dt = datetime.strptime(value, "%d-%b-%y")
         finally:
-            new_dt = dt.strftime('%Y-%m-%d')
-
+            new_dt = dt.strftime("%Y-%m-%d")
 
     return new_dt
 
 
 def clean_header(header):
-    return re.sub('"', '', header.strip())
+    return re.sub('"', "", header.strip())
 
 
 def get_organization(internal_filename, year):
     if year == 2010:
-        if 'Receitas' in internal_filename:
-            return internal_filename.split('Receitas')[1].replace('.txt', '').lower()
+        if "Receitas" in internal_filename:
+            return internal_filename.split("Receitas")[1].replace(".txt", "").lower()
         else:
-            return internal_filename.split('Despesas')[1].replace('.txt', '').lower()
+            return internal_filename.split("Despesas")[1].replace(".txt", "").lower()
     elif year in (2008, 2014, 2016):
-        return internal_filename.split('_')[1]
+        return internal_filename.split("_")[1]
     elif year in (2002, 2004, 2006):
-        return 'comites' if 'Comit' in internal_filename else 'candidatos'
+        return "comites" if "Comit" in internal_filename else "candidatos"
     elif year == 2012:
-        return internal_filename.split('_')[1]
-    elif '2018' in year:
-        cand_or_party = 'candidatos' if 'candidatos' in internal_filename else 'partidos'
-        if 'pagas' in internal_filename:
-            cand_or_party = 'pagas-' + cand_or_party
-        elif 'contratadas' in internal_filename:
-            cand_or_party = 'contratadas-' + cand_or_party
-        origin = 'originarios-' if 'originario' in internal_filename else ''
+        return internal_filename.split("_")[1]
+    elif "2018" in year:
+        cand_or_party = (
+            "candidatos" if "candidatos" in internal_filename else "partidos"
+        )
+        if "pagas" in internal_filename:
+            cand_or_party = "pagas-" + cand_or_party
+        elif "contratadas" in internal_filename:
+            cand_or_party = "contratadas-" + cand_or_party
+        origin = "originarios-" if "originario" in internal_filename else ""
         return origin + cand_or_party
 
 
@@ -214,10 +216,7 @@ class Extractor:
             internal_filename = file_info.filename
             if not self.valid_filename(internal_filename):
                 continue
-            fobj = TextIOWrapper(
-                zfile.open(internal_filename),
-                encoding=self.encoding
-            )
+            fobj = TextIOWrapper(zfile.open(internal_filename), encoding=self.encoding)
             fobj = self.fix_fobj(fobj)
             reader = csv.reader(fobj, dialect=utils.TSEDialect)
             header_meta = self.get_headers(year, filename, internal_filename)
@@ -413,7 +412,6 @@ class BemDeclaradoExtractor(Extractor):
         }
 
     def convert_row(self, row_field_names, final_field_names):
-
         def convert(row_data):
             row = dict(zip(row_field_names, row_data))
             new = {}
@@ -456,8 +454,35 @@ class VotacaoZonaExtractor(Extractor):
     year_range = tuple(range(1996, FINAL_VOTATION_YEAR, 2))
     schema_filename = settings.SCHEMA_PATH / "votacao-zona.csv"
 
+    @cached_property
+    def codigo_situacao_candidatura(self):
+        return {
+            (
+                row.codigo_situacao_candidatura,
+                row.descricao_situacao_candidatura,
+            ): row.novo_codigo_situacao_candidatura
+            for row in rows.import_from_csv(
+                settings.HEADERS_PATH / f"situacao-candidatura.csv",
+            )
+        }
+
+    @cached_property
+    def descricao_situacao_candidatura(self):
+        return {
+            (
+                row.codigo_situacao_candidatura,
+                row.descricao_situacao_candidatura,
+            ): row.nova_descricao_situacao_candidatura
+            for row in rows.import_from_csv(
+                settings.HEADERS_PATH / f"situacao-candidatura.csv",
+            )
+        }
+
     def url(self, year):
-        return urljoin(self.base_url, f"votacao_candidato_munzona/votacao_candidato_munzona_{year}.zip")
+        return urljoin(
+            self.base_url,
+            f"votacao_candidato_munzona/votacao_candidato_munzona_{year}.zip",
+        )
 
     def filename(self, year):
         return settings.DOWNLOAD_PATH / f"votacao-zona-{year}.zip"
@@ -485,7 +510,6 @@ class VotacaoZonaExtractor(Extractor):
         }
 
     def convert_row(self, row_field_names, final_field_names):
-
         def convert(row_data):
             row = dict(zip(row_field_names, row_data))
             new = {}
@@ -500,6 +524,11 @@ class VotacaoZonaExtractor(Extractor):
             new["codigo_cargo"], new["descricao_cargo"], _ = fix_cargo(
                 new["codigo_cargo"], new["descricao_cargo"]
             )
+
+            key = (new["codigo_situacao_candidatura"],
+                    new["descricao_situacao_candidatura"])
+            new["codigo_situacao_candidatura"] = self.codigo_situacao_candidatura[key]
+            new["descricao_situacao_candidatura"] = self.descricao_situacao_candidatura[key]
 
             return new
 
@@ -540,8 +569,19 @@ class VotacaoZonaExtractor(Extractor):
 
 class PrestacaoContasExtractor(Extractor):
 
-    year_range = (2002, 2004, 2006, 2008, 2010, 2012, 2014, '2014-suplementar',
-                  2016, '2018-orgaos', '2018-candidatos')
+    year_range = (
+        2002,
+        2004,
+        2006,
+        2008,
+        2010,
+        2012,
+        2014,
+        "2014-suplementar",
+        2016,
+        "2018-orgaos",
+        "2018-candidatos",
+    )
 
     def url(self, year):
         urls = {
@@ -555,8 +595,8 @@ class PrestacaoContasExtractor(Extractor):
             "2014-suplementar": "contas_final_sup_2014",
             2016: "contas_final_2016",
             "2016-suplementar": "contas_final_sup_2016",
-            '2018-orgaos': 'de_contas_eleitorais_orgaos_partidarios_2018',
-            '2018-candidatos': 'de_contas_eleitorais_candidatos_2018'
+            "2018-orgaos": "de_contas_eleitorais_orgaos_partidarios_2018",
+            "2018-candidatos": "de_contas_eleitorais_candidatos_2018",
         }
         return urljoin(self.base_url, f"prestacao_contas/prestacao_{urls[year]}.zip")
 
@@ -601,8 +641,8 @@ class PrestacaoContasExtractor(Extractor):
             # 2014
             header_year = year
             year = 2014
-        elif isinstance(year, str) and '2018' in year:
-            header_year = '2018'
+        elif isinstance(year, str) and "2018" in year:
+            header_year = "2018"
         else:
             header_year = str(year)
 
@@ -622,14 +662,17 @@ class PrestacaoContasExtractor(Extractor):
         year = str(year)
 
         is_type_mov = self.type_mov in filename
-        extension = filename.endswith('.csv') or filename.endswith('.txt')
-        not_brasil = '_brasil' not in filename
-        is_2008 = year == '2008'
-        is_suplementar = 'sup' not in filename
-        is_year_suplementar = year.endswith('suplementar')
+        extension = filename.endswith(".csv") or filename.endswith(".txt")
+        not_brasil = "_brasil" not in filename
+        is_2008 = year == "2008"
+        is_suplementar = "sup" not in filename
+        is_year_suplementar = year.endswith("suplementar")
 
-        return (is_type_mov and extension and (((not_brasil or is_2008) and
-                is_suplementar) or is_year_suplementar))
+        return (
+            is_type_mov
+            and extension
+            and (((not_brasil or is_2008) and is_suplementar) or is_year_suplementar)
+        )
 
     def order_columns(self, name):
         """Order columns according to a (possible) normalization
@@ -642,15 +685,15 @@ class PrestacaoContasExtractor(Extractor):
         - Revenue
         """
 
-        if "uf" in name or "ue" in name or name == 'municipio':
+        if "uf" in name or "ue" in name or name == "municipio":
             value = 0
-        elif "sequencial" in name or 'candidato' in name:
+        elif "sequencial" in name or "candidato" in name:
             value = 1
-        elif 'partido' in name or 'comite' in name:
+        elif "partido" in name or "comite" in name:
             value = 2
-        elif 'doador' in name or 'fornecedor' in name:
+        elif "doador" in name or "fornecedor" in name:
             value = 3
-        elif 'receita' in name or 'despesa' in name or 'recurso' in name:
+        elif "receita" in name or "despesa" in name or "recurso" in name:
             value = 4
         else:
             value = 5
@@ -659,20 +702,13 @@ class PrestacaoContasExtractor(Extractor):
 
     def extract(self, year):
         filename = self.filename(year)
-        fobjs, internal_filenames = self._get_compressed_fobjs(
-                filename,
-                year,
-        )
+        fobjs, internal_filenames = self._get_compressed_fobjs(filename, year)
         for fobj, internal_filename in zip(fobjs, internal_filenames):
             fobj = self.fix_fobj(fobj, year)
             dialect = csv.Sniffer().sniff(fobj.read(1024))
             fobj.seek(0)
             reader = csv.reader(fobj, dialect=dialect)
-            header_meta = self.get_headers(
-                year,
-                filename,
-                internal_filename,
-            )
+            header_meta = self.get_headers(year, filename, internal_filename)
             year_fields = [
                 field.nome_final or field.nome_tse
                 for field in header_meta["year_fields"]
@@ -684,16 +720,18 @@ class PrestacaoContasExtractor(Extractor):
             ]
 
             # Add year to final csv
-            final_fields = ['ano_eleicao'] + final_fields
+            final_fields = ["ano_eleicao"] + final_fields
             convert_function = self.convert_row(year_fields, final_fields, year)
             for index, row in enumerate(reader):
-                if index == 0 and ("UF" in row or
-                                   "SG_UF" in row or
-                                   'SG_UE_SUP' in row or
-                                   'SITUACAOCADASTRAL' in row or
-                                   'DS_ORGAO' in row or
-                                   'RV_MEANING' in row or
-                                   'SEQUENCIAL_CANDIDATO' in row):
+                if index == 0 and (
+                    "UF" in row
+                    or "SG_UF" in row
+                    or "SG_UE_SUP" in row
+                    or "SITUACAOCADASTRAL" in row
+                    or "DS_ORGAO" in row
+                    or "RV_MEANING" in row
+                    or "SEQUENCIAL_CANDIDATO" in row
+                ):
                     # It's a header, we should skip it as a data row but
                     # use the information to get field ordering (better
                     # trust it then our headers files, TSE may change the
@@ -702,7 +740,9 @@ class PrestacaoContasExtractor(Extractor):
                         field.nome_tse: field.nome_final or field.nome_tse
                         for field in header_meta["year_fields"]
                     }
-                    year_fields = [field_map[clean_header(field_name)] for field_name in row]
+                    year_fields = [
+                        field_map[clean_header(field_name)] for field_name in row
+                    ]
                     convert_function = self.convert_row(year_fields, final_fields, year)
                     continue
 
@@ -711,7 +751,7 @@ class PrestacaoContasExtractor(Extractor):
 
 class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
 
-    type_mov = 'receita'
+    type_mov = "receita"
     schema_filename = settings.SCHEMA_PATH / "receita.csv"
 
     def convert_row(self, row_field_names, final_field_names, year):
@@ -724,15 +764,16 @@ class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
                     value = ""
                 new[key] = value = utils.unaccent(value).upper()
 
-            new['ano_eleicao'] = year
-            new['valor_receita'] = fix_valor(new['valor_receita'])
-            new['data_receita'] = fix_data(new['data_receita'])
-            new['data_prestacao_contas'] = fix_data(new['data_prestacao_contas'])
-            new['data_eleicao'] = fix_data(new['data_eleicao'])
-            new['cnpj_candidato'] = fix_cnpj_cpf(new['cnpj_candidato'])
-            new['cpf_cnpj_doador'] = fix_cnpj_cpf(new['cpf_cnpj_doador'])
-            new['cpf_cnpj_doador_originario'] =\
-                fix_cnpj_cpf(new['cpf_cnpj_doador_originario'])
+            new["ano_eleicao"] = year
+            new["valor_receita"] = fix_valor(new["valor_receita"])
+            new["data_receita"] = fix_data(new["data_receita"])
+            new["data_prestacao_contas"] = fix_data(new["data_prestacao_contas"])
+            new["data_eleicao"] = fix_data(new["data_eleicao"])
+            new["cnpj_candidato"] = fix_cnpj_cpf(new["cnpj_candidato"])
+            new["cpf_cnpj_doador"] = fix_cnpj_cpf(new["cpf_cnpj_doador"])
+            new["cpf_cnpj_doador_originario"] = fix_cnpj_cpf(
+                new["cpf_cnpj_doador_originario"]
+            )
             return new
 
         return convert
@@ -740,7 +781,7 @@ class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
 
 class PrestacaoContasDespesasExtractor(PrestacaoContasExtractor):
 
-    type_mov = 'despesa'
+    type_mov = "despesa"
     schema_filename = settings.SCHEMA_PATH / "despesa.csv"
 
     def convert_row(self, row_field_names, final_field_names, year):
@@ -753,15 +794,13 @@ class PrestacaoContasDespesasExtractor(PrestacaoContasExtractor):
                     value = ""
                 new[key] = value = utils.unaccent(value).upper()
 
-            new['ano_eleicao'] = year
-            new['valor_despesa'] = fix_valor(new['valor_despesa'])
-            new['data_despesa'] = fix_data(new['data_despesa'])
-            new['data_prestacao_contas'] = fix_data(new['data_prestacao_contas'])
-            new['data_eleicao'] = fix_data(new['data_eleicao'])
-            new['cnpj_candidato'] = fix_cnpj_cpf(new['cnpj_candidato'])
-            new['cpf_cnpj_fornecedor'] = fix_cnpj_cpf(
-                new['cpf_cnpj_fornecedor']
-            )
+            new["ano_eleicao"] = year
+            new["valor_despesa"] = fix_valor(new["valor_despesa"])
+            new["data_despesa"] = fix_data(new["data_despesa"])
+            new["data_prestacao_contas"] = fix_data(new["data_prestacao_contas"])
+            new["data_eleicao"] = fix_data(new["data_eleicao"])
+            new["cnpj_candidato"] = fix_cnpj_cpf(new["cnpj_candidato"])
+            new["cpf_cnpj_fornecedor"] = fix_cnpj_cpf(new["cpf_cnpj_fornecedor"])
             return new
 
         return convert
