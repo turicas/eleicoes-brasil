@@ -469,10 +469,10 @@ class VotacaoZonaExtractor(Extractor):
         uf = self.extract_state_from_filename(internal_filename)
         if year < 2014:
             header_year = "1994"
-        elif 2014 <= year <= 2016:
+        elif year == 2014:
             header_year = "2014"
-        elif year == 2018:
-            header_year = "2018"
+        elif 2016 <= year <= 2018:
+            header_year = "2016"
         else:
             raise ValueError("Unrecognized year")
         return {
