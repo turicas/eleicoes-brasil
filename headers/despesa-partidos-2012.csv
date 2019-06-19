@@ -5,7 +5,7 @@
 "Sequencial Diretorio",,
 "UF","sigla_uf",
 "Número UE","codigo_ue",
-"Município","municipio",
+"Município","nome_ue",
 "Tipo diretorio","descricao_orgao",
 "Sigla  Partido","sigla_partido",
 "Tipo do documento","tipo_documento",

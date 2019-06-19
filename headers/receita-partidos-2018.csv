@@ -12,7 +12,7 @@
 "SG_UF","sigla_uf","Sigla da unidade da federação de abrangência do prestador de contas"
 "CD_MUNICIPIO","codigo_ue","Código do município de abrangência do órgão partidário, quando a esfera partidária for municipal"
 "NM_MUNICIPIO","nome_ue","Descrição do município de abrangência do órgão partidário, quando a esfera partidária for municipal"
-"NR_CNPJ_PRESTADOR_CONTA","cnpj_orgao","Número do CNPJ do prestador de contas"
+"NR_CNPJ_PRESTADOR_CONTA","cnpj","Número do CNPJ do prestador de contas"
 "NR_PARTIDO","numero_partido","Número do partido do prestador de contas"
 "SG_PARTIDO","sigla_partido","Sigla do partido do prestador de contas"
 "NM_PARTIDO","nome_partido","Nome do partido do prestador de contas"
