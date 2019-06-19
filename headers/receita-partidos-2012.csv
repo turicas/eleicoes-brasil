@@ -5,7 +5,7 @@
 "Sequencial Diretorio",,
 "UF","sigla_uf",
 "Número UE","codigo_ue",
-"Município","municipio",
+"Município","nome_ue",
 "Tipo diretorio","descricao_orgao",
 "Sigla  Partido","sigla_partido",
 "Tipo do documento","tipo_documento",
@@ -22,6 +22,6 @@
 "Data da receita","data",
 "Valor receita","valor",
 "Tipo receita","tipo",
-"Fonte recurso","fonte_recurso",
+"Fonte recurso","fonte_recurso","Fonte do recurso da doação, podendo ser “Fundo Partidário” ou “Outros Recursos”"
 "Espécie recurso","tipo_recurso",
-"Descrição da receita","descricao_receita",
+"Descrição da receita","descricao_receita","Descrição da doação quando esta for estimável em dinheiro"

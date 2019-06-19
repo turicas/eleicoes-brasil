@@ -1,29 +1,29 @@
-nome_tse,nome_final,descricao
-SEQUENCIAL_CANDIDATO,numero_sequencial_candidato,Número Sequencial do Candidato
-NM_CANDIDATO,nome_candidato,Nome do candidato
-SEXO,sexo,Sexo do(a) candidato(a)
-DS_CARGO,descricao_cargo,Descrição do cargo
-CD_CARGO,codigo_cargo,Código do cargo
-NR_CANDIDATO,numero_candidato,Número do candidato
-SG_UE_SUPERIOR,sigla_uf,Unidade da federação do candidato
-NM_UE,nome_ue,Nome da unidade da federação
-SG_UE,codigo_ue,Código do município
-DS_NR_TITULO_ELEITOR,titulo_eleitoral,Título eleitoral
-CD_NUM_CPF,cpf_candidato,CPF do candidato
-CD_NUM_CNPJ,cnpj_candidato,CNPJ de campanha
-NR_PARTIDO,numero_partido,Número do partido
-SG_PARTIDO,sigla_partido,Sigla do partido
-VR_RECEITA,valor,Valor da receita
-DT_RECEITA,data,Data da receita
-DS_TITULO,tipo,Tipo de receita
-CD_TITULO,codigo_tipo_receita,Código do tipo de receita
-DS_ESP_RECURSO,tipo_recurso,"Tipo de recurso (Em espécie,  Cheque,  Estimado, não informado)"
-CD_ESP_RECURSO,codigo_tipo_recurso,Código do tipo de recurso
-NM_DOADOR,nome_doador,Nome do doador
-CD_CPF_CNPJ_DOADOR,cpf_cnpj_doador,CPF/CNPJ do doador
-SG_UE_SUPERIOR_1,sigla_ue_doador,;
-NM_UE_1,nome_ue_doador,Nome da unidade da federação
-SG_UE_1,codigo_ue_doador,Código do município
-SITUACAOCADASTRAL,situacao_cadastral,Batimento Receita Federal do Brasil
-NM_ADM,nome_administrador,Nome do administrador financeiro de campanha
-CD_CPF_ADM,cpf_administrador,CPF do administrador financeiro de campanha
+"nome_tse","nome_final","descricao"
+"SEQUENCIAL_CANDIDATO","numero_sequencial_candidato","Número Sequencial do Candidato"
+"NM_CANDIDATO","nome_candidato","Nome do candidato"
+"SEXO","sexo","Sexo do(a) candidato(a)"
+"DS_CARGO","descricao_cargo","Descrição do cargo"
+"CD_CARGO","codigo_cargo","Código do cargo"
+"NR_CANDIDATO","numero_candidato","Número do candidato"
+"SG_UE_SUPERIOR","sigla_uf","Unidade da federação do candidato"
+"NM_UE","nome_ue","Nome da unidade da federação"
+"SG_UE","codigo_ue","Código do município"
+"DS_NR_TITULO_ELEITOR","titulo_eleitoral","Título eleitoral"
+"CD_NUM_CPF","cpf_candidato","CPF do candidato"
+"CD_NUM_CNPJ","cnpj_candidato","CNPJ de campanha"
+"NR_PARTIDO","numero_partido","Número do partido"
+"SG_PARTIDO","sigla_partido","Sigla do partido"
+"VR_RECEITA","valor","Valor da receita"
+"DT_RECEITA","data","Data da receita"
+"DS_TITULO","tipo","Tipo de receita"
+"CD_TITULO","codigo_tipo_receita","Código do tipo de receita"
+"DS_ESP_RECURSO","tipo_recurso","Tipo de recurso (Em espécie,  Cheque,  Estimado, não informado)"
+"CD_ESP_RECURSO","codigo_tipo_recurso","Código do tipo de recurso"
+"NM_DOADOR","nome_doador","Nome do doador"
+"CD_CPF_CNPJ_DOADOR","cpf_cnpj_doador","CPF/CNPJ do doador"
+"SG_UE_SUPERIOR_1","sigla_ue_doador","Unidade da federação do doador"
+"NM_UE_1","nome_ue_doador","Nome da unidade da federação"
+"SG_UE_1","codigo_ue_doador","Código do município"
+"SITUACAOCADASTRAL","situacao_cadastral","Batimento Receita Federal do Brasil"
+"NM_ADM","nome_administrador","Nome do administrador financeiro de campanha"
+"CD_CPF_ADM","cpf_administrador","CPF do administrador financeiro de campanha"

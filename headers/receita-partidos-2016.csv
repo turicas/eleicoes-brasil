@@ -2,7 +2,7 @@
 "Cód. Eleição",,"Código identificador da Eleição"
 "Desc. Eleição","descricao_eleicao","Descrição ou nome da Eleição"
 "Data e hora",,"Data e hora de geração da informação"
-"CNPJ Prestador Conta","cnpj_orgao","CNPJ da direção partidária"
+"CNPJ Prestador Conta","cnpj","CNPJ da direção partidária"
 "Sequencial prestador conta",,"Sequencial da direção partidária na base de dados da Justiça Eleitoral"
 "UF","sigla_uf","Unidade da Federação da direção partidária"
 "Sigla da UE","codigo_ue","Código da Unidade Eleitoral"
