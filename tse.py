@@ -59,6 +59,8 @@ def create_final_headers(header_type, order_columns, final_filename):
             if REGEXP_HEADER_YEAR.findall(filename)
         ]
     )
+    # TODO: check if schema is according to final header. if there are diffs,
+    # warn user.
     for index, (header_year, filename) in enumerate(filenames):
         header = read_header(filename)
         for row in header:
