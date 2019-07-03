@@ -765,8 +765,8 @@ class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
                 new[key] = value = utils.unaccent(value).upper()
 
             new["ano_eleicao"] = year
-            new["valor_receita"] = fix_valor(new["valor_receita"])
-            new["data_receita"] = fix_data(new["data_receita"])
+            new["valor"] = fix_valor(new["valor"])
+            new["data"] = fix_data(new["data"])
             new["data_prestacao_contas"] = fix_data(new["data_prestacao_contas"])
             new["data_eleicao"] = fix_data(new["data_eleicao"])
             new["cnpj_candidato"] = fix_cnpj_cpf(new["cnpj_candidato"])
@@ -794,7 +794,7 @@ class PrestacaoContasDespesasExtractor(PrestacaoContasExtractor):
                     value = ""
                 new[key] = value = utils.unaccent(value).upper()
 
-            new["ano_eleicao"] = year
+            new["ano_eleicao"] = year  # TODO: replace "2018-candidatos" with "2018"
             new["valor_despesa"] = fix_valor(new["valor_despesa"])
             new["data_despesa"] = fix_data(new["data_despesa"])
             new["data_prestacao_contas"] = fix_data(new["data_prestacao_contas"])

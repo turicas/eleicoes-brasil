@@ -1,7 +1,6 @@
 nome_final,descricao
 codigo_ue,"Código do município. Aparece no TSE como: SG_UE (2004), Número UE (2012), Sigla da UE (2014-suplementar), CD_MUNICIPIO (2018). Coluna adicionada em 2004."
 codigo_ue_fornecedor,"Código do município do fornecedor. Aparece no TSE como: SG_UE_1 (2008), CD_MUNICIPIO_FORNECEDOR (2018). Coluna adicionada em 2008."
-municipio,. Aparece no TSE como: Município (2012). Coluna adicionada em 2012.
 nome_ue,"Nome da unidade da federação. Aparece no TSE como: NO_UE (2004), NM_UE (2008), Município (2012), Nome da UE (2014-suplementar), NM_MUNICIPIO (2018). Coluna adicionada em 2004."
 nome_ue_fornecedor,"Unidade da federação do fornecedor. Aparece no TSE como: NO_UE (2006), NM_UE_1 (2008), NM_MUNICIPIO_FORNECEDOR (2018). Coluna adicionada em 2006."
 sigla_ue,Sigla da Unidade Eleitoral do candidato (Em caso de eleição majoritária é o nome da UF que o candidato concorre e em caso de eleição municipal é o nome do município). Aparece no TSE como: SG_UE (2018). Coluna adicionada em 2018.
