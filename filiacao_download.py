@@ -85,15 +85,24 @@ class FiliadosFileListSpider(scrapy.Spider):
         for party in PARTIES:
             for state in STATES:
                 download_filename = make_filepath(party, state)
-                yield scrapy.Request(
-                    url=f"http://agencia.tse.jus.br/estatistica/sead/eleitorado/filiados/uf/filiados_{party}_{state}.zip",
-                    meta={
+                url = f"http://agencia.tse.jus.br/estatistica/sead/eleitorado/filiados/uf/filiados_{party}_{state}.zip"
+                if not download_filename.exists():
+                    yield scrapy.Request(
+                        url=url,
+                        meta={
+                            "filename": download_filename,
+                            "party": party,
+                            "state": state,
+                        },
+                        callback=self.save_zip,
+                    )
+                else:
+                    yield {
                         "filename": download_filename,
                         "party": party,
                         "state": state,
-                    },
-                    callback=self.save_zip,
-                )
+                        "url": url,
+                    }
 
     def save_zip(self, response):
         meta = response.request.meta
