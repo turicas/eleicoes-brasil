@@ -83,8 +83,6 @@ class FiliadosFileListSpider(scrapy.Spider):
 
     def start_requests(self):
         for party in PARTIES:
-            if party == "solidariedade":
-                party = "sd"
             for state in STATES:
                 download_filename = make_filepath(party, state)
                 yield scrapy.Request(
