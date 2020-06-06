@@ -1,12 +1,11 @@
 import csv
 import re
-
 from datetime import datetime
 from functools import lru_cache
 from io import StringIO, TextIOWrapper, BytesIO
-from os import rename as rename_file
 from pathlib import Path
 from shutil import move as move_file
+from shutil import move as rename_file
 from urllib.parse import urljoin
 from zipfile import ZipFile
 
@@ -251,7 +250,7 @@ class Extractor:
 
 class CandidaturaExtractor(Extractor):
 
-    year_range = tuple(range(1996, NOW.year + 1, 2))
+    year_range = tuple(range(1996, FINAL_VOTATION_YEAR, 2))
     schema_filename = settings.SCHEMA_PATH / "candidatura.csv"
 
     def url(self, year):
@@ -380,7 +379,7 @@ class CandidaturaExtractor(Extractor):
 
 class BemDeclaradoExtractor(Extractor):
 
-    year_range = tuple(range(2006, NOW.year + 1, 2))
+    year_range = tuple(range(2006, FINAL_VOTATION_YEAR, 2))
     schema_filename = settings.SCHEMA_PATH / "bem-declarado.csv"
 
     def url(self, year):
