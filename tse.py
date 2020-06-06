@@ -141,7 +141,8 @@ if __name__ == "__main__":
     parser.add_argument("--download-only", action="store_true", default=False)
     parser.add_argument("--output")
     parser.add_argument("--years", default="all")
-    parser.add_argument("--base_url", default=None, help="Use the default data repository from TSE or a faster mirror (like https://data.brasil.io/mirror/tse)")
+    parser.add_argument("--use-mirror", action="store_true")
+    parser.add_argument("--mirror-url", default="https://data.brasil.io/mirror/tse/", help="Use the default data repository from TSE or a mirror")
     args = parser.parse_args()
 
     if args.type == "headers":
@@ -167,7 +168,7 @@ if __name__ == "__main__":
                         added_urls.append(url)
                     final_name = url.split("sead/odsele/")[1]
                     fobj.write(f"time aria2c -s 8 -x 8 -k 1M -o 'data/download/{filename}' '{url}'\n")
-                    fobj.write(f"time ./s3upload.py 'data/download/{filename}' mirror/tse/{final_name}\n")
+                    fobj.write(f"time s3cmd put 'data/download/{filename}' s3://mirror/tse/{final_name}\n")
                 fobj.write("\n")
         # chmod 750 mirror.sh
         os.chmod("mirror.sh", stat.S_IRUSR + stat.S_IWUSR + stat.S_IXUSR + stat.S_IRGRP + stat.S_IXGRP)
@@ -196,7 +197,7 @@ if __name__ == "__main__":
             ExtractorClass=extractor["extractor_class"],
             year_range=years,
             output_filename=args.output or extractor["output_filename"],
-            base_url=args.base_url,
+            base_url=args.mirror_url if args.use_mirror else None,
             force_redownload=args.force_redownload,
             download_only=args.download_only,
         )

@@ -1,9 +1,10 @@
 cached-property
 click
-git+https://github.com/turicas/rows.git@develop#egg=rows
+https://github.com/turicas/rows/archive/develop.zip
 lxml
 rarfile
 requests
 requests-cache
+s3cmd
 scrapy
 tqdm
