@@ -1,5 +1,5 @@
 "nome_tse","nome_final","descricao"
-"SEQUENCIAL_CANDIDATO",,"Número Sequencial do Candidato"
+"SEQUENCIAL_CANDIDATO",numero_sequencial_candidato,"Número Sequencial do Candidato"
 "NM_CANDIDATO","nome_candidato","Nome do candidato"
 "DS_CARGO","cargo","Descrição do cargo"
 "CD_CARGO","codigo_cargo","Código do cargo"

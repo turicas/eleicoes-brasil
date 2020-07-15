@@ -4,6 +4,7 @@ codigo_ue,text
 codigo_ue_fornecedor,text
 nome_ue,text
 nome_ue_fornecedor,text
+numero_sequencial_candidato,text
 sigla_ue,text
 sigla_ue_fornecedor,text
 sigla_uf,text
