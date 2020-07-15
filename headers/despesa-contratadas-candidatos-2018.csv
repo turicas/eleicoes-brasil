@@ -17,7 +17,7 @@
 "NR_CNPJ_PRESTADOR_CONTA","cnpj_candidato","Número do CNPJ do prestador de contas"
 "CD_CARGO","codigo_cargo","Código do cargo do candidato prestador de contas"
 "DS_CARGO","cargo","Descrição do cargo do candidato prestador de contas"
-"SQ_CANDIDATO",,"Sequencial do candidato prestador de contas"
+"SQ_CANDIDATO","numero_sequencial_candidato","Sequencial do candidato prestador de contas"
 "NR_CANDIDATO","numero_candidato","Número do candidato prestador de contas"
 "NM_CANDIDATO","nome_candidato","Nome completo do candidato"
 "NR_CPF_CANDIDATO","cpf_candidato","CPF do candidato registrado na Justiça Federal"
