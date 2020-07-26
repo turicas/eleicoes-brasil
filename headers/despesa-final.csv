@@ -3,6 +3,7 @@ codigo_ue,"Código do município. Aparece no TSE como: SG_UE (2004), Número UE 
 codigo_ue_fornecedor,"Código do município do fornecedor. Aparece no TSE como: SG_UE_1 (2008), CD_MUNICIPIO_FORNECEDOR (2018). Coluna adicionada em 2008."
 nome_ue,"Nome da unidade da federação. Aparece no TSE como: NO_UE (2004), NM_UE (2008), Município (2012), Nome da UE (2014-suplementar), NM_MUNICIPIO (2018). Coluna adicionada em 2004."
 nome_ue_fornecedor,"Unidade da federação do fornecedor. Aparece no TSE como: NO_UE (2006), NM_UE_1 (2008), NM_MUNICIPIO_FORNECEDOR (2018). Coluna adicionada em 2006."
+numero_sequencial_candidato,"Número Sequencial do Candidato. Aparece no TSE como: SEQUENCIAL_CANDIDATO (2002), Sequencial Candidato (2010), SQ_CANDIDATO (2018)."
 sigla_ue,Sigla da Unidade Eleitoral do candidato (Em caso de eleição majoritária é o nome da UF que o candidato concorre e em caso de eleição municipal é o nome do município). Aparece no TSE como: SG_UE (2018). Coluna adicionada em 2018.
 sigla_ue_fornecedor,"Unidade da federação do fornecedor. Aparece no TSE como: UNIDADE_ELEITORAL_FORNECEDOR (2006), SG_UE_SUPERIOR_1 (2008). Coluna adicionada em 2006."
 sigla_uf,"Unidade da federação do candidat. Aparece no TSE como: SG_UF (2002), SG_UE_SUP (2004), UNIDADE_ELEITORAL_CANDIDATO (2006), SG_UE (2006), SG_UE_SUPERIOR (2008), UF (2010)."

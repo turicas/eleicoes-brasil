@@ -1,6 +1,6 @@
 "nome_tse","nome_final","descricao"
 "Data e hora",,
-"Sequencial Candidato",,
+"Sequencial Candidato",numero_sequencial_candidato,
 "UF","sigla_uf",
 "Sigla Partido","sigla_partido",
 "Número candidato","numero_candidato",
