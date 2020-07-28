@@ -328,6 +328,8 @@ class CandidaturaExtractor(Extractor):
             new["codigo_cargo"], new["descricao_cargo"], new["pergunta"] = fix_cargo(
                 new["codigo_cargo"], new["descricao_cargo"]
             )
+            new["data_eleicao"] = fix_data(new["data_eleicao"])
+            new["data_nascimento"] = fix_data(new["data_nascimento"])
 
             return new
 
