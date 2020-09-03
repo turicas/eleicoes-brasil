@@ -250,7 +250,7 @@ class Extractor:
 
 class CandidaturaExtractor(Extractor):
 
-    year_range = tuple(range(1996, FINAL_VOTATION_YEAR, 2))
+    year_range = tuple(range(1996, FINAL_VOTATION_YEAR + 1, 2))
     schema_filename = settings.SCHEMA_PATH / "candidatura.csv"
 
     def url(self, year):
@@ -261,7 +261,11 @@ class CandidaturaExtractor(Extractor):
 
     def valid_filename(self, filename):
         name = filename.lower()
-        return name.startswith("consulta_cand_") and "_brasil.csv" not in name
+        return (
+            name.startswith("consulta_cand_")
+            and "_brasil.csv" not in name
+            and not name.endswith("todos.csv")
+        )
 
     def fix_fobj(self, fobj):
         """Fix wrong-escaped lines from the TSE's CSVs
@@ -291,6 +295,8 @@ class CandidaturaExtractor(Extractor):
             header_year = "2012"
         elif 2014 <= year <= 2018:
             header_year = "2018"
+        elif year == 2020:
+            header_year = "2020"
         else:
             raise ValueError(f"Unrecognized year ({year}, {uf})")
         return {
