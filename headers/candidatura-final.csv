@@ -41,15 +41,20 @@ numero_partido,"Número do partido. Aparece no TSE como: NUMERO_PARTIDO (1994-BR
 sigla_legenda,Sigla da legenda. Aparece no TSE como: SIGLA_LEGENDA (1994-BR).
 sigla_partido,"Sigla do partido. Aparece no TSE como: SIGLA_PARTIDO (1994-BR), SG_PARTIDO (2018)."
 tipo_agremiacao,Tipo de agremiação - pode assumir os valores “coligação” (quando o candidato concorre por coligação) e “partido isolado” (quando o candidato concorre somente pelo partido). Aparece no TSE como: TP_AGREMIACAO (2018). Coluna adicionada em 2018.
+candidato_inserido_urna,. Aparece no TSE como: ST_CANDIDATO_INSERIDO_URNA (2020). Coluna adicionada em 2020.
 codigo_cargo,"Código do cargo a que o candidato concorre. Aparece no TSE como: CODIGO_CARGO (1994-BR), CD_CARGO (2018)."
 codigo_detalhe_situacao_candidatura,Código do detalhe da situação do registro de candidatura do candidato. Aparece no TSE como: CD_DETALHE_SITUACAO_CAND (2018). Coluna adicionada em 2018.
+codigo_situacao_candidato_pleito,. Aparece no TSE como: CD_SITUACAO_CANDIDATO_PLEITO (2020). Coluna adicionada em 2020.
+codigo_situacao_candidato_urna,. Aparece no TSE como: CD_SITUACAO_CANDIDATO_URNA (2020). Coluna adicionada em 2020.
 codigo_situacao_candidatura,"Código da situação de candidatura. Aparece no TSE como: COD_SITUACAO_CANDIDATURA (1994-BR), CD_SITUACAO_CANDIDATURA (2018)."
 concorre_reeleicao,"O indicativo de que o candidato está concorrendo ou não à reeleição - pode assumir os valores “S” (sim) e “N” (não) -apenas para os cargos de presidente, governador e prefeito é possível candidatura à reeleição. Aparece no TSE como: ST_REELEICAO (2018). Coluna adicionada em 2018."
 declara_bens,O indicativo de que o candidato tem ou não bens a declarar - pode assumiar os valores “S” (em caso positivo) e “N” (em caso negativo). Aparece no TSE como: ST_DECLARAR_BENS (2018). Coluna adicionada em 2018.
 descricao_cargo,"Descrição do cargo a que o candidato concorre. Aparece no TSE como: DESCRICAO_CARGO (1994-BR), DS_CARGO (2018)."
 descricao_detalhe_situacao_candidatura,Descrição do detalhe da situação do registro de candidatura do candidato. Aparece no TSE como: DS_DETALHE_SITUACAO_CAND (2018). Coluna adicionada em 2018.
+descricao_situacao_candidato_pleito,. Aparece no TSE como: DS_SITUACAO_CANDIDATO_PLEITO (2020). Coluna adicionada em 2020.
+descricao_situacao_candidato_urna,. Aparece no TSE como: DS_SITUACAO_CANDIDATO_URNA (2020). Coluna adicionada em 2020.
 descricao_situacao_candidatura,"Descrição da situação de candidatura. Aparece no TSE como: DES_SITUACAO_CANDIDATURA (1994-BR), DS_SITUACAO_CANDIDATURA (2018)."
-despesa_maxima_campanha,"Despesa máxima de campanha declarada pelo partido para aquele cargo. Valores em Reais.. Aparece no TSE como: DESPESA_MAX_CAMPANHA (1994-BR), NR_DESPESA_MAX_CAMPANHA (2018)."
+despesa_maxima_campanha,"Despesa máxima de campanha declarada pelo partido para aquele cargo. Valores em Reais.. Aparece no TSE como: DESPESA_MAX_CAMPANHA (1994-BR), NR_DESPESA_MAX_CAMPANHA (2018), VR_DESPESA_MAX_CAMPANHA (2020)."
 idade_data_eleicao,Idade do candidato da data da eleição. Aparece no TSE como: IDADE_DATA_ELEICAO (1994-BR).
 idade_data_posse,Idade do candidato na data da posse (consultar a data de posse para cada cargo e unidade eleitoral nos arquivos de vagas). Aparece no TSE como: NR_IDADE_DATA_POSSE (2018). Coluna adicionada em 2018.
 nome_urna,"Nome de urna do candidato. Aparece no TSE como: NOME_URNA_CANDIDATO (1994-BR), NM_URNA_CANDIDATO (2018)."
