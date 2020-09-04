@@ -70,6 +70,11 @@ else:
     FINAL_VOTATION_YEAR = NOW.year
 
 
+class SimNaoBooleanField(rows.fields.BoolField):
+    TRUE_VALUES = ("sim",)
+    FALSE_VALUES = ("não", "nao")
+
+
 @lru_cache()
 def read_header(filename, encoding="utf-8"):
     filename = Path(filename)
@@ -333,6 +338,9 @@ class CandidaturaExtractor(Extractor):
             new["titulo_eleitoral"] = fix_titulo_eleitoral(new["titulo_eleitoral"])
             new["codigo_cargo"], new["descricao_cargo"], new["pergunta"] = fix_cargo(
                 new["codigo_cargo"], new["descricao_cargo"]
+            )
+            new["candidato_inserido_urna"] = SimNaoBooleanField.deserialize(
+                new["candidato_inserido_urna"]
             )
             new["data_eleicao"] = fix_data(new["data_eleicao"])
             new["data_nascimento"] = fix_data(new["data_nascimento"])
