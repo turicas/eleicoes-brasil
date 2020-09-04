@@ -381,7 +381,7 @@ class CandidaturaExtractor(Extractor):
 
 class BemDeclaradoExtractor(Extractor):
 
-    year_range = tuple(range(2006, FINAL_VOTATION_YEAR, 2))
+    year_range = tuple(range(2006, FINAL_VOTATION_YEAR + 1, 2))
     schema_filename = settings.SCHEMA_PATH / "bem-declarado.csv"
 
     def url(self, year):
@@ -392,13 +392,17 @@ class BemDeclaradoExtractor(Extractor):
 
     def valid_filename(self, filename):
         name = filename.lower()
-        return name.startswith("bem_candidato") and "_brasil.csv" not in name
+        return (
+            name.startswith("bem_candidato")
+            and "_brasil.csv" not in name
+            and not name.endswith("todos.csv")
+        )
 
     def get_headers(self, year, filename, internal_filename):
         uf = self.extract_state_from_filename(internal_filename)
         if 2006 <= year <= 2012:
             header_year = "2006"
-        elif 2014 <= year <= 2018:
+        elif 2014 <= year <= 2020:
             header_year = "2014"
         else:
             raise ValueError("Unrecognized year")
