@@ -82,6 +82,13 @@ vírgulas), como em:
 python tse.py candidatura --years=2014,2018
 ```
 
+#### Alterar fonte dos dados
+Você pode alterar a fonte dos dados para um repositório mais rápido, como por exemplo: https://data.brasil.io/mirror/tse
+
+```bash
+python tse.py candidatura --base_url=https://data.brasil.io/mirror/tse/
+```
+
 #### Apenas baixar
 
 Caso queira apenas baixar os arquivos, utilize a opção `--download-only`.
