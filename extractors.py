@@ -139,18 +139,25 @@ def fix_titulo_eleitoral(value):
 
 
 def fix_data(value):
+    original_value = value
     new_dt = ""
-    value = value.replace("00:00:00", "")
-    value = value.replace("0002", "2002")
-    if value:
-        try:
-            dt = datetime.strptime(value, "%d/%m/%Y")
-        except ValueError:
-            dt = datetime.strptime(value, "%d-%b-%y")
-        finally:
-            new_dt = dt.strftime("%Y-%m-%d")
+    value = value.replace("00:00:00", "").replace("0002", "2002").strip()
+    if not value:
+        return None
 
-    return new_dt
+    possible_date_formats = ("%d/%m/%Y", "%d/%m/%y", "%d-%b-%y")
+    dt = None
+    for date_format in possible_date_formats:
+        try:
+            dt = datetime.strptime(value, date_format)
+        except ValueError:
+            continue
+    if dt is None:
+        # TODO: talvez gerar uma exceção com o erro, salvar o erro em algum log
+        # ou gravar valor em outra coluna
+        return None
+
+    return dt.strftime("%Y-%m-%d")
 
 
 def clean_header(header):
