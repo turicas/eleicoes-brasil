@@ -201,7 +201,7 @@ class Extractor:
             return {"downloaded": False, "filename": filename}
 
         url = self.url(year)
-        file_data = download_file(url, progress=True)
+        file_data = download_file(url, progress=True, chunk_size=256 * 1024)
         rename_file(file_data.uri, filename)
         return {"downloaded": True, "filename": filename}
 
