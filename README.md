@@ -82,6 +82,15 @@ vírgulas), como em:
 python tse.py candidatura --years=2014,2018
 ```
 
+#### Alterar fonte dos dados
+Como os servidores do TSE podem estar lentos em épocas de eleição, você pode baixar os dados de algum servidor mais rápido que hospede uma cópia deles (chamamos de *mirror*). No Brasil.IO mantemos um *mirror* de alguns arquivos do Repositório de Dados Eleitorais do TSE, **porém** note que ainda não temos uma política de atualização frequente desses dados e, por isso, eles podem estar desatualizados (estamos trabalhando para que sejam atualizados com mais frequência e que a data de cópia dos dados fique explícita em uma página).
+
+Para que o script colete os daos usando nosso *mirror*, execute-o com a opção `--base_url`:
+
+```bash
+python tse.py candidatura --base_url=https://data.brasil.io/mirror/tse/
+```
+
 #### Apenas baixar
 
 Caso queira apenas baixar os arquivos, utilize a opção `--download-only`.
