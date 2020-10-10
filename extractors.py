@@ -198,12 +198,24 @@ class Extractor:
         if base_url is not None:
             self.base_url = base_url
 
+    def filename(self, year):
+        """Caminho para arquivo de um ano, que será juntado com self.base_url"""
+        raise NotImplementedError()
+
+    def url(self, year):
+        return urljoin(self.base_url, self.filename(year))
+
+    def download_filename(self, year):
+        return settings.DOWNLOAD_PATH / self.filename(year)
+
     @property
     def schema(self):
         return load_schema(str(self.schema_filename))
 
     def download(self, year, force=False):
-        filename = self.filename(year)
+        filename = self.download_filename(year)
+        if not filename.parent.exists():
+            filename.parent.mkdir()
         if not force and filename.exists():  # File has already been downloaded
             return {"downloaded": False, "filename": filename}
 
@@ -221,7 +233,7 @@ class Extractor:
         return fobj
 
     def extract(self, year):
-        filename = self.filename(year)
+        filename = self.download_filename(year)
         zfile = ZipFile(filename)
         for file_info in zfile.filelist:
             internal_filename = file_info.filename
@@ -265,11 +277,8 @@ class CandidaturaExtractor(Extractor):
     year_range = tuple(range(1996, FINAL_VOTATION_YEAR + 1, 2))
     schema_filename = settings.SCHEMA_PATH / "candidatura.csv"
 
-    def url(self, year):
-        return urljoin(self.base_url, f"consulta_cand/consulta_cand_{year}.zip")
-
     def filename(self, year):
-        return settings.DOWNLOAD_PATH / f"candidatura-{year}.zip"
+        return f"consulta_cand/consulta_cand_{year}.zip"
 
     def valid_filename(self, filename):
         name = filename.lower()
@@ -405,11 +414,8 @@ class BemDeclaradoExtractor(Extractor):
     year_range = tuple(range(2006, FINAL_VOTATION_YEAR + 1, 2))
     schema_filename = settings.SCHEMA_PATH / "bem-declarado.csv"
 
-    def url(self, year):
-        return urljoin(self.base_url, f"bem_candidato/bem_candidato_{year}.zip")
-
     def filename(self, year):
-        return settings.DOWNLOAD_PATH / f"bem-declarado-{year}.zip"
+        return f"bem_candidato/bem_candidato_{year}.zip"
 
     def valid_filename(self, filename):
         name = filename.lower()
@@ -504,14 +510,8 @@ class VotacaoZonaExtractor(Extractor):
             )
         }
 
-    def url(self, year):
-        return urljoin(
-            self.base_url,
-            f"votacao_candidato_munzona/votacao_candidato_munzona_{year}.zip",
-        )
-
     def filename(self, year):
-        return settings.DOWNLOAD_PATH / f"votacao-zona-{year}.zip"
+        return f"votacao_candidato_munzona/votacao_candidato_munzona_{year}.zip"
 
     def valid_filename(self, filename):
         return filename.startswith("votacao_candidato_munzona_")
@@ -609,7 +609,7 @@ class PrestacaoContasExtractor(Extractor):
         "2018-candidatos",
     )
 
-    def url(self, year):
+    def filename(self, year):
         urls = {
             2002: "contas_2002",
             2004: "contas_2004",
@@ -624,7 +624,7 @@ class PrestacaoContasExtractor(Extractor):
             "2018-orgaos": "de_contas_eleitorais_orgaos_partidarios_2018",
             "2018-candidatos": "de_contas_eleitorais_candidatos_2018",
         }
-        return urljoin(self.base_url, f"prestacao_contas/prestacao_{urls[year]}.zip")
+        return f"prestacao_contas/prestacao_{urls[year]}.zip"
 
     def _get_compressed_fobjs(self, filename, year):
         with open(filename, mode="rb") as fobj:
@@ -657,9 +657,6 @@ class PrestacaoContasExtractor(Extractor):
             fobj = TextIOWrapper(fobj, encoding=self.encoding)
 
         return fobj
-
-    def filename(self, year):
-        return settings.DOWNLOAD_PATH / f"prestacao-contas-{year}.zip"
 
     def get_headers(self, year, filename, internal_filename):
         if str(year).endswith("suplementar"):
@@ -727,7 +724,7 @@ class PrestacaoContasExtractor(Extractor):
         return value, name
 
     def extract(self, year):
-        filename = self.filename(year)
+        filename = self.download_filename(year)
         fobjs, internal_filenames = self._get_compressed_fobjs(filename, year)
         for fobj, internal_filename in zip(fobjs, internal_filenames):
             fobj = self.fix_fobj(fobj, year)

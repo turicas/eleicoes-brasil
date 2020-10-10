@@ -153,29 +153,36 @@ if __name__ == "__main__":
             create_final_headers(header_type, extractor.order_columns, final_filename)
 
     elif args.type == "mirror":
-        added_urls = []
-        with open("mirror.sh", mode="w") as fobj:
+        added_urls, created_paths = [], []
+        base_path = settings.MIRROR_FILENAME.parent
+        sha512sums_filename = (settings.DOWNLOAD_PATH / "SHA512SUMS").relative_to(base_path)
+        with open(settings.MIRROR_FILENAME, mode="w") as fobj:
             fobj.write("#!/bin/bash\n")
             fobj.write("\n")
             fobj.write("set -e\n")
             fobj.write("mkdir -p data/download\n")
             fobj.write("rm -rf data/download/SHA512SUMS\n")
+            fobj.write("\n")
             for header_type in sorted(extractors.keys()):
                 extractor = extractors[header_type]["extractor_class"]()
                 for year in extractor.year_range:
-                    filename = str(extractor.filename(year)).split("data/download/")[1]
                     url = extractor.url(year)
                     if url in added_urls:
                         continue
                     else:
                         added_urls.append(url)
-                    final_name = url.split("sead/odsele/")[1]
-                    fobj.write(f"time aria2c -s 8 -x 8 -k 1M -o 'data/download/{filename}' '{url}'\n")
-                    fobj.write(f"time s3cmd put 'data/download/{filename}' s3://mirror/tse/{final_name}\n")
-                    fobj.write(f"time echo \"$(sha512sum 'data/download/{filename}' | cut -d' ' -f 1) {final_name}\" >> data/download/SHA512SUMS\n")
+                    filename = extractor.filename(year)
+                    download_filename = extractor.download_filename(year).relative_to(base_path)
+                    save_path = str(download_filename.parent)
+                    if save_path not in created_paths:
+                        fobj.write(f"mkdir -p {save_path}\n")
+                        created_paths.append(save_path)
+                    fobj.write(f"time aria2c -s 8 -x 8 -k 1M -o '{download_filename}' '{url}'\n")
+                    fobj.write(f"time s3cmd put '{download_filename}' s3://mirror/tse/{filename}\n")
+                    fobj.write(f"time echo \"$(sha512sum '{download_filename}' | cut -d' ' -f 1) {filename}\" >> {sha512sums_filename}\n")
                 fobj.write("\n")
-        # chmod 750 mirror.sh
-        os.chmod("mirror.sh", stat.S_IRUSR + stat.S_IWUSR + stat.S_IXUSR + stat.S_IRGRP + stat.S_IXGRP)
+        # chmod 750 {settings.MIRROR_FILENAME}
+        os.chmod(settings.MIRROR_FILENAME, stat.S_IRUSR + stat.S_IWUSR + stat.S_IXUSR + stat.S_IRGRP + stat.S_IXGRP)
 
     else:
         for path in (settings.DATA_PATH, settings.DOWNLOAD_PATH, settings.OUTPUT_PATH):
