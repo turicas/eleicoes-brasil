@@ -156,7 +156,10 @@ if __name__ == "__main__":
         added_urls = []
         with open("mirror.sh", mode="w") as fobj:
             fobj.write("#!/bin/bash\n")
+            fobj.write("\n")
+            fobj.write("set -e\n")
             fobj.write("mkdir -p data/download\n")
+            fobj.write("rm -rf data/download/SHA512SUMS\n")
             for header_type in sorted(extractors.keys()):
                 extractor = extractors[header_type]["extractor_class"]()
                 for year in extractor.year_range:
@@ -169,6 +172,7 @@ if __name__ == "__main__":
                     final_name = url.split("sead/odsele/")[1]
                     fobj.write(f"time aria2c -s 8 -x 8 -k 1M -o 'data/download/{filename}' '{url}'\n")
                     fobj.write(f"time s3cmd put 'data/download/{filename}' s3://mirror/tse/{final_name}\n")
+                    fobj.write(f"time echo \"$(sha512sum 'data/download/{filename}' | cut -d' ' -f 1) {final_name}\" >> data/download/SHA512SUMS\n")
                 fobj.write("\n")
         # chmod 750 mirror.sh
         os.chmod("mirror.sh", stat.S_IRUSR + stat.S_IWUSR + stat.S_IXUSR + stat.S_IRGRP + stat.S_IXGRP)
