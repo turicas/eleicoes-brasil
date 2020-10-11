@@ -1,21 +1,20 @@
-"nome_tse","nome_final","descricao"
-"Data e hora",,"Data e hora de geração da informação"
-"Sequencial Candidato","numero_sequencial_candidato","Sequencial do candidato na base de dados da Justiça Eleitoral"
-"UF","sigla_uf","Unidade da Federação do candidato"
-"Sigla Partido","sigla_partido","Sigla do partido"
-"Número candidato","numero_candidato","Número do candidato registrado na Justiça Eleitoral"
-"Cargo","descricao_cargo","Candidatura a qual concorre o candidato registrado na Justiça Eleitoral"
-"Nome candidato","nome_candidato","Nome do candidato registrado na Justiça Eleitoral"
-"CPF do candidato","cpf_candidato","CPF do candidato registrado na Justiça Eleitoral"
-"Entrega em conjunto?","entrega_em_conjuto","Entrega em Conjunto"
-"Número Recibo Eleitoral","numero_recibo_eleitoral","Número do recibo eleitoral referente à doação recebida"
-"Número do documento","numero_documento","Número do documento referente à transação bancária ou comprovante da doação estimável"
-"CPF/CNPJ do doador","cpf_cnpj_doador","CPF/CNPJ do doador declarado à Justiça Eleitoral"
-"Nome do doador","nome_doador","Nome do doador declarado à Justiça Eleitoral"
-"Data da receita","data","Data da doação declarada à Justiça Eleitoral"
-"Valor receita","valor","Valor da doação em Reais (R$)"
-"Tipo receita","tipo","Tipo da doação, podendo ser 'Recursos Próprios', 'Recursos de Pessoas Físicas', 'Doações pela interne', 'Recursos de Outros'"
-"Fonte recurso","fonte_recurso","Fonte do recurso da doação, podendo ser 'Fundo Partidário' ou 'Outros Recursos'"
-"Espécie recurso","tipo_recurso","Espécie do recurso da doação, podendo assumir os valores 'Cheque', 'Em Espécie', 'Transferência Eletrônica', 'Depósito em'"
-"Espécie”,"especie", "'Cartão de Crédito', 'Cartão de Débito', 'Boleto de Cobrança', 'Estimado' e 'Outros Títulos de Crédito'."
-"Descrição da receita","descricao","Descrição da doação quando esta for estimável em dinheiro"
+nome_tse,nome_final,descricao
+Data e hora,,Data e hora de geração da informação
+Sequencial Candidato,numero_sequencial_candidato,Sequencial do candidato na base de dados da Justiça Eleitoral
+UF,sigla_uf,Unidade da Federação do candidato
+Sigla Partido,sigla_partido,Sigla do partido
+Número candidato,numero_candidato,Número do candidato registrado na Justiça Eleitoral
+Cargo,descricao_cargo,Candidatura a qual concorre o candidato registrado na Justiça Eleitoral
+Nome candidato,nome_candidato,Nome do candidato registrado na Justiça Eleitoral
+CPF do candidato,cpf_candidato,CPF do candidato registrado na Justiça Eleitoral
+Entrega em conjunto?,entrega_em_conjuto,Entrega em Conjunto
+Número Recibo Eleitoral,numero_recibo_eleitoral,Número do recibo eleitoral referente à doação recebida
+Número do documento,numero_documento,Número do documento referente à transação bancária ou comprovante da doação estimável
+CPF/CNPJ do doador,cpf_cnpj_doador,CPF/CNPJ do doador declarado à Justiça Eleitoral
+Nome do doador,nome_doador,Nome do doador declarado à Justiça Eleitoral
+Data da receita,data,Data da doação declarada à Justiça Eleitoral
+Valor receita,valor,Valor da doação em Reais (R$)
+Tipo receita,tipo,"Tipo da doação, podendo ser 'Recursos Próprios', 'Recursos de Pessoas Físicas', 'Doações pela interne', 'Recursos de Outros'"
+Fonte recurso,fonte_recurso,"Fonte do recurso da doação, podendo ser 'Fundo Partidário' ou 'Outros Recursos'"
+Espécie recurso,tipo_recurso,"Espécie do recurso da doação, podendo assumir os valores 'Cheque', 'Em Espécie', 'Transferência Eletrônica', 'Depósito em espécie’, ‘Cartão de Crédito', 'Cartão de Débito', 'Boleto de Cobrança', 'Estimado' e 'Outros Títulos de Crédito'."
+Descrição da receita,descricao,Descrição da doação quando esta for estimável em dinheiro

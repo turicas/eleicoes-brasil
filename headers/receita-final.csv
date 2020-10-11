@@ -50,7 +50,6 @@ fonte_recurso,"Fonte do recurso da doação, podendo ser 'Fundo Partidário' ou 
 natureza_receita,Descrição da natureza do tipo espécie do recursos da doação. Pode assumir os valores ‘Financeiro’ ou ‘Estimável’. Aparece no TSE como: DS_NATUREZA_RECEITA (2018). Coluna adicionada em 2018.
 origem_receita,"Descrição do tipo de origem do recurso (DRD), informado pelo prestador de contas em relação à doação. Aparece no TSE como: DS_ORIGEM_RECEITA (2018). Coluna adicionada em 2018."
 tipo_recurso,"Tipo de recurso (Cheque, TED, Dinheiro, etc). Aparece no TSE como: TP_RECURSO (2002), DECODE(REC.TP_RECURSO,0,'EMESPÉCIE',1,'CHEQUE',2,'ESTIMADO','NÃOINFORMADO') (2004), DESCRICAO_TIPO_RECURSO (2006), RV_MEANING (2006), DS_ESP_RECURSO (2008), Espécie recurso (2010), Especie recurso (2012)."
-" ""'Cartão de Crédito'"," 'Cartão de Débito'. Aparece no TSE como: Espécie”,especie"" (2010). Coluna adicionada em 2010."
 cnpj,"CNPJ de campanha. Aparece no TSE como: NR_CNPJ (2008), CNPJ Prestador Conta (2014), NR_CNPJ_PRESTADOR_CONTA (2018). Coluna adicionada em 2008."
 codigo_cargo,"Código do cargo. Aparece no TSE como: CD_CARGO (2004), CODIGO_CARGO (2006). Coluna adicionada em 2004."
 codigo_eleicao,Código da eleição. Aparece no TSE como: CD_ELEICAO (2018). Coluna adicionada em 2018.
