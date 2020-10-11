@@ -8,7 +8,10 @@ OUTPUT_PATH=$DATA_PATH/output
 rm -rf $OUTPUT_PATH
 mkdir -p $OUTPUT_PATH
 
-OPTS=""  # or: OPTS="--use-mirror"
+OPTS=""
+if [ "$1" = "--use-mirror" ]; then
+	OPTS="$1"
+fi
 
 time python tse.py headers
 

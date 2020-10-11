@@ -118,6 +118,7 @@ Você pode especificar também a URL base do *mirror*, que por padrão é do
 python tse.py candidatura --use-mirror --mirror-url=https://data.brasil.io/mirror/eleicoes-brasil/
 ```
 
+
 #### Apenas baixar
 
 Caso queira apenas baixar os arquivos, utilize a opção `--download-only`.
