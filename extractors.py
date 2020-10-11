@@ -64,7 +64,7 @@ MAP_DESCRICAO_CARGO = {
     "VEREADOR": "VEREADOR",
 }
 NOW = datetime.now()
-if NOW >= datetime(NOW.year, 10, 8, 0, 0, 0):
+if NOW >= datetime(NOW.year, 12, 1, 0, 0, 0):
     FINAL_VOTATION_YEAR = NOW.year + 1
 else:
     FINAL_VOTATION_YEAR = NOW.year

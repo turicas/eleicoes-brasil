@@ -144,7 +144,4 @@ time echo "$(sha512sum 'data/download/votacao_candidato_munzona/votacao_candidat
 time aria2c -s 8 -x 8 -k 1M -o 'data/download/votacao_candidato_munzona/votacao_candidato_munzona_2018.zip' 'http://agencia.tse.jus.br/estatistica/sead/odsele/votacao_candidato_munzona/votacao_candidato_munzona_2018.zip'
 time s3cmd put 'data/download/votacao_candidato_munzona/votacao_candidato_munzona_2018.zip' s3://mirror/tse/votacao_candidato_munzona/votacao_candidato_munzona_2018.zip
 time echo "$(sha512sum 'data/download/votacao_candidato_munzona/votacao_candidato_munzona_2018.zip' | cut -d' ' -f 1) votacao_candidato_munzona/votacao_candidato_munzona_2018.zip" >> data/download/SHA512SUMS
-time aria2c -s 8 -x 8 -k 1M -o 'data/download/votacao_candidato_munzona/votacao_candidato_munzona_2020.zip' 'http://agencia.tse.jus.br/estatistica/sead/odsele/votacao_candidato_munzona/votacao_candidato_munzona_2020.zip'
-time s3cmd put 'data/download/votacao_candidato_munzona/votacao_candidato_munzona_2020.zip' s3://mirror/tse/votacao_candidato_munzona/votacao_candidato_munzona_2020.zip
-time echo "$(sha512sum 'data/download/votacao_candidato_munzona/votacao_candidato_munzona_2020.zip' | cut -d' ' -f 1) votacao_candidato_munzona/votacao_candidato_munzona_2020.zip" >> data/download/SHA512SUMS
 
