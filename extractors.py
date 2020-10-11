@@ -215,7 +215,7 @@ class Extractor:
     def download(self, year, force=False):
         filename = self.download_filename(year)
         if not filename.parent.exists():
-            filename.parent.mkdir()
+            filename.parent.mkdir(parents=True)
         if not force and filename.exists():  # File has already been downloaded
             return {"downloaded": False, "filename": filename}
 

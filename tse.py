@@ -187,7 +187,7 @@ if __name__ == "__main__":
     else:
         for path in (settings.DATA_PATH, settings.DOWNLOAD_PATH, settings.OUTPUT_PATH):
             if not path.exists():
-                path.mkdir()
+                path.mkdir(parents=True)
 
         extractor = extractors[args.type]
         if args.years == "all":

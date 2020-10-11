@@ -1,6 +1,5 @@
 import csv
 from io import BytesIO, TextIOWrapper
-from os.path import basename
 from pathlib import Path
 from zipfile import ZipFile
 
@@ -56,14 +55,16 @@ class FiliadosFileParserSpider(scrapy.Spider):
         meta = response.request.meta
         zf = ZipFile(BytesIO(response.body))
         files = sorted(zf.filelist, key=lambda row: row.filename, reverse=True)
+        csv_fobj = None
         for file_info in files:
-            filename = basename(file_info.filename)
+            filename = Path(file_info.filename).name
             if filename.startswith("filiados_") and filename.endswith(".csv"):
                 csv_fobj = zf.open(file_info.filename)
                 break
 
-        reader = csv.DictReader(
-            TextIOWrapper(csv_fobj, encoding="iso-8859-15"), dialect=utils.TSEDialect
-        )
-        for row in reader:
-            yield convert_row(row)
+        if csv_fobj is not None:
+            reader = csv.DictReader(
+                TextIOWrapper(csv_fobj, encoding="iso-8859-15"), dialect=utils.TSEDialect
+            )
+            for row in reader:
+                yield convert_row(row)

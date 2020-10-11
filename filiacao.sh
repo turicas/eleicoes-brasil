@@ -9,7 +9,7 @@ OUTPUT_PATH=$DATA_PATH/output
 LINKS_PATH=$OUTPUT_PATH/filiacao-links.csv
 FILIACAO_PATH=$OUTPUT_PATH/filiacao.csv
 
-rm -rf $DOWNLOAD_PATH/filiacao-* $LINKS_PATH
+rm -rf $DOWNLOAD_PATH/filiacao* $LINKS_PATH $OUTPUT_PATH/filiacao*
 mkdir -p $DOWNLOAD_PATH $OUTPUT_PATH $LOG_PATH
 
 time scrapy runspider \
@@ -23,5 +23,5 @@ time scrapy runspider \
 	-o $FILIACAO_PATH \
 	filiacao_parse.py
 
-time xz -4z $LINKS_PATH
-time xz -4z $FILIACAO_PATH
+gzip $LINKS_PATH
+gzip $FILIACAO_PATH
