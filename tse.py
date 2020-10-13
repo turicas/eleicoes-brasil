@@ -144,7 +144,7 @@ if __name__ == "__main__":
     parser.add_argument("--years", default="all")
     parser.add_argument("--use-mirror", action="store_true")
     parser.add_argument("--mirror-url", default="https://data.brasil.io/mirror/eleicoes-brasil/", help="Use the default data repository from TSE or a mirror")
-    parser.add_argument("--no_censorship", action="store_true")
+    parser.add_argument("--no-censorship", action="store_true")
     args = parser.parse_args()
 
     if args.type == "headers":

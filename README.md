@@ -55,7 +55,7 @@ facilitar a exposição desses dados. Os dados censurados são:
   - A coluna `cpf` terá os 3 primerios dígitos trocados por `*`
 
 Caso queira rodar o script sem o modo censura, altere o script `run.sh` e
-adicione a opção `--no_censorship` para o script `tse.py`.
+adicione a opção `--no-censorship` para o script `tse.py`.
 
 
 ## Instalando
