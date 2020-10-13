@@ -24,9 +24,10 @@ from extractors import (
 REGEXP_HEADER_YEAR = re.compile("([0-9]{4}.*)\.csv")
 
 
-def extract_data(ExtractorClass, year_range, output_filename, base_url, force_redownload=False, download_only=False):
+def extract_data(ExtractorClass, year_range, output_filename, base_url,
+        force_redownload=False, download_only=False, censor=False):
     extractor_name = ExtractorClass.__name__.replace("Extractor", "")
-    extractor = ExtractorClass(base_url)
+    extractor = ExtractorClass(base_url, censor=censor)
     output_fobj = open_compressed(output_filename, mode="w", encoding="utf-8")
     writer = csv.DictWriter(
         output_fobj,
@@ -143,6 +144,7 @@ if __name__ == "__main__":
     parser.add_argument("--years", default="all")
     parser.add_argument("--use-mirror", action="store_true")
     parser.add_argument("--mirror-url", default="https://data.brasil.io/mirror/eleicoes-brasil/", help="Use the default data repository from TSE or a mirror")
+    parser.add_argument("--no_censorship", action="store_true")
     args = parser.parse_args()
 
     if args.type == "headers":
@@ -211,4 +213,5 @@ if __name__ == "__main__":
             base_url=args.mirror_url if args.use_mirror else None,
             force_redownload=args.force_redownload,
             download_only=args.download_only,
+            censor=not args.no_censorship,
         )

@@ -44,6 +44,20 @@ conversões dos dados, como:
 > inconsistências ainda não resolvidas e serão feitos em breve).
 
 
+### Privacidade
+
+Para garantir a privacidade e evitar SPAM, o script limpa algumas colunas com
+informações sensíveis. Essa é a forma padrão de funcionamento para não
+facilitar a exposição desses dados. Os dados censurados são:
+
+- Na tabela `candidatura`:
+  - A coluna `email` terá seu conteúdo totalmente limpo
+  - A coluna `cpf` terá os 3 primerios dígitos trocados por `*`
+
+Caso queira rodar o script sem o modo censura, altere o script `run.sh` e
+adicione a opção `--no_censorship` para o script `tse.py`.
+
+
 ## Instalando
 
 Os programas requerem Python 3.7+. Instale as dependências executando:

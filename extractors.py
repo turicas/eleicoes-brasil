@@ -18,6 +18,8 @@ import utils
 import settings
 
 
+# TODO: may add validators to convert_row methods
+
 REGEXP_NUMBERS = re.compile("([0-9]+)")
 REGEXP_WRONGQUOTE = re.compile(r';"([^;\r\n]+"[^;\r\n]*)";')
 MAP_CODIGO_CARGO = {
@@ -68,6 +70,18 @@ if NOW >= datetime(NOW.year, 12, 1, 0, 0, 0):
     FINAL_VOTATION_YEAR = NOW.year + 1
 else:
     FINAL_VOTATION_YEAR = NOW.year
+
+
+def obfuscate_cpf(cpf):
+    """
+    >>> obfuscate_cpf("12345678901")
+    '***456789**'
+    >>> obfuscate_cpf("123")
+    '123'
+    """
+    if len(cpf) == 11:
+        cpf = f"***{cpf[3:9]}**"
+    return cpf
 
 
 class SimNaoBooleanField(rows.fields.BoolField):
@@ -194,9 +208,10 @@ class Extractor:
     encoding = "latin-1"
     schema_filename = ""
 
-    def __init__(self, base_url=None):
+    def __init__(self, base_url=None, censor=False):
         if base_url is not None:
             self.base_url = base_url
+        self.censor = censor
 
     def filename(self, year):
         """Caminho para arquivo de um ano, que será juntado com self.base_url"""
@@ -330,8 +345,7 @@ class CandidaturaExtractor(Extractor):
         }
 
     def convert_row(self, row_field_names, final_field_names):
-        # TODO: may add validators for these converter methods
-
+        censor = self.censor
         def convert(row_data):
             if len(row_data) == 1 and "elapsed" in row_data[0].lower():
                 return None
@@ -360,6 +374,9 @@ class CandidaturaExtractor(Extractor):
             )
             new["data_eleicao"] = fix_data(new["data_eleicao"])
             new["data_nascimento"] = fix_data(new["data_nascimento"])
+            if censor:
+                row["cpf"] = obfuscate_cpf(row["cpf"])
+                row["email"] = ""
 
             return new
 
