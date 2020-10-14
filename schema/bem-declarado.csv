@@ -8,11 +8,11 @@ nome_tipo_eleicao,text
 nome_ue,text
 sigla_ue,text
 sigla_uf,text
-numero_sequencial,integer
+numero_sequencial,text
 codigo_tipo,integer
 data_ultima_atualizacao,text
 descricao_tipo,text
 detalhe,text
 hora_ultima_atualizacao,text
 numero_ordem,text
-valor,float
+valor,decimal

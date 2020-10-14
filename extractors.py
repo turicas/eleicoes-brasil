@@ -1,17 +1,24 @@
 import csv
 import re
+from datetime import datetime
 from functools import lru_cache
-from io import StringIO, TextIOWrapper
+from io import StringIO, TextIOWrapper, BytesIO
 from pathlib import Path
 from shutil import move as move_file
+from shutil import move as rename_file
 from urllib.parse import urljoin
 from zipfile import ZipFile
 
+import rarfile
 import rows
-from rows.utils import download_file
+from cached_property import cached_property
+from rows.utils import download_file, load_schema
 
 import utils
 import settings
+
+
+# TODO: may add validators to convert_row methods
 
 REGEXP_NUMBERS = re.compile("([0-9]+)")
 REGEXP_WRONGQUOTE = re.compile(r';"([^;\r\n]+"[^;\r\n]*)";')
@@ -58,6 +65,28 @@ MAP_DESCRICAO_CARGO = {
     "VICE-PREFEITO": "VICE-PREFEITO",
     "VEREADOR": "VEREADOR",
 }
+NOW = datetime.now()
+if NOW >= datetime(NOW.year, 12, 1, 0, 0, 0):
+    FINAL_VOTATION_YEAR = NOW.year + 1
+else:
+    FINAL_VOTATION_YEAR = NOW.year
+
+
+def obfuscate_cpf(cpf):
+    """
+    >>> obfuscate_cpf("12345678901")
+    '***456789**'
+    >>> obfuscate_cpf("123")
+    '123'
+    """
+    if len(cpf) == 11:
+        cpf = f"***{cpf[3:9]}**"
+    return cpf
+
+
+class SimNaoBooleanField(rows.fields.BoolField):
+    TRUE_VALUES = ("sim",)
+    FALSE_VALUES = ("não", "nao")
 
 
 @lru_cache()
@@ -95,9 +124,27 @@ def fix_valor(value):
 
 
 def fix_cpf(value):
+    """
+    >>> fix_cpf("123.456.789-01")
+    '12345678901'
+    >>> fix_cpf("123456789")
+    '00123456789'
+    >>> fix_cpf("000.000.000-00")
+    ''
+    """
+
     value = "".join(REGEXP_NUMBERS.findall(value))
     if len(value) < 11:
         value = "0" * (11 - len(value)) + value
+    if set(value) == {"0"}:
+        value = ""
+    return value
+
+
+def fix_cnpj_cpf(value):
+    value = re.sub(r"\s+", "", value)
+    if set(value) == {"0"}:
+        value = ""
     return value
 
 
@@ -105,23 +152,91 @@ def fix_titulo_eleitoral(value):
     return "".join(REGEXP_NUMBERS.findall(value))
 
 
+def fix_data(value):
+    original_value = value
+    new_dt = ""
+    value = value.replace("00:00:00", "").replace("0002", "2002").strip()
+    if not value:
+        return None
+
+    possible_date_formats = ("%d/%m/%Y", "%d/%m/%y", "%d-%b-%y")
+    dt = None
+    for date_format in possible_date_formats:
+        try:
+            dt = datetime.strptime(value, date_format)
+        except ValueError:
+            continue
+    if dt is None:
+        # TODO: talvez gerar uma exceção com o erro, salvar o erro em algum log
+        # ou gravar valor em outra coluna
+        return None
+
+    return dt.strftime("%Y-%m-%d")
+
+
+def clean_header(header):
+    return re.sub('"', "", header.strip())
+
+
+def get_organization(internal_filename, year):
+    if year == 2010:
+        if "Receitas" in internal_filename:
+            return internal_filename.split("Receitas")[1].replace(".txt", "").lower()
+        else:
+            return internal_filename.split("Despesas")[1].replace(".txt", "").lower()
+    elif year in (2008, 2014, 2016):
+        return internal_filename.split("_")[1]
+    elif year in (2002, 2004, 2006):
+        return "comites" if "Comit" in internal_filename else "candidatos"
+    elif year == 2012:
+        return internal_filename.split("_")[1]
+    elif "2018" in year:
+        cand_or_party = (
+            "candidatos" if "candidatos" in internal_filename else "partidos"
+        )
+        if "pagas" in internal_filename:
+            cand_or_party = "pagas-" + cand_or_party
+        elif "contratadas" in internal_filename:
+            cand_or_party = "contratadas-" + cand_or_party
+        origin = "originarios-" if "originario" in internal_filename else ""
+        return origin + cand_or_party
+
+
 class Extractor:
 
     base_url = "http://agencia.tse.jus.br/estatistica/sead/odsele/"
     encoding = "latin-1"
+    schema_filename = ""
 
-    def __init__(self, base_url=None):
+    def __init__(self, base_url=None, censor=False):
         if base_url is not None:
             self.base_url = base_url
+        self.censor = censor
+
+    def filename(self, year):
+        """Caminho para arquivo de um ano, que será juntado com self.base_url"""
+        raise NotImplementedError()
+
+    def url(self, year):
+        return urljoin(self.base_url, self.filename(year))
+
+    def download_filename(self, year):
+        return settings.DOWNLOAD_PATH / self.filename(year)
+
+    @property
+    def schema(self):
+        return load_schema(str(self.schema_filename))
 
     def download(self, year, force=False):
-        filename = self.filename(year)
+        filename = self.download_filename(year)
+        if not filename.parent.exists():
+            filename.parent.mkdir(parents=True)
         if not force and filename.exists():  # File has already been downloaded
             return {"downloaded": False, "filename": filename}
 
         url = self.url(year)
-        file_data = download_file(url, progress=True)
-        move_file(file_data.uri, filename)
+        file_data = download_file(url, progress=True, chunk_size=256 * 1024)
+        rename_file(file_data.uri, filename)
         return {"downloaded": True, "filename": filename}
 
     def extract_state_from_filename(self, filename):
@@ -133,7 +248,7 @@ class Extractor:
         return fobj
 
     def extract(self, year):
-        filename = self.filename(year)
+        filename = self.download_filename(year)
         zfile = ZipFile(filename)
         for file_info in zfile.filelist:
             internal_filename = file_info.filename
@@ -174,15 +289,19 @@ class Extractor:
 
 class CandidaturaExtractor(Extractor):
 
-    def url(self, year):
-        return urljoin(self.base_url, f"consulta_cand/consulta_cand_{year}.zip")
+    year_range = tuple(range(1996, FINAL_VOTATION_YEAR + 1, 2))
+    schema_filename = settings.SCHEMA_PATH / "candidatura.csv"
 
     def filename(self, year):
-        return settings.DOWNLOAD_PATH / f"candidatura-{year}.zip"
+        return f"consulta_cand/consulta_cand_{year}.zip"
 
     def valid_filename(self, filename):
         name = filename.lower()
-        return name.startswith("consulta_cand_") and "_brasil.csv" not in name
+        return (
+            name.startswith("consulta_cand_")
+            and "_brasil.csv" not in name
+            and not name.endswith("todos.csv")
+        )
 
     def fix_fobj(self, fobj):
         """Fix wrong-escaped lines from the TSE's CSVs
@@ -210,8 +329,10 @@ class CandidaturaExtractor(Extractor):
             header_year = "1996"
         elif year == 2012:
             header_year = "2012"
-        elif 2014 <= year <= 2018:
-            header_year = "2018"
+        elif year == 2014:
+            header_year = "2014"
+        elif 2016 <= year <= 2020:
+            header_year = "2020"
         else:
             raise ValueError(f"Unrecognized year ({year}, {uf})")
         return {
@@ -224,8 +345,7 @@ class CandidaturaExtractor(Extractor):
         }
 
     def convert_row(self, row_field_names, final_field_names):
-        # TODO: may add validators for these converter methods
-
+        censor = self.censor
         def convert(row_data):
             if len(row_data) == 1 and "elapsed" in row_data[0].lower():
                 return None
@@ -249,6 +369,14 @@ class CandidaturaExtractor(Extractor):
             new["codigo_cargo"], new["descricao_cargo"], new["pergunta"] = fix_cargo(
                 new["codigo_cargo"], new["descricao_cargo"]
             )
+            new["candidato_inserido_urna"] = SimNaoBooleanField.deserialize(
+                new["candidato_inserido_urna"]
+            )
+            new["data_eleicao"] = fix_data(new["data_eleicao"])
+            new["data_nascimento"] = fix_data(new["data_nascimento"])
+            if censor:
+                row["cpf"] = obfuscate_cpf(row["cpf"])
+                row["email"] = ""
 
             return new
 
@@ -300,36 +428,39 @@ class CandidaturaExtractor(Extractor):
 
 class BemDeclaradoExtractor(Extractor):
 
-    def url(self, year):
-        return urljoin(self.base_url, f"bem_candidato/bem_candidato_{year}.zip")
+    year_range = tuple(range(2006, FINAL_VOTATION_YEAR + 1, 2))
+    schema_filename = settings.SCHEMA_PATH / "bem-declarado.csv"
 
     def filename(self, year):
-        return settings.DOWNLOAD_PATH / f"bemdeclarado-{year}.zip"
+        return f"bem_candidato/bem_candidato_{year}.zip"
 
     def valid_filename(self, filename):
         name = filename.lower()
-        return name.startswith("bem_candidato") and "_brasil.csv" not in name
+        return (
+            name.startswith("bem_candidato")
+            and "_brasil.csv" not in name
+            and not name.endswith("todos.csv")
+        )
 
     def get_headers(self, year, filename, internal_filename):
         uf = self.extract_state_from_filename(internal_filename)
         if 2006 <= year <= 2012:
             header_year = "2006"
-        elif 2014 <= year <= 2018:
+        elif 2014 <= year <= 2020:
             header_year = "2014"
         else:
             raise ValueError("Unrecognized year")
 
         return {
             "year_fields": read_header(
-                settings.HEADERS_PATH / f"bemdeclarado-{header_year}.csv"
+                settings.HEADERS_PATH / f"bem-declarado-{header_year}.csv"
             ),
             "final_fields": read_header(
-                settings.HEADERS_PATH / "bemdeclarado-final.csv"
+                settings.HEADERS_PATH / "bem-declarado-final.csv"
             ),
         }
 
     def convert_row(self, row_field_names, final_field_names):
-
         def convert(row_data):
             row = dict(zip(row_field_names, row_data))
             new = {}
@@ -369,11 +500,35 @@ class BemDeclaradoExtractor(Extractor):
 
 class VotacaoZonaExtractor(Extractor):
 
-    def url(self, year):
-        return urljoin(self.base_url, f"votacao_candidato_munzona/votacao_candidato_munzona_{year}.zip")
+    year_range = tuple(range(1996, FINAL_VOTATION_YEAR, 2))
+    schema_filename = settings.SCHEMA_PATH / "votacao-zona.csv"
+
+    @cached_property
+    def codigo_situacao_candidatura(self):
+        return {
+            (
+                row.codigo_situacao_candidatura,
+                row.descricao_situacao_candidatura,
+            ): row.novo_codigo_situacao_candidatura
+            for row in rows.import_from_csv(
+                settings.HEADERS_PATH / f"situacao-candidatura.csv",
+            )
+        }
+
+    @cached_property
+    def descricao_situacao_candidatura(self):
+        return {
+            (
+                row.codigo_situacao_candidatura,
+                row.descricao_situacao_candidatura,
+            ): row.nova_descricao_situacao_candidatura
+            for row in rows.import_from_csv(
+                settings.HEADERS_PATH / f"situacao-candidatura.csv",
+            )
+        }
 
     def filename(self, year):
-        return settings.DOWNLOAD_PATH / f"votacao-zona-{year}.zip"
+        return f"votacao_candidato_munzona/votacao_candidato_munzona_{year}.zip"
 
     def valid_filename(self, filename):
         return filename.startswith("votacao_candidato_munzona_")
@@ -382,10 +537,8 @@ class VotacaoZonaExtractor(Extractor):
         uf = self.extract_state_from_filename(internal_filename)
         if year < 2014:
             header_year = "1994"
-        elif 2014 <= year <= 2016:
+        elif 2014 <= year <= 2018:
             header_year = "2014"
-        elif year == 2018:
-            header_year = "2018"
         else:
             raise ValueError("Unrecognized year")
         return {
@@ -398,7 +551,6 @@ class VotacaoZonaExtractor(Extractor):
         }
 
     def convert_row(self, row_field_names, final_field_names):
-
         def convert(row_data):
             row = dict(zip(row_field_names, row_data))
             new = {}
@@ -413,6 +565,11 @@ class VotacaoZonaExtractor(Extractor):
             new["codigo_cargo"], new["descricao_cargo"], _ = fix_cargo(
                 new["codigo_cargo"], new["descricao_cargo"]
             )
+
+            key = (new["codigo_situacao_candidatura"],
+                    new["descricao_situacao_candidatura"])
+            new["codigo_situacao_candidatura"] = self.codigo_situacao_candidatura[key]
+            new["descricao_situacao_candidatura"] = self.descricao_situacao_candidatura[key]
 
             return new
 
@@ -449,3 +606,239 @@ class VotacaoZonaExtractor(Extractor):
         else:
             value = 4
         return value, name
+
+
+class PrestacaoContasExtractor(Extractor):
+
+    year_range = (
+        2002,
+        2004,
+        2006,
+        2008,
+        2010,
+        2012,
+        2014,
+        "2014-suplementar",
+        2016,
+        "2018-orgaos",
+        "2018-candidatos",
+    )
+
+    def filename(self, year):
+        urls = {
+            2002: "contas_2002",
+            2004: "contas_2004",
+            2006: "contas_2006",
+            2008: "contas_2008",
+            2010: "contas_2010",
+            2012: "final_2012",
+            2014: "final_2014",
+            "2014-suplementar": "contas_final_sup_2014",
+            2016: "contas_final_2016",
+            "2016-suplementar": "contas_final_sup_2016",
+            "2018-orgaos": "de_contas_eleitorais_orgaos_partidarios_2018",
+            "2018-candidatos": "de_contas_eleitorais_candidatos_2018",
+        }
+        return f"prestacao_contas/prestacao_{urls[year]}.zip"
+
+    def _get_compressed_fobjs(self, filename, year):
+        with open(filename, mode="rb") as fobj:
+            first_bytes = fobj.read(10)
+        if first_bytes.startswith(b"PK\x03\x04"):  # Zip archive
+            zfile = ZipFile(str(filename))
+            filelist = [fn.filename for fn in zfile.filelist]
+            opener = zfile
+        elif first_bytes.startswith(b"Rar!"):
+            rarobj = rarfile.RarFile(str(filename))
+            filelist = rarobj.namelist()
+            opener = rarobj
+        else:
+            raise RuntimeError(f"Could not extract archive '{filename}'")
+
+        valid_names = []
+        fobjs = []
+        for internal_filename in filelist:
+            if not self.valid_filename(internal_filename, year=year):
+                continue
+            fobjs.append(opener.open(internal_filename))
+            valid_names.append(internal_filename)
+
+        return fobjs, valid_names
+
+    def fix_fobj(self, fobj, year):
+        if year == 2002 or year == 2004 or year == 2006 or year == 2008:
+            fobj = utils.FixQuotes(fobj, encoding=self.encoding)
+        else:
+            fobj = TextIOWrapper(fobj, encoding=self.encoding)
+
+        return fobj
+
+    def get_headers(self, year, filename, internal_filename):
+        if str(year).endswith("suplementar"):
+            # TODO: check if 2016-suplementar should use the same headers as
+            # 2014
+            header_year = year
+            year = 2014
+        elif isinstance(year, str) and "2018" in year:
+            header_year = "2018"
+        else:
+            header_year = str(year)
+
+        org = get_organization(internal_filename, year)
+
+        return {
+            "year_fields": read_header(
+                settings.HEADERS_PATH / f"{self.type_mov}-{org}-{header_year}.csv"
+            ),
+            "final_fields": read_header(
+                settings.HEADERS_PATH / f"{self.type_mov}-final.csv"
+            ),
+        }
+
+    def valid_filename(self, filename, year):
+        filename = filename.lower()
+        year = str(year)
+
+        is_type_mov = self.type_mov in filename
+        extension = filename.endswith(".csv") or filename.endswith(".txt")
+        not_brasil = "_brasil" not in filename
+        is_2008 = year == "2008"
+        is_suplementar = "sup" not in filename
+        is_year_suplementar = year.endswith("suplementar")
+
+        return (
+            is_type_mov
+            and extension
+            and (((not_brasil or is_2008) and is_suplementar) or is_year_suplementar)
+        )
+
+    def order_columns(self, name):
+        """Order columns according to a (possible) normalization
+
+        The order is:
+        - Geographic Area
+        - Person
+        - Party
+        - Donator
+        - Revenue
+        """
+
+        if "uf" in name or "ue" in name or name == "municipio":
+            value = 0
+        elif "sequencial" in name or "candidato" in name:
+            value = 1
+        elif "partido" in name or "comite" in name:
+            value = 2
+        elif "doador" in name or "fornecedor" in name:
+            value = 3
+        elif "receita" in name or "despesa" in name or "recurso" in name:
+            value = 4
+        else:
+            value = 5
+
+        return value, name
+
+    def extract(self, year):
+        filename = self.download_filename(year)
+        fobjs, internal_filenames = self._get_compressed_fobjs(filename, year)
+        for fobj, internal_filename in zip(fobjs, internal_filenames):
+            fobj = self.fix_fobj(fobj, year)
+            dialect = csv.Sniffer().sniff(fobj.read(1024))
+            fobj.seek(0)
+            reader = csv.reader(fobj, dialect=dialect)
+            header_meta = self.get_headers(year, filename, internal_filename)
+            year_fields = [
+                field.nome_final or field.nome_tse
+                for field in header_meta["year_fields"]
+            ]
+            final_fields = [
+                field.nome_final
+                for field in header_meta["final_fields"]
+                if field.nome_final
+            ]
+
+            # Add year to final csv
+            final_fields = ["ano_eleicao"] + final_fields
+            convert_function = self.convert_row(year_fields, final_fields, year)
+            for index, row in enumerate(reader):
+                if index == 0 and (
+                    "UF" in row
+                    or "SG_UF" in row
+                    or "SG_UE_SUP" in row
+                    or "SITUACAOCADASTRAL" in row
+                    or "DS_ORGAO" in row
+                    or "RV_MEANING" in row
+                    or "SEQUENCIAL_CANDIDATO" in row
+                ):
+                    # It's a header, we should skip it as a data row but
+                    # use the information to get field ordering (better
+                    # trust it then our headers files, TSE may change the
+                    # order)
+                    field_map = {
+                        field.nome_tse: field.nome_final or field.nome_tse
+                        for field in header_meta["year_fields"]
+                    }
+                    year_fields = [
+                        field_map[clean_header(field_name)] for field_name in row
+                    ]
+                    convert_function = self.convert_row(year_fields, final_fields, year)
+                    continue
+
+                yield convert_function(row)
+
+
+class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
+
+    type_mov = "receita"
+    schema_filename = settings.SCHEMA_PATH / "receita.csv"
+
+    def convert_row(self, row_field_names, final_field_names, year):
+        def convert(row_data):
+            row = dict(zip(row_field_names, row_data))
+            new = {}
+            for key in final_field_names:
+                value = row.get(key, "").strip()
+                if value in ("#NULO", "#NULO#", "#NE#"):
+                    value = ""
+                new[key] = value = utils.unaccent(value).upper()
+
+            new["ano_eleicao"] = year
+            new["valor"] = fix_valor(new["valor"])
+            new["data"] = fix_data(new["data"])
+            new["data_prestacao_contas"] = fix_data(new["data_prestacao_contas"])
+            new["data_eleicao"] = fix_data(new["data_eleicao"])
+            new["cnpj_candidato"] = fix_cnpj_cpf(new["cnpj_candidato"])
+            new["cpf_cnpj_doador"] = fix_cnpj_cpf(new["cpf_cnpj_doador"])
+            new["cpf_cnpj_doador_originario"] = fix_cnpj_cpf(
+                new["cpf_cnpj_doador_originario"]
+            )
+            return new
+
+        return convert
+
+
+class PrestacaoContasDespesasExtractor(PrestacaoContasExtractor):
+
+    type_mov = "despesa"
+    schema_filename = settings.SCHEMA_PATH / "despesa.csv"
+
+    def convert_row(self, row_field_names, final_field_names, year):
+        def convert(row_data):
+            row = dict(zip(row_field_names, row_data))
+            new = {}
+            for key in final_field_names:
+                value = row.get(key, "").strip()
+                if value in ("#NULO", "#NULO#", "#NE#"):
+                    value = ""
+                new[key] = value = utils.unaccent(value).upper()
+
+            new["ano_eleicao"] = year  # TODO: replace "2018-candidatos" with "2018"
+            new["valor_despesa"] = fix_valor(new["valor_despesa"])
+            new["data_despesa"] = fix_data(new["data_despesa"])
+            new["data_prestacao_contas"] = fix_data(new["data_prestacao_contas"])
+            new["data_eleicao"] = fix_data(new["data_eleicao"])
+            new["cnpj_candidato"] = fix_cnpj_cpf(new["cnpj_candidato"])
+            new["cpf_cnpj_fornecedor"] = fix_cnpj_cpf(new["cpf_cnpj_fornecedor"])
+            return new
+
+        return convert

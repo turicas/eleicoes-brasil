@@ -7,7 +7,7 @@ disponíveis são:
 - Candidaturas (1996 a 2018)
 - Bens declarados (2006 a 2018)
 - Votação por zona eleitoral (1996 a 2018)
-
+- Prestação de contas (2002 a 2018)
 
 ## Metodologia
 
@@ -44,9 +44,23 @@ conversões dos dados, como:
 > inconsistências ainda não resolvidas e serão feitos em breve).
 
 
+### Privacidade
+
+Para garantir a privacidade e evitar SPAM, o script limpa algumas colunas com
+informações sensíveis. Essa é a forma padrão de funcionamento para não
+facilitar a exposição desses dados. Os dados censurados são:
+
+- Na tabela `candidatura`:
+  - A coluna `email` terá seu conteúdo totalmente limpo
+  - A coluna `cpf` terá os 3 primerios dígitos trocados por `*`
+
+Caso queira rodar o script sem o modo censura, altere o script `run.sh` e
+adicione a opção `--no-censorship` para o script `tse.py`.
+
+
 ## Instalando
 
-Os programas requerem Python 3.6+. Instale as dependências executando:
+Os programas requerem Python 3.7+. Instale as dependências executando:
 
 ```bash
 pip install -r requirements.txt
@@ -60,14 +74,26 @@ tipo de dado quer baixar/tratar/extrair:
 
 ```bash
 python tse.py candidatura
-python tse.py bemdeclarado
+python tse.py bem-declarado
 python tse.py votacao-zona
+python tse.py receita
+python tse.py despesa
 ```
 
 Os dados ficarão disponíveis em:
 
 - `data/download/`: arquivos originais baixados, por ano
 - `data/output/`: arquivos extraídos (agrupados por tipo)
+
+Caso queira converter os arquivos `.csv.gz` gerados em um banco de dados
+SQLite (facilita as análises), execute:
+
+```bash
+./csv2sqlite.sh
+```
+
+Esse script irá rodar o comando `rows csv-to-sqlite` em todos os arquivos
+gerados em `data/output` e criará o arquivo `data/eleicoes-brasil.sqlite`.
 
 ### Opções
 
@@ -83,13 +109,29 @@ python tse.py candidatura --years=2014,2018
 ```
 
 #### Alterar fonte dos dados
-Como os servidores do TSE podem estar lentos em épocas de eleição, você pode baixar os dados de algum servidor mais rápido que hospede uma cópia deles (chamamos de *mirror*). No Brasil.IO mantemos um *mirror* de alguns arquivos do Repositório de Dados Eleitorais do TSE, **porém** note que ainda não temos uma política de atualização frequente desses dados e, por isso, eles podem estar desatualizados (estamos trabalhando para que sejam atualizados com mais frequência e que a data de cópia dos dados fique explícita em uma página).
 
-Para que o script colete os daos usando nosso *mirror*, execute-o com a opção `--base_url`:
+Como os servidores do TSE podem estar lentos em épocas de eleição, você pode
+baixar os dados de algum servidor mais rápido que hospede uma cópia deles
+(chamamos de *mirror*). No Brasil.IO mantemos um *mirror* de alguns arquivos do
+Repositório de Dados Eleitorais do TSE, **porém** note que ainda não temos uma
+política de atualização frequente desses dados e, por isso, eles podem estar
+desatualizados (estamos trabalhando para que sejam atualizados com mais
+frequência e que a data de cópia dos dados fique explícita em uma página).
+
+Para que o script colete os daos usando nosso *mirror*, execute-o com a opção
+`--use-mirror`:
 
 ```bash
-python tse.py candidatura --base_url=https://data.brasil.io/mirror/tse/
+python tse.py candidatura --use-mirror
 ```
+
+Você pode especificar também a URL base do *mirror*, que por padrão é do
+[Brasil.IO](https://brasil.io/):
+
+```bash
+python tse.py candidatura --use-mirror --mirror-url=https://data.brasil.io/mirror/eleicoes-brasil/
+```
+
 
 #### Apenas baixar
 
@@ -107,8 +149,16 @@ Você pode especificar o arquivo de saída (que será sempre um CSV, mas pode
 estar compactado):
 
 ```bash
-python tse.py candidatura --output=candidaturas.csv.gz
+python tse.py candidatura --output=candidatura.csv.gz
 ```
+
+#### Observações
+
+Em alguns casos o TSE libera arquivos compactados no formato RAR (mesmo com a
+extensão ".zip"). Para extrair os dados desses arquivos você precisa instalar
+em seu sistema o bsdtar ou unrar (em sistemas Debian e derivados):
+`apt install libarchive-tools` ou `apt install unrar` - o último não é software
+livre).
 
 
 ## Desenvolvendo/contribuindo

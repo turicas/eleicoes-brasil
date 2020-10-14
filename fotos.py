@@ -11,7 +11,7 @@ download_path = data_path / "download"
 output_path = data_path / "output"
 for path in (data_path, download_path, output_path):
     if not path.exists():
-        path.mkdir()
+        path.mkdir(parents=True)
 
 
 def download_photos(year):
@@ -28,14 +28,14 @@ def download_photos(year):
             print(" - downloaded already, skipping.")
         else:
             if not filename.parent.exists():
-                filename.parent.mkdir()
+                filename.parent.mkdir(parents=True)
             print()
             download_file(urljoin(url, row.name), progress=True, filename=filename)
             print(f"  saved: {filename}")
 
         photo_path = output_path / year
         if not photo_path.exists():
-            photo_path.mkdir()
+            photo_path.mkdir(parents=True)
         print(f"  Exporting to: {photo_path}")
         zf = ZipFile(filename)
         for file_info in tqdm(zf.filelist, desc="Exporting pictures"):
@@ -47,7 +47,7 @@ def download_photos(year):
             new_filename = photo_path / state / f"{sequence_number}.{extension}"
 
             if not new_filename.parent.exists():
-                new_filename.parent.mkdir()
+                new_filename.parent.mkdir(parents=True)
             zfobj = zf.open(internal_name)
             with open(new_filename, mode="wb") as fobj:
                 fobj.write(zfobj.read())

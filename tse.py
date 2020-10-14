@@ -1,11 +1,14 @@
 import argparse
-import datetime
+import csv
+import os
 import re
+import stat
+import sys
 from collections import OrderedDict
 from glob import glob
 
 import rows
-from rows.utils import CsvLazyDictWriter
+from rows.utils import open_compressed
 from tqdm import tqdm
 
 import settings
@@ -14,15 +17,23 @@ from extractors import (
     CandidaturaExtractor,
     BemDeclaradoExtractor,
     VotacaoZonaExtractor,
+    PrestacaoContasReceitasExtractor,
+    PrestacaoContasDespesasExtractor,
 )
 
 REGEXP_HEADER_YEAR = re.compile("([0-9]{4}.*)\.csv")
 
 
-def extract_data(ExtractorClass, year_range, output_filename, base_url, force_redownload=False, download_only=False):
+def extract_data(ExtractorClass, year_range, output_filename, base_url,
+        force_redownload=False, download_only=False, censor=False):
     extractor_name = ExtractorClass.__name__.replace("Extractor", "")
-    extractor = ExtractorClass(base_url)
-    writer = CsvLazyDictWriter(output_filename)
+    extractor = ExtractorClass(base_url, censor=censor)
+    output_fobj = open_compressed(output_filename, mode="w", encoding="utf-8")
+    writer = csv.DictWriter(
+        output_fobj,
+        fieldnames=list(extractor.schema.keys()),
+    )
+    writer.writeheader()
     for year in year_range:
         print(f"{extractor_name} {year}")
 
@@ -37,6 +48,7 @@ def extract_data(ExtractorClass, year_range, output_filename, base_url, force_re
                 writer.writerow(row)
 
         print()
+    output_fobj.close()
 
 
 def create_final_headers(header_type, order_columns, final_filename):
@@ -48,6 +60,8 @@ def create_final_headers(header_type, order_columns, final_filename):
             if REGEXP_HEADER_YEAR.findall(filename)
         ]
     )
+    # TODO: check if schema is according to final header. if there are diffs,
+    # warn user.
     for index, (header_year, filename) in enumerate(filenames):
         header = read_header(filename)
         for row in header:
@@ -83,7 +97,7 @@ def create_final_headers(header_type, order_columns, final_filename):
         final_headers.values(), key=lambda row: order_columns(row["nome_final"])
     )
     for row in header_list:
-        row_data = {"descricao": row["descricao"], "nome_final": row["nome_final"]}
+        row_data = {"descricao": row["descricao"] or "", "nome_final": row["nome_final"]}
         introduced_on = row.get("introduced_on", None)
         original_names = ", ".join(
             f"{item[1]} ({item[0]})" for item in row.get("original_names")
@@ -98,37 +112,39 @@ def create_final_headers(header_type, order_columns, final_filename):
 
 
 if __name__ == "__main__":
-    now = datetime.datetime.now()
-    if now >= datetime.datetime(now.year, 10, 8, 0, 0, 0):
-        final_votation_year = now.year + 1
-    else:
-        final_votation_year = now.year
     extractors = {
         "candidatura": {
-            "years": range(1996, now.year + 1, 2),
             "extractor_class": CandidaturaExtractor,
-            "output_filename": settings.OUTPUT_PATH / "candidatos.csv.xz",
+            "output_filename": settings.OUTPUT_PATH / "candidatura.csv.gz",
         },
-        "bemdeclarado": {
-            "years": range(2006, now.year + 1, 2),
+        "bem-declarado": {
             "extractor_class": BemDeclaradoExtractor,
-            "output_filename": settings.OUTPUT_PATH / "bemdeclarado.csv.xz",
+            "output_filename": settings.OUTPUT_PATH / "bem-declarado.csv.gz",
         },
         "votacao-zona": {
-            "years": range(1996, final_votation_year, 2),
             "extractor_class": VotacaoZonaExtractor,
-            "output_filename": settings.OUTPUT_PATH / "votacao-zona.csv.xz",
+            "output_filename": settings.OUTPUT_PATH / "votacao-zona.csv.gz",
+        },
+        "receita": {
+             "extractor_class": PrestacaoContasReceitasExtractor,
+             "output_filename": settings.OUTPUT_PATH / "receita.csv.gz"
+        },
+        "despesa": {
+             "extractor_class": PrestacaoContasDespesasExtractor,
+             "output_filename": settings.OUTPUT_PATH / "despesa.csv.gz"
         },
     }
     # TODO: clear '##VERIFICAR BASE 1994##' so we can add 1994 too
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("type", choices=list(extractors.keys()) + ["headers"])
+    parser.add_argument("type", choices=list(extractors.keys()) + ["headers", "mirror"])
     parser.add_argument("--force-redownload", action="store_true", default=False)
     parser.add_argument("--download-only", action="store_true", default=False)
     parser.add_argument("--output")
     parser.add_argument("--years", default="all")
-    parser.add_argument("--base_url", default=None, help="Use the default data repository from TSE or a faster mirror (like https://data.brasil.io/mirror/tse)")
+    parser.add_argument("--use-mirror", action="store_true")
+    parser.add_argument("--mirror-url", default="https://data.brasil.io/mirror/eleicoes-brasil/", help="Use the default data repository from TSE or a mirror")
+    parser.add_argument("--no-censorship", action="store_true")
     args = parser.parse_args()
 
     if args.type == "headers":
@@ -138,21 +154,64 @@ if __name__ == "__main__":
             print(f"Creating {final_filename}")
             create_final_headers(header_type, extractor.order_columns, final_filename)
 
+    elif args.type == "mirror":
+        added_urls, created_paths = [], []
+        base_path = settings.MIRROR_FILENAME.parent
+        sha512sums_filename = (settings.DOWNLOAD_PATH / "SHA512SUMS").relative_to(base_path)
+        with open(settings.MIRROR_FILENAME, mode="w") as fobj:
+            fobj.write("#!/bin/bash\n")
+            fobj.write("\n")
+            fobj.write("set -e\n")
+            fobj.write("mkdir -p data/download\n")
+            fobj.write("rm -rf data/download/SHA512SUMS\n")
+            fobj.write("\n")
+            for header_type in sorted(extractors.keys()):
+                extractor = extractors[header_type]["extractor_class"]()
+                for year in extractor.year_range:
+                    url = extractor.url(year)
+                    if url in added_urls:
+                        continue
+                    else:
+                        added_urls.append(url)
+                    filename = extractor.filename(year)
+                    download_filename = extractor.download_filename(year).relative_to(base_path)
+                    save_path = str(download_filename.parent)
+                    if save_path not in created_paths:
+                        fobj.write(f"mkdir -p {save_path}\n")
+                        created_paths.append(save_path)
+                    fobj.write(f"time aria2c -s 8 -x 8 -k 1M -o '{download_filename}' '{url}'\n")
+                    fobj.write(f"time s3cmd put '{download_filename}' s3://mirror/tse/{filename}\n")
+                    fobj.write(f"time echo \"$(sha512sum '{download_filename}' | cut -d' ' -f 1) {filename}\" >> {sha512sums_filename}\n")
+                fobj.write("\n")
+        # chmod 750 {settings.MIRROR_FILENAME}
+        os.chmod(settings.MIRROR_FILENAME, stat.S_IRUSR + stat.S_IWUSR + stat.S_IXUSR + stat.S_IRGRP + stat.S_IXGRP)
+
     else:
-        extractor = extractors[args.type]
-        if args.years == "all":
-            years = extractor["years"]
-        else:
-            years = [int(value) for value in args.years.split(",")]
         for path in (settings.DATA_PATH, settings.DOWNLOAD_PATH, settings.OUTPUT_PATH):
             if not path.exists():
-                path.mkdir()
+                path.mkdir(parents=True)
+
+        extractor = extractors[args.type]
+        if args.years == "all":
+            years = extractor["extractor_class"].year_range
+        else:
+            years = []
+            for value in args.years.split(","):
+                try:
+                    value = int(value)
+                except ValueError:
+                    pass
+                if value not in extractor["extractor_class"].year_range:
+                    sys.stderr.write(f"ERROR: invalid year '{value}' for {args.type}\n")
+                    exit(1)
+                years.append(value)
 
         extract_data(
             ExtractorClass=extractor["extractor_class"],
             year_range=years,
             output_filename=args.output or extractor["output_filename"],
-            base_url=args.base_url,
+            base_url=args.mirror_url if args.use_mirror else None,
             force_redownload=args.force_redownload,
             download_only=args.download_only,
+            censor=not args.no_censorship,
         )
