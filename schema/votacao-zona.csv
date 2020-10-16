@@ -4,7 +4,7 @@ codigo_eleicao,integer
 codigo_tipo_eleicao,integer
 data_eleicao,text
 descricao_eleicao,text
-nome_tipo_eleicao,text
+tipo_eleicao,text
 tipo_abrangencia_eleicao,text
 codigo_totalizacao_turno,integer
 descricao_totalizacao_turno,text

@@ -70,7 +70,7 @@ descricao_tipo,text
 entrega_em_conjuto,text
 esfera_partidaria,text
 nome_administrador,text
-nome_tipo_eleicao,text
+tipo_eleicao,text
 numero_documento,text
 numero_recibo,text
 numero_recibo_eleitoral,text

@@ -68,7 +68,7 @@ entrega_em_conjuto,text
 esfera_partidaria,text
 nome_administador,text
 nome_administrador,text
-nome_tipo_eleicao,text
+tipo_eleicao,text
 numero_documento,text
 segundo_turno,text
 situacao_cadastral,text

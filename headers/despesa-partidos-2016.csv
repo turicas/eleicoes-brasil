@@ -1,23 +1,23 @@
 "nome_tse","nome_final","descricao"
 "Cód. Eleição",,"Código identificador da Eleição"
-"Desc. Eleição","descricao_eleicao","Descrição ou nome da Eleição"
+"Desc. Eleição","eleicao","Descrição ou nome da Eleição"
 "Data e hora",,"Data e hora de geração da informação"
 "CNPJ Prestador Conta","cnpj_orgao","CNPJ da direção partidária  "
 "Sequencial do Prestador de conta",,"Sequencial da direção partidária na base de dados da Justiça Eleitoral"
-"UF","sigla_uf","Unidade da Federação da direção partidária"
+"UF","sigla_unidade_federativa","Unidade da Federação da direção partidária"
 "Sigla da UE","codigo_ue","Código da Unidade Eleitoral"
-"Nome da UE","nome_ue","Município de registro da direção partidária"
-"Tipo diretorio","descricao_orgao","Esfera partidária, podendo assumir os valores “Direção Nacional”, “Direção Estadual/Distrital”, “Direção Municipal”"
+"Nome da UE","unidade_eleitoral","Município de registro da direção partidária"
+"Tipo diretorio","orgao","Esfera partidária, podendo assumir os valores “Direção Nacional”, “Direção Estadual/Distrital”, “Direção Municipal”"
 "Sigla  Partido","sigla_partido","Sigla da legenda da direção partidária registrada na Justiça Eleitoral"
 "Tipo do documento","tipo_documento","Tipo de documento, podendo assumir os valores “Recibo”, “Cupom Fiscal”, “Fatura”, “Nota Fiscal”, “Duplicata”, “Outros”"
 "Número do documento","numero_documento","Número de documento que comprove a despesa"
 "CPF/CNPJ do fornecedor","cpf_cnpj_fornecedor","CPF/CNPJ do fornecedor de bens e/ou serviços declarado à Justiça Eleitoral"
-"Nome do fornecedor","nome_fornecedor","Nome do fornecedor de bens e/ou serviços declarado à Justiça Eleitoral"
-"Nome do fornecedor (Receita Federal)","nome_fornecedor_receita_federal","Nome do fornecedor de bens e/ou serviços cadastrado na Receita Federal do BrasilNome do fornecedor de bens e/ou serviços cadastrado na Receita Federal do Brasil"
+"Nome do fornecedor","fornecedor","Nome do fornecedor de bens e/ou serviços declarado à Justiça Eleitoral"
+"Nome do fornecedor (Receita Federal)","fornecedor_receita_federal","Nome do fornecedor de bens e/ou serviços cadastrado na Receita Federal do BrasilNome do fornecedor de bens e/ou serviços cadastrado na Receita Federal do Brasil"
 "Cod setor econômico do fornecedor","codigo_setor_economico_fornecedor","Código CNAE do fornecedor de bens e/ou serviços, se pessoa jurídica"
 "Setor econômico do fornecedor","setor_economico_fornecedor","Descrição do CNAE do fornecedor de bens e/ou serviços, se pessoa jurídica"
-"Data da despesa","data_despesa","Data da despesa declarada à Justiça Eleitoral"
-"Valor despesa","valor_despesa","Valor da despesa em Reais (R$)"
+"Data da despesa","data","Data da despesa declarada à Justiça Eleitoral"
+"Valor despesa","valor","Valor da despesa em Reais (R$)"
 "Tipo despesa","tipo_despesa","Tipo da despesa, podendo ser
 ""Despesas com pessoal"", ""Encargos sociais"", ""Impostos, contribuições e taxas"", ""Locação/cessão de bens imóveis"",
 ""Despesas com transporte ou deslocamento"", ""Publicidade por carros de som"", ""Locação/cessão de bens móveis (exceto
@@ -30,4 +30,4 @@ financeiras a outros candidatos/partidos"", ""Criação e inclusão de páginas 
 ""Aquisição/Doação de bens móveis ou imóveis"", ""Publicidade por telemarketing”, ""Telefone"", ""Produção de jingles,
 vinhetas e slogans"", ""Pré-instalação física de comitês de campanha"", ""Cessão ou locação de veículos"", ""Baixa de recursos
 estimáveis em dinheiro"", ""Atividades de militância e mobilização de rua"""
-"Descrição da despesa","descricao_despesa","Descrição da despesa"
+"Descrição da despesa","descricao","Descrição da despesa"

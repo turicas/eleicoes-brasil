@@ -1,4 +1,4 @@
-codigo_situacao_candidatura,novo_codigo_situacao_candidatura,descricao_situacao_candidatura,nova_descricao_situacao_candidatura
+codigo_situacao_candidatura,novo_codigo_situacao_candidatura,situacao_candidatura,nova_descricao_situacao_candidatura
 -1,-1,,
 1,1,CADASTRADO,CADASTRADO
 2,2,DEFERIDO,DEFERIDO

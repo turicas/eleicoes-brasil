@@ -95,17 +95,17 @@ def read_header(filename, encoding="utf-8"):
     return rows.import_from_csv(filename, encoding=encoding)
 
 
-def fix_cargo(codigo_cargo, descricao_cargo):
+def fix_cargo(codigo_cargo, cargo):
     if codigo_cargo == "91":
         # It's a question on a plebiscite
-        descricao_cargo, pergunta = "OPCAO PLEBISCITO", descricao_cargo
+        cargo, pergunta = "OPCAO PLEBISCITO", cargo
 
     else:
-        # Normalize descricao_cargo spelling and fix codigo_cargo accordingly
-        descricao_cargo = MAP_DESCRICAO_CARGO[descricao_cargo]
-        codigo_cargo = MAP_CODIGO_CARGO[descricao_cargo]
+        # Normalize cargo spelling and fix codigo_cargo accordingly
+        cargo = MAP_DESCRICAO_CARGO[cargo]
+        codigo_cargo = MAP_CODIGO_CARGO[cargo]
         pergunta = ""
-    return codigo_cargo, descricao_cargo, pergunta
+    return codigo_cargo, cargo, pergunta
 
 
 def fix_nome(value):
@@ -115,7 +115,7 @@ def fix_nome(value):
     return value
 
 
-def fix_sigla_uf(value):
+def fix_sigla_unidade_federativa(value):
     return value.replace("BH", "BA").replace("LB", "ZZ")
 
 
@@ -363,14 +363,14 @@ class CandidaturaExtractor(Extractor):
             # TODO: fix totalizacao
             new["cpf"] = fix_cpf(new["cpf"])
             new["nome"] = fix_nome(new["nome"])
-            new["sigla_uf"] = fix_sigla_uf(new["sigla_uf"])
-            new["sigla_uf_nascimento"] = fix_sigla_uf(new["sigla_uf_nascimento"])
+            new["sigla_unidade_federativa"] = fix_sigla_unidade_federativa(new["sigla_unidade_federativa"])
+            new["sigla_unidade_federativa_nascimento"] = fix_sigla_unidade_federativa(new["sigla_unidade_federativa_nascimento"])
             new["titulo_eleitoral"] = fix_titulo_eleitoral(new["titulo_eleitoral"])
-            new["codigo_cargo"], new["descricao_cargo"], new["pergunta"] = fix_cargo(
-                new["codigo_cargo"], new["descricao_cargo"]
+            new["codigo_cargo"], new["cargo"], new["pergunta"] = fix_cargo(
+                new["codigo_cargo"], new["cargo"]
             )
-            new["candidato_inserido_urna"] = SimNaoBooleanField.deserialize(
-                new["candidato_inserido_urna"]
+            new["candidatura_inserida_urna"] = SimNaoBooleanField.deserialize(
+                new["candidatura_inserida_urna"]
             )
             new["data_eleicao"] = fix_data(new["data_eleicao"])
             new["data_nascimento"] = fix_data(new["data_nascimento"])
@@ -398,7 +398,7 @@ class CandidaturaExtractor(Extractor):
             value = 0
         elif "turno" in name:
             value = 1
-        elif name.endswith("_ue") or name == "sigla_uf":
+        elif name.endswith("_unidade_eleitoral") or name == "sigla_unidade_federativa":
             value = 2
         elif "titulo" in name:
             value = 3
@@ -470,7 +470,7 @@ class BemDeclaradoExtractor(Extractor):
                     value = ""
                 new[key] = value = utils.unaccent(value).upper()
 
-            new["sigla_uf"] = fix_sigla_uf(new["sigla_uf"])
+            new["sigla_unidade_federativa"] = fix_sigla_unidade_federativa(new["sigla_unidade_federativa"])
             new["valor"] = fix_valor(new["valor"])
 
             return new
@@ -489,7 +489,7 @@ class BemDeclaradoExtractor(Extractor):
 
         if name.endswith("_eleicao"):
             value = 0
-        elif name.endswith("_ue") or name == "sigla_uf":
+        elif name.endswith("_unidade_eleitoral") or name == "sigla_unidade_federativa":
             value = 1
         elif name == "numero_sequencial":
             value = 2
@@ -508,7 +508,7 @@ class VotacaoZonaExtractor(Extractor):
         return {
             (
                 row.codigo_situacao_candidatura,
-                row.descricao_situacao_candidatura,
+                row.situacao_candidatura,
             ): row.novo_codigo_situacao_candidatura
             for row in rows.import_from_csv(
                 settings.HEADERS_PATH / f"situacao-candidatura.csv",
@@ -516,12 +516,12 @@ class VotacaoZonaExtractor(Extractor):
         }
 
     @cached_property
-    def descricao_situacao_candidatura(self):
+    def situacao_candidatura(self):
         return {
             (
                 row.codigo_situacao_candidatura,
-                row.descricao_situacao_candidatura,
-            ): row.nova_descricao_situacao_candidatura
+                row.situacao_candidatura,
+            ): row.nova_situacao_candidatura
             for row in rows.import_from_csv(
                 settings.HEADERS_PATH / f"situacao-candidatura.csv",
             )
@@ -560,16 +560,16 @@ class VotacaoZonaExtractor(Extractor):
                     value = ""
                 new[key] = value = utils.unaccent(value).upper()
 
-            new["sigla_uf"] = fix_sigla_uf(new["sigla_uf"])
+            new["sigla_unidade_federativa"] = fix_sigla_unidade_federativa(new["sigla_unidade_federativa"])
             new["nome"] = fix_nome(new["nome"])
-            new["codigo_cargo"], new["descricao_cargo"], _ = fix_cargo(
-                new["codigo_cargo"], new["descricao_cargo"]
+            new["codigo_cargo"], new["cargo"], _ = fix_cargo(
+                new["codigo_cargo"], new["cargo"]
             )
 
             key = (new["codigo_situacao_candidatura"],
-                    new["descricao_situacao_candidatura"])
+                    new["situacao_candidatura"])
             new["codigo_situacao_candidatura"] = self.codigo_situacao_candidatura[key]
-            new["descricao_situacao_candidatura"] = self.descricao_situacao_candidatura[key]
+            new["situacao_candidatura"] = self.situacao_candidatura[key]
 
             return new
 
@@ -592,7 +592,7 @@ class VotacaoZonaExtractor(Extractor):
         elif name.endswith("_turno"):
             value = 1
         elif (
-            name.endswith("_ue") or name.endswith("_uf") or name.endswith("_municipio")
+            name.endswith("_unidade_eleitoral") or name.endswith("_uf") or name.endswith("_municipio")
         ):
             value = 2
         elif (
@@ -802,12 +802,12 @@ class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
                     value = ""
                 new[key] = value = utils.unaccent(value).upper()
 
-            new["ano_eleicao"] = year
+            new["ano"] = year
             new["valor"] = fix_valor(new["valor"])
             new["data"] = fix_data(new["data"])
             new["data_prestacao_contas"] = fix_data(new["data_prestacao_contas"])
             new["data_eleicao"] = fix_data(new["data_eleicao"])
-            new["cnpj_candidato"] = fix_cnpj_cpf(new["cnpj_candidato"])
+            new["cnpj"] = fix_cnpj_cpf(new["cnpj"])
             new["cpf_cnpj_doador"] = fix_cnpj_cpf(new["cpf_cnpj_doador"])
             new["cpf_cnpj_doador_originario"] = fix_cnpj_cpf(
                 new["cpf_cnpj_doador_originario"]
@@ -832,12 +832,12 @@ class PrestacaoContasDespesasExtractor(PrestacaoContasExtractor):
                     value = ""
                 new[key] = value = utils.unaccent(value).upper()
 
-            new["ano_eleicao"] = year  # TODO: replace "2018-candidatos" with "2018"
-            new["valor_despesa"] = fix_valor(new["valor_despesa"])
-            new["data_despesa"] = fix_data(new["data_despesa"])
+            new["ano"] = year  # TODO: replace "2018-candidatos" with "2018"
+            new["valor"] = fix_valor(new["valor"])
+            new["data"] = fix_data(new["data"])
             new["data_prestacao_contas"] = fix_data(new["data_prestacao_contas"])
             new["data_eleicao"] = fix_data(new["data_eleicao"])
-            new["cnpj_candidato"] = fix_cnpj_cpf(new["cnpj_candidato"])
+            new["cnpj"] = fix_cnpj_cpf(new["cnpj"])
             new["cpf_cnpj_fornecedor"] = fix_cnpj_cpf(new["cpf_cnpj_fornecedor"])
             return new
 

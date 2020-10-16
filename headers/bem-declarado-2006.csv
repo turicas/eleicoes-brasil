@@ -1,12 +1,12 @@
 nome_tse,nome_final,descricao
 DATA_GERACAO,,Data de geração do arquivo (data da extração)
 HORA_GERACAO,,Hora de geração do arquivo (hora da extração) - Horário de Brasília
-ANO_ELEICAO,ano_eleicao,Ano da eleição
-DESCRICAO_ELEICAO,descricao_eleicao,Descrição da eleição
-SIGLA_UF,sigla_uf,Sigla da Unidade da Federação em que ocorreu a eleição
+ANO_ELEICAO,ano,Ano da eleição
+DESCRICAO_ELEICAO,eleicao,Descrição da eleição
+SIGLA_UF,sigla_unidade_federativa,Sigla da Unidade da Federação em que ocorreu a eleição
 SQ_CANDIDATO,numero_sequencial,Número sequencial do candidato gerado internamente pelos sistemas eleitorais. Não é o número de campanha do candidato.
 CD_TIPO_BEM_CANDIDATO,codigo_tipo,Código do tipo do bem do candidato
-DS_TIPO_BEM_CANDIDATO,descricao_tipo,Descrição do tipo do bem do candidato
+DS_TIPO_BEM_CANDIDATO,tipo,Descrição do tipo do bem do candidato
 DETALHE_BEM,detalhe,Detalhe do bem do candidato
 VALOR_BEM,valor,Valor declarado do bem do candidato
 DATA_ULTIMA_ATUALIZACAO,data_ultima_atualizacao,Data da última atualização do registro do bem

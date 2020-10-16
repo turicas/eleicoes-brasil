@@ -1,19 +1,19 @@
 nome_tse,nome_final,descricao
 DT_GERACAO,,Data de geração do arquivo (data da extração dos dados)
 HH_GERACAO,,Hora de geração do arquivo (hora da extração) - Horário de Brasília
-ANO_ELEICAO,ano_eleicao,Ano da eleição (referente ao ano eleitoral de pesquisa)
+ANO_ELEICAO,ano,Ano da eleição (referente ao ano eleitoral de pesquisa)
 CD_TIPO_ELEICAO,codigo_tipo_eleicao,Código do tipo de eleição
-NM_TIPO_ELEICAO,nome_tipo_eleicao,Nome do tipo de eleição
-NR_TURNO,numero_turno,Número do turno da eleição
+NM_TIPO_ELEICAO,tipo_eleicao,Nome do tipo de eleição
+NR_TURNO,turno,Número do turno da eleição
 CD_ELEICAO,codigo_eleicao,Código da eleição
-DS_ELEICAO,descricao_eleicao,Descrição da eleição
+DS_ELEICAO,eleicao,Descrição da eleição
 DT_ELEICAO,data_eleicao,Data em que ocorreu a eleição
 TP_ABRANGENCIA,tipo_abrangencia_eleicao,Tipo de abrangência da eleição
-SG_UF,sigla_uf,Sigla da Unidade da Federação em que ocorreu a eleição
-SG_UE,sigla_ue,Sigla da Unidade Eleitoral do candidato (em caso de eleição majoritária é a sigla da UF que o candidato concorre e em caso de eleição municipal é o código TSE do município)
-NM_UE,descricao_ue,Nome da Unidade Eleitoral do candidato (em caso de eleição majoritária é a sigla da UF que o candidato concorre e em caso de eleição municipal é o código TSE do município)
+SG_UF,sigla_unidade_federativa,Sigla da Unidade da Federação em que ocorreu a eleição
+SG_UE,sigla_unidade_eleitoral,Sigla da Unidade Eleitoral do candidato (em caso de eleição majoritária é a sigla da UF que o candidato concorre e em caso de eleição municipal é o código TSE do município)
+NM_UE,unidade_eleitoral,Nome da Unidade Eleitoral do candidato (em caso de eleição majoritária é a sigla da UF que o candidato concorre e em caso de eleição municipal é o código TSE do município)
 CD_CARGO,codigo_cargo,Código do cargo ao qual o candidato concorre
-DS_CARGO,descricao_cargo,Descrição do cargo ao qual o candidato concorre
+DS_CARGO,cargo,Descrição do cargo ao qual o candidato concorre
 SQ_CANDIDATO,numero_sequencial,Número sequencial do candidato gerado internamente pelos sistemas eleitorais (não é o número da campanha do candidato)
 NR_CANDIDATO,numero_urna,Nümero do candidato na urna
 NM_CANDIDATO,nome,Nome completo do candidato
@@ -22,37 +22,37 @@ NM_SOCIAL_CANDIDATO,nome_social,Nome social do candidato
 NR_CPF_CANDIDATO,cpf,Número do CPF do candidato
 NM_EMAIL,email,Endereço de e-mail do candidato
 CD_SITUACAO_CANDIDATURA,codigo_situacao_candidatura,Código da situação do registro de candidatura do candidato
-DS_SITUACAO_CANDIDATURA,descricao_situacao_candidatura,"Descrição da situação do registro de candidatura do candidato - pode assumir os valores “apto (apto para ir para urna)”, “inapto” (inapto para ir para urna) e “cadastrado” (registro de candidatura realizado, mas ainda não julgado)"
+DS_SITUACAO_CANDIDATURA,situacao_candidatura,"Descrição da situação do registro de candidatura do candidato - pode assumir os valores “apto (apto para ir para urna)”, “inapto” (inapto para ir para urna) e “cadastrado” (registro de candidatura realizado, mas ainda não julgado)"
 CD_DETALHE_SITUACAO_CAND,codigo_detalhe_situacao_candidatura,Código do detalhe da situação do registro de candidatura do candidato
-DS_DETALHE_SITUACAO_CAND,descricao_detalhe_situacao_candidatura,Descrição do detalhe da situação do registro de candidatura do candidato
+DS_DETALHE_SITUACAO_CAND,detalhe_situacao_candidatura,Descrição do detalhe da situação do registro de candidatura do candidato
 TP_AGREMIACAO,tipo_agremiacao,Tipo de agremiação - pode assumir os valores “coligação” (quando o candidato concorre por coligação) e “partido isolado” (quando o candidato concorre somente pelo partido)
 NR_PARTIDO,numero_partido,Número do partido do candidato
 SG_PARTIDO,sigla_partido,Sigla do partido do candidato
-NM_PARTIDO,nome_partido,Nome do partido do candidato
+NM_PARTIDO,partido,Nome do partido do candidato
 SQ_COLIGACAO,codigo_legenda,Número sequencial da coligação da qual o candidato pertence
-NM_COLIGACAO,nome_legenda,Nome da coligação da qual o candidato pertence
+NM_COLIGACAO,legenda,Nome da coligação da qual o candidato pertence
 DS_COMPOSICAO_COLIGACAO,composicao_legenda,Descrição da composição da coligação da qual o candidato pertence
 CD_NACIONALIDADE,codigo_nacionalidade,Código da nacionalidade do candidato
-DS_NACIONALIDADE,descricao_nacionalidade,Descrição da nacionalidade do candidato
-SG_UF_NASCIMENTO,sigla_uf_nascimento,Sigla da UF de nascimento do candidato
+DS_NACIONALIDADE,nacionalidade,Descrição da nacionalidade do candidato
+SG_UF_NASCIMENTO,sigla_unidade_federativa_nascimento,Sigla da UF de nascimento do candidato
 CD_MUNICIPIO_NASCIMENTO,codigo_municipio_nascimento,Código TSE do município de nascimento do candidato
-NM_MUNICIPIO_NASCIMENTO,nome_municipio_nascimento,Nome do município de nascimento do candidato
+NM_MUNICIPIO_NASCIMENTO,municipio_nascimento,Nome do município de nascimento do candidato
 DT_NASCIMENTO,data_nascimento,Data de nascimento do candidato
 NR_IDADE_DATA_POSSE,idade_data_posse,Idade do candidato na data da posse (consultar a data de posse para cada cargo e unidade eleitoral nos arquivos de vagas)
 NR_TITULO_ELEITORAL_CANDIDATO,titulo_eleitoral,Número do título eleitoral do candidato
 CD_GENERO,codigo_genero,Código do gênero do candidato
-DS_GENERO,descricao_genero,Descrição do gênero do candidato
+DS_GENERO,genero,Descrição do gênero do candidato
 CD_GRAU_INSTRUCAO,codigo_grau_instrucao,Código do grau de instrução do candidato
-DS_GRAU_INSTRUCAO,descricao_grau_instrucao,Descrição do grau de instrução do candidato
+DS_GRAU_INSTRUCAO,grau_instrucao,Descrição do grau de instrução do candidato
 CD_ESTADO_CIVIL,codigo_estado_civil,Código do estado civil do candidato
-DS_ESTADO_CIVIL,descricao_estado_civil,Descrição do estado civil do candidato
-CD_COR_RACA,codigo_cor_raca,Código da cor/raça do candidato (auto declaração)
-DS_COR_RACA,descricao_cor_raca,Descrição da cor/raça do candidato (auto declaração)
+DS_ESTADO_CIVIL,estado_civil,Descrição do estado civil do candidato
+CD_COR_RACA,codigo_etnia,Código da etnia (cor/raça) do candidato (auto declaração)
+DS_COR_RACA,etnia,Etnia (cor/raça) do candidato (auto declaração)
 CD_OCUPACAO,codigo_ocupacao,Código da ocupação do candidato
-DS_OCUPACAO,descricao_ocupacao,Descrição da ocupação do candidato
+DS_OCUPACAO,ocupacao,Descrição da ocupação do candidato
 NR_DESPESA_MAX_CAMPANHA,despesa_maxima_campanha,"Despesa máxima de campanha declarada pelo partido para aquele cargo, em reais - os valores máximos para candidatos a vice e suplentes serão incluídos nos valores indicados para os titulares (quando não informado o valor será -1)"
 CD_SIT_TOT_TURNO,codigo_totalizacao_turno,Código da situação de totalização do candidato naquele turno
-DS_SIT_TOT_TURNO,descricao_totalizacao_turno,Descrição da situação de totalização do candidato naquele turno
+DS_SIT_TOT_TURNO,totalizacao_turno,Descrição da situação de totalização do candidato naquele turno
 ST_REELEICAO,concorre_reeleicao,"O indicativo de que o candidato está concorrendo ou não à reeleição - pode assumir os valores “S” (sim) e “N” (não) -apenas para os cargos de presidente, governador e prefeito é possível candidatura à reeleição"
 ST_DECLARAR_BENS,declara_bens,O indicativo de que o candidato tem ou não bens a declarar - pode assumiar os valores “S” (em caso positivo) e “N” (em caso negativo)
 NR_PROTOCOLO_CANDIDATURA,numero_protocolo_candidatura,Número do protocolo de registro de candidatura do candidato
