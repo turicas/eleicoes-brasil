@@ -10,7 +10,6 @@ sigla_unidade_eleitoral,text
 sigla_unidade_eleitoral_doador,text
 sigla_unidade_federativa,text
 sigla_unidade_federativa_doador,text
-cnpj_candidato,text
 cpf,text
 cpf_vice_candidato,text
 nome,text

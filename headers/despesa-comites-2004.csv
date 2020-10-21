@@ -4,7 +4,7 @@
 "SG_PART","sigla_partido","Sigla do partido"
 "SG_UE_SUP","sigla_unidade_federativa","Unidade da federação"
 "NO_UE","unidade_eleitoral","Nome da unidade da federação"
-"SG_UE","codigo_ue","Código do município"
+"SG_UE","codigo_unidade_eleitoral","Código do município"
 "VR_DESPESA","valor","Valor da despesa"
 "DT_DOC_DESP","data","Data da despesa"
 "RTRIM(LTRIM(DR.CD_TITULO))","tipo_despesa","Tipo de despesa"

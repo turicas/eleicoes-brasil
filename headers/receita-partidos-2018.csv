@@ -10,7 +10,7 @@
 "CD_ESFERA_PARTIDARIA","codigo_esfera_partidaria","Código da esfera partidária do prestador"
 "DS_ESFERA_PARTIDARIA","esfera_partidaria","Descrição da esfera partidário do prestador. Pode assumir os valores: ‘Nacional’, ‘Estadual/Distritral’ e ‘Munipal’"
 "SG_UF","sigla_unidade_federativa","Sigla da unidade da federação de abrangência do prestador de contas"
-"CD_MUNICIPIO","codigo_ue","Código do município de abrangência do órgão partidário, quando a esfera partidária for municipal"
+"CD_MUNICIPIO","codigo_unidade_eleitoral","Código do município de abrangência do órgão partidário, quando a esfera partidária for municipal"
 "NM_MUNICIPIO","unidade_eleitoral","Descrição do município de abrangência do órgão partidário, quando a esfera partidária for municipal"
 "NR_CNPJ_PRESTADOR_CONTA","cnpj","Número do CNPJ do prestador de contas"
 "NR_PARTIDO","numero_partido","Número do partido do prestador de contas"

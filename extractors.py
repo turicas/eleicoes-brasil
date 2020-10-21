@@ -723,7 +723,7 @@ class PrestacaoContasExtractor(Extractor):
         - Revenue
         """
 
-        if "uf" in name or "ue" in name or name == "municipio":
+        if "unidade_federativa" in name or "unidade_eleitoral" in name or name == "municipio":
             value = 0
         elif "sequencial" in name or "candidato" in name:
             value = 1
@@ -758,7 +758,7 @@ class PrestacaoContasExtractor(Extractor):
             ]
 
             # Add year to final csv
-            final_fields = ["ano_eleicao"] + final_fields
+            final_fields = ["ano"] + final_fields
             convert_function = self.convert_row(year_fields, final_fields, year)
             for index, row in enumerate(reader):
                 if index == 0 and (

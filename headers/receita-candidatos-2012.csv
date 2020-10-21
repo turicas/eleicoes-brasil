@@ -4,7 +4,7 @@ Desc. Eleição,eleicao,Descrição ou nome da Eleição
 Data e hora,,Data e hora de geração da informação
 Sequencial Candidato,numero_sequencial,Sequencial do candidato na base de dados da Justiça Eleitoral
 UF,sigla_unidade_federativa,Unidade da Federação do candidato
-Numero UE,codigo_ue,Código da Unidade Eleitoral
+Numero UE,codigo_unidade_eleitoral,Código da Unidade Eleitoral
 Municipio,unidade_eleitoral,
 Sigla  Partido,sigla_partido,Sigla da legenda partidária do candidato registrado na Justiça Eleitoral
 Numero candidato,numero_candidatura,Número do candidato registrado na Justiça Eleitoral
