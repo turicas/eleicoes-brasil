@@ -4,10 +4,10 @@ Esse repositório de código contém programas que baixam dados do Tribunal
 Superior Eleitoral, normalizam, agrupam e limpam. Atualmente as bases de dados
 disponíveis são:
 
-- Candidaturas (1996 a 2018)
-- Bens declarados (2006 a 2018)
-- Votação por zona eleitoral (1996 a 2018)
-- Prestação de contas (2002 a 2018)
+- Candidaturas (1996 a 2020)
+- Bens declarados (2006 a 2020)
+- Votação por zona eleitoral (1996 a 2020)
+- Prestação de contas (2002 a 2020)
 
 ## Metodologia
 
