@@ -105,6 +105,12 @@ time echo "$(sha512sum 'data/download/prestacao_contas/prestacao_de_contas_eleit
 time aria2c -s 8 -x 8 -k 1M -o 'data/download/prestacao_contas/prestacao_de_contas_eleitorais_candidatos_2018.zip' 'http://agencia.tse.jus.br/estatistica/sead/odsele/prestacao_contas/prestacao_de_contas_eleitorais_candidatos_2018.zip'
 time s3cmd put 'data/download/prestacao_contas/prestacao_de_contas_eleitorais_candidatos_2018.zip' s3://mirror/tse/prestacao_contas/prestacao_de_contas_eleitorais_candidatos_2018.zip
 time echo "$(sha512sum 'data/download/prestacao_contas/prestacao_de_contas_eleitorais_candidatos_2018.zip' | cut -d' ' -f 1) prestacao_contas/prestacao_de_contas_eleitorais_candidatos_2018.zip" >> data/download/SHA512SUMS
+time aria2c -s 8 -x 8 -k 1M -o 'data/download/prestacao_contas/prestacao_de_contas_eleitorais_orgaos_partidarios_2020.zip' 'http://agencia.tse.jus.br/estatistica/sead/odsele/prestacao_contas/prestacao_de_contas_eleitorais_orgaos_partidarios_2020.zip'
+time s3cmd put 'data/download/prestacao_contas/prestacao_de_contas_eleitorais_orgaos_partidarios_2020.zip' s3://mirror/tse/prestacao_contas/prestacao_de_contas_eleitorais_orgaos_partidarios_2020.zip
+time echo "$(sha512sum 'data/download/prestacao_contas/prestacao_de_contas_eleitorais_orgaos_partidarios_2020.zip' | cut -d' ' -f 1) prestacao_contas/prestacao_de_contas_eleitorais_orgaos_partidarios_2020.zip" >> data/download/SHA512SUMS
+time aria2c -s 8 -x 8 -k 1M -o 'data/download/prestacao_contas/prestacao_de_contas_eleitorais_candidatos_2020.zip' 'http://agencia.tse.jus.br/estatistica/sead/odsele/prestacao_contas/prestacao_de_contas_eleitorais_candidatos_2020.zip'
+time s3cmd put 'data/download/prestacao_contas/prestacao_de_contas_eleitorais_candidatos_2020.zip' s3://mirror/tse/prestacao_contas/prestacao_de_contas_eleitorais_candidatos_2020.zip
+time echo "$(sha512sum 'data/download/prestacao_contas/prestacao_de_contas_eleitorais_candidatos_2020.zip' | cut -d' ' -f 1) prestacao_contas/prestacao_de_contas_eleitorais_candidatos_2020.zip" >> data/download/SHA512SUMS
 
 
 mkdir -p data/download/votacao_candidato_munzona
