@@ -1,7 +1,7 @@
 "nome_tse","nome_final","descricao"
 "DT_GERACAO",,"Data de geração das informações (data da extração dos dados)"
 "HH_GERACAO",,"Hora de geração das informações (hora da extração dos dados) – Horário de Brasília"
-"ANO_ELEICAO",,"Ano da eleição (referente ao ano eleitoral de pesquisa)"
+"ANO_ELEICAO",ano,"Ano da eleição (referente ao ano eleitoral de pesquisa)"
 "CD_TIPO_ELEICAO","codigo_tipo_eleicao","Código do tipo de eleição"
 "NM_TIPO_ELEICAO","tipo_eleicao","Nome do tipo de eleição"
 "TP_PRESTACAO_CONTAS","tipo_prestacao_contas","Tipo de entrega da prestação de contas. Pode assumir os valores: Relatório financeiro (referente à entrega do relatório financeiro); Parcial (referente à entrega parcial de prestação de contas); Final (referente à entrega final da prestação)"

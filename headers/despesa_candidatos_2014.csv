@@ -1,5 +1,5 @@
 nome_tse,nome_final,descricao
-Cód. Eleição,,
+Cód. Eleição,codigo_eleicao,
 Desc. Eleição,eleicao,
 Data e hora,,
 CNPJ Prestador Conta,cnpj,
@@ -19,5 +19,5 @@ Cod setor econômico do fornecedor,codigo_setor_economico_fornecedor,
 Setor econômico do fornecedor,setor_economico_fornecedor,
 Data da despesa,data,
 Valor despesa,valor,
-Tipo despesa,tipo_despesa,
+Tipo despesa,tipo,
 Descriçao da despesa,descricao,

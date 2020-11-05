@@ -11,7 +11,7 @@ SG_PART,sigla_partido,Sigla do partido
 VR_RECEITA,valor,Valor da receita
 DT_RECEITA,data,Data da receita
 RTRIM(LTRIM(DR.DS_TITULO)),tipo,Tipo de receita
-CD_TITULO,codigo_tipo_receita,Código do tipo de receita
+CD_TITULO,codigo_tipo,Código do tipo de receita
 "DECODE(REC.TP_RECURSO,0,'EMESPÉCIE',1,'CHEQUE',2,'ESTIMADO','NÃOINFORMADO')",tipo_recurso,"Tipo de recurso (Em espécie, Cheque, Estimado, não informado)"
 TP_RECURSO,codigo_tipo_recurso,Código do tipo de recurso
 NO_DOADOR,doador,Nome do doador

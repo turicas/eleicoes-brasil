@@ -36,23 +36,21 @@ setor_economico_doador_originario,"Código CNAE do doador originário, se pessoa
 tipo_doador_originario,"Tipo do doador originário, podendo assumir os valores “F” – Pessoa Física ou “J” – Pessoa Jurídica. Aparece no TSE como: Tipo doador originário (2014), TP_DOADOR_ORIGINARIO (2018). Coluna adicionada em 2014."
 codigo_especie_recurso,Código de identificação do tipo de espécie de recursos da doação. Aparece no TSE como: CD_ESPECIE_RECEITA (2018). Coluna adicionada em 2018.
 codigo_fonte_recurso,"Código de identificação do tipo de fonte de recursos da doação, informado pelo prestador de contas em relação à doação. Aparece no TSE como: CD_FONTE_RECEITA (2018). Coluna adicionada em 2018."
-codigo_natureza_receita,Código de identificação da natureza do tipo espécie do recursos da doação. Aparece no TSE como: CD_NATUREZA_RECEITA (2018). Coluna adicionada em 2018.
-codigo_origem_receita,"Código de identificação do tipo de origem do recurso (DRD), informado pelo prestador de contas em relação à doação. Aparece no TSE como: CD_ORIGEM_RECEITA (2018). Coluna adicionada em 2018."
-codigo_tipo_receita,"Código do tipo de receita. Aparece no TSE como: CD_TITULO (2004), CODIGO_TIPO_RECEITA (2006). Coluna adicionada em 2004."
 codigo_tipo_recurso,"Código do tipo de recurso. Aparece no TSE como: TP_RECURSO (2004), CODIGO_TIPO_RECURSO (2006), CD_ESP_RECURSO (2008). Coluna adicionada em 2004."
 especie_recurso,"Descrição do tipo de espécie do recurso da doação, quando a natureza do recurso for igual a financeiro. Pode assumir os valores: ‘Cheque’, ‘Em Espécie’, ‘Transferência Eletrônica’, ‘Depósito em Espécie’, ‘Cartão de Crédito’, ‘Cartão e Débito’, ‘Boleto de Cobrança’, ‘Estimado’, e ‘Outros Títulos de Crédito’. Aparece no TSE como: DS_ESPECIE_RECEITA (2018). Coluna adicionada em 2018."
 fonte_recurso,"Fonte do recurso da doação, podendo ser 'Fundo Partidário' ou 'Outros Recursos'. Aparece no TSE como: Fonte recurso (2010), DS_FONTE_RECEITA (2018). Coluna adicionada em 2010."
-natureza_receita,Descrição da natureza do tipo espécie do recursos da doação. Pode assumir os valores ‘Financeiro’ ou ‘Estimável’. Aparece no TSE como: DS_NATUREZA_RECEITA (2018). Coluna adicionada em 2018.
-origem_receita,"Descrição do tipo de origem do recurso (DRD), informado pelo prestador de contas em relação à doação. Aparece no TSE como: DS_ORIGEM_RECEITA (2018). Coluna adicionada em 2018."
 receita,Descrição da doação quando esta for estimável em dinheiro. Aparece no TSE como: Descrição da receita (2012). Coluna adicionada em 2012.
 tipo_recurso,"Tipo de recurso (Cheque, TED, Dinheiro, etc). Aparece no TSE como: TP_RECURSO (2002), DECODE(REC.TP_RECURSO,0,'EMESPÉCIE',1,'CHEQUE',2,'ESTIMADO','NÃOINFORMADO') (2004), DESCRICAO_TIPO_RECURSO (2006), RV_MEANING (2006), DS_ESP_RECURSO (2008), Espécie recurso (2010), Especie recurso (2012)."
 administrador,"Nome do administrador financeiro de campanha. Aparece no TSE como: NM_ADM (2008), NM_MEMBRO (2008). Coluna adicionada em 2008."
+ano,Ano da eleição (referente ao ano eleitoral de pesquisa). Aparece no TSE como: ANO_ELEICAO (2018). Coluna adicionada em 2018.
 cargo,"Descrição do cargo. Aparece no TSE como: DS_CARGO (2002), DESCRICAO_CARGO (2006), Cargo (2010)."
 cnpj,"CNPJ de campanha. Aparece no TSE como: NUMERO_CNPJ_CANDIDATO (2006), CNPJ (2006), CD_NUM_CNPJ (2008), NR_CNPJ (2008), CNPJ Prestador Conta (2014), NR_CNPJ_PRESTADOR_CONTA (2018). Coluna adicionada em 2006."
 codigo_cargo,"Código do cargo. Aparece no TSE como: CD_CARGO (2004), CODIGO_CARGO (2006). Coluna adicionada em 2004."
-codigo_eleicao,Código da eleição. Aparece no TSE como: CD_ELEICAO (2018). Coluna adicionada em 2018.
+codigo_eleicao,"Código identificador da Eleição. Aparece no TSE como: Cód. Eleição (2012), CD_ELEICAO (2018). Coluna adicionada em 2012."
 codigo_esfera_partidaria,Código da esfera partidária do prestador. Aparece no TSE como: CD_ESFERA_PARTIDARIA (2018). Coluna adicionada em 2018.
-codigo_tipo,Código do tipo de receita. Aparece no TSE como: CD_TITULO (2004). Coluna adicionada em 2004.
+codigo_natureza,Código de identificação da natureza do tipo espécie do recursos da doação. Aparece no TSE como: CD_NATUREZA_RECEITA (2018). Coluna adicionada em 2018.
+codigo_origem,"Código de identificação do tipo de origem do recurso (DRD), informado pelo prestador de contas em relação à doação. Aparece no TSE como: CD_ORIGEM_RECEITA (2018). Coluna adicionada em 2018."
+codigo_tipo,"Código do tipo de receita. Aparece no TSE como: CD_TITULO (2004), CODIGO_TIPO_RECEITA (2006). Coluna adicionada em 2004."
 codigo_tipo_eleicao,Código do tipo de eleição. Aparece no TSE como: CD_TIPO_ELEICAO (2018). Coluna adicionada em 2018.
 cpf,"CPF do candidato. Aparece no TSE como: CD_NUM_CPF (2008), CPF do candidato (2010), NR_CPF_CANDIDATO (2018). Coluna adicionada em 2008."
 cpf_administrador,"CPF do administrador financeiro de campanha. Aparece no TSE como: CD_CPF_ADM (2008), NR_CPF (2008). Coluna adicionada em 2008."
@@ -64,12 +62,14 @@ descricao,"Descrição da doação quando esta for estimável em dinheiro. Apare
 eleicao,"Descrição ou nome da Eleição. Aparece no TSE como: Desc. Eleição (2012), DS_ELEICAO (2018). Coluna adicionada em 2012."
 entrega_em_conjuto,Entrega em Conjunto. Aparece no TSE como: Entrega em conjunto? (2010). Coluna adicionada em 2010.
 esfera_partidaria,"Descrição da esfera partidário do prestador. Pode assumir os valores: ‘Nacional’, ‘Estadual/Distritral’ e ‘Munipal’. Aparece no TSE como: DS_ESFERA_PARTIDARIA (2018). Coluna adicionada em 2018."
+natureza,Descrição da natureza do tipo espécie do recursos da doação. Pode assumir os valores ‘Financeiro’ ou ‘Estimável’. Aparece no TSE como: DS_NATUREZA_RECEITA (2018). Coluna adicionada em 2018.
 nome,"Nome do candidato. Aparece no TSE como: NO_CAND (2002), NOME_CANDIDATO (2006), NM_CANDIDATO (2008), Nome candidato (2010)."
 numero_candidatura,"Número da candidatura. Aparece no TSE como: NR_CAND (2002), NUMERO_CANDIDATO (2006), NR_CANDIDATO (2008), Número candidato (2010), Numero candidato (2012), NR_PARTIDO (2018)."
 numero_documento,"Número do documento referente à transação bancária ou comprovante da doação estimável. Aparece no TSE como: Número do documento (2010), Numero do documento (2012), NR_DOCUMENTO_DOACAO (2018). Coluna adicionada em 2010."
 numero_recibo,Número de recibo de doação informada pelo prestador de contas. Aparece no TSE como: NR_RECIBO_DOACAO (2018). Coluna adicionada em 2018.
 numero_recibo_eleitoral,"Número do recibo eleitoral referente à doação recebida. Aparece no TSE como: Número Recibo Eleitoral (2010), Numero Recibo Eleitoral (2012), Número recibo eleitoral (2014_suplementar). Coluna adicionada em 2010."
 orgao,"Tipo de comitê. Aparece no TSE como: DS_ORGAO (2002), Tipo diretorio (2012), Tipo Comite (2014). Coluna adicionada em 2002."
+origem,"Descrição do tipo de origem do recurso (DRD), informado pelo prestador de contas em relação à doação. Aparece no TSE como: DS_ORIGEM_RECEITA (2018). Coluna adicionada em 2018."
 segundo_turno,O indicativo se prestador de contas teve prestação de contas para segundo turno. Aparece no TSE como: ST_TURNO (2018). Coluna adicionada em 2018.
 sexo,Sexo do(a) candidato(a). Aparece no TSE como: SEXO (2008). Coluna adicionada em 2008.
 situacao_cadastral,"Batimento Receita Federal do Brasil. Aparece no TSE como: RV_MEANING (2004), SITUACAO_CADASTRAL (2006), SITUACAOCADASTRAL (2006). Coluna adicionada em 2004."

@@ -7,4 +7,4 @@
 "SG_UF_FORNECEDOR","sigla_unidade_federativa_fornecedor","Unidade da federação do fornecedor"
 "NO_FOR","fornecedor","Nome do fornecedor"
 "VR_DESPESA","valor","Valor da despesa"
-"DS_TITULO","tipo_despesa","Tipo de despesa"
+"DS_TITULO","tipo","Tipo de despesa"

@@ -1,5 +1,5 @@
 nome_tse,nome_final,descricao
-Cód. Eleição,,Código identificador da Eleição
+Cód. Eleição,codigo_eleicao,Código identificador da Eleição
 Desc. Eleição,eleicao,Descrição ou nome da Eleição
 Data e hora,,Data e hora de geração da informação
 CNPJ Prestador Conta,cnpj,CNPJ do candidato

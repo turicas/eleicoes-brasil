@@ -16,7 +16,7 @@
 "VR_RECEITA","valor","Valor da receita"
 "DT_RECEITA","data","Data da receita"
 "DS_TITULO","tipo","Tipo de receita"
-"CD_TITULO","codigo_tipo_receita","Código do tipo de receita"
+"CD_TITULO","codigo_tipo","Código do tipo de receita"
 "DS_ESP_RECURSO","tipo_recurso","Tipo de recurso (Em espécie,  Cheque,  Estimado, não informado)"
 "CD_ESP_RECURSO","codigo_tipo_recurso","Código do tipo de recurso"
 "NM_DOADOR","doador","Nome do doador"

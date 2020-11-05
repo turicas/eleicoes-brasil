@@ -1,5 +1,5 @@
 "nome_tse","nome_final","descricao"
-"Cód. Eleição",,
+"Cód. Eleição",codigo_eleicao,
 "Desc. Eleição","eleicao",
 "Data e hora",,
 "Sequencial Candidato",numero_sequencial,

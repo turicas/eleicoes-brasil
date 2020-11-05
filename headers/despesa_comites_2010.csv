@@ -9,7 +9,7 @@
 "Nome do fornecedor","fornecedor",
 "Data da despesa","data",
 "Valor despesa","valor",
-"Tipo despesa","tipo_despesa",
+"Tipo despesa","tipo",
 "Fonte recurso","fonte_recurso",
 "Espécie recurso","tipo_recurso",
 "Descrição da despesa","descricao",

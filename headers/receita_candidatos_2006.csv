@@ -11,7 +11,7 @@ SIGLA_PARTIDO,sigla_partido,Sigla do partido
 VALOR_RECEITA,valor,Valor da receita
 DATA_RECEITA,data,Data da receita
 TIPO_RECEITA,tipo,Tipo de receita
-CODIGO_TIPO_RECEITA,codigo_tipo_receita,Código do tipo de receita
+CODIGO_TIPO_RECEITA,codigo_tipo,Código do tipo de receita
 DESCRICAO_TIPO_RECURSO,tipo_recurso,"Tipo de recurso (Em espécie, Cheque, Estimado, não informado)"
 CODIGO_TIPO_RECURSO,codigo_tipo_recurso,Código do Tipo de Recurso
 NOME_DOADOR,doador,Nome do doador
