@@ -3,7 +3,7 @@
 "Desc. Eleição","eleicao",
 "Data e hora",,
 "CNPJ Prestador Conta","cnpj_orgao",
-"Sequencial Comite",,
+"Sequencial Comite","numero_sequencial_comite",
 "UF","sigla_unidade_federativa",
 "Tipo Comite","orgao",
 "Sigla  Partido","sigla_partido",

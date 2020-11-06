@@ -28,7 +28,7 @@
 "SG_UF_FORNECEDOR","sigla_unidade_federativa_fornecedor","Sigla da unidade da federação do fornecedor, quando fornecedor for candidato ou órgão partidário"
 "CD_MUNICIPIO_FORNECEDOR","codigo_unidade_eleitoral_fornecedor","Código do município do fornecedor, quando a esfera partidária do fornecedor for municipal"
 "NM_MUNICIPIO_FORNECEDOR","unidade_eleitoral_fornecedor","Descrição do município do fornecedor, quando a esfera partidária do fornecedor for municipal"
-"SQ_CANDIDATO_FORNECEDOR",,"Sequencial do candidato fornecedor, quando fornecedor candidato"
+"SQ_CANDIDATO_FORNECEDOR","numero_sequencial_candidatura_fornecedora","Sequencial do candidato fornecedor, quando fornecedor candidato"
 "NR_CANDIDATO_FORNECEDOR","numero_candidatura_fornecedora","Número do candidato declarado pelo prestador de contas, quando fornecedor candidato"
 "CD_CARGO_FORNECEDOR","codigo_cargo_fornecedor","Código do cargo do candidato declarado pelo prestador de contas, quando fornecedor candidato"
 "DS_CARGO_FORNECEDOR","cargo_fornecedor","Descrição do cargo do candidato declarado pelo prestador de contas, quando fornecedor candidato"

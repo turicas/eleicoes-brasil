@@ -2,7 +2,7 @@
 "Cód. Eleição",codigo_eleicao,
 "Desc. Eleição","eleicao",
 "Data e hora",,
-"Sequencial Comite",,
+"Sequencial Comite","numero_sequencial_comite",
 "UF","sigla_unidade_federativa",
 "Número UE","codigo_unidade_eleitoral",
 "Município","unidade_eleitoral",

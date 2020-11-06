@@ -3,7 +3,7 @@
 "Desc. Eleição","eleicao",
 "Data e hora",,
 "CNPJ Prestador Conta","cnpj",
-"Sequencial Diretorio",,
+"Sequencial Diretorio","numero_sequencial_diretorio",
 "UF","sigla_unidade_federativa",
 "Tipo diretorio","orgao",
 "Sigla  Partido","sigla_partido",

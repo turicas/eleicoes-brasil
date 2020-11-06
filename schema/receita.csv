@@ -45,6 +45,8 @@ codigo_origem,text
 codigo_tipo_recurso,text
 receita,text
 especie_recurso,text
+sequencial_identificacao_receita,text
+numero_sequencial_candidatura_doadora,text
 fonte_recurso,text
 natureza,text
 origem,text

@@ -14,7 +14,7 @@
 "TP_DOADOR_ORIGINARIO","tipo_doador_originario","Tipo do doador originário, podendo assumir os valores ‘F’ para pessoa física ou ‘J’ para pessoa jurídica"
 "CD_CNAE_DOADOR_ORIGINARIO","codigo_setor_economico_doador_originario","Código CNAE do doador, se pessoa jurídica"
 "DS_CNAE_DOADOR_ORIGINARIO","setor_economico_doador_originario","Descrição do CNAE (Código Nacional de Atividade Econômica) do doador, se pessoa jurídica"
-"SQ_RECEITA",,"Sequencial de identificação do registro da receita declarada pelo prestador de contas"
+"SQ_RECEITA","sequencial_identificacao_receita","Sequencial de identificação do registro da receita declarada pelo prestador de contas"
 "DT_RECEITA","data","Data da doação declarada à Justiça Eleitoral"
 "DS_RECEITA","descricao","Descrição da Receita informada pelo prestador de contas"
 "VR_RECEITA","valor","Valor da doação em Reais (R$)"
