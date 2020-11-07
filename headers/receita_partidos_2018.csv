@@ -1,49 +1,49 @@
-"nome_tse","nome_final","descricao"
-"DT_GERACAO",,"Data de geração das informações (data da extração dos dados)"
-"HH_GERACAO",,"Hora de geração das informações (hora da extração dos dados) – Horário de Brasília"
-"ANO_ELEICAO",ano,"Ano da eleição (referente ao ano eleitoral de pesquisa)"
-"CD_TIPO_ELEICAO","codigo_tipo_eleicao","Código do tipo de eleição"
-"NM_TIPO_ELEICAO","tipo_eleicao","Nome do tipo de eleição"
-"TP_PRESTACAO_CONTAS","tipo_prestacao_contas","Tipo de entrega da prestação de contas. Pode assumir os valores: Relatório financeiro (referente à entrega do relatório financeiro); Parcial (referente à entrega parcial de prestação de contas); Final (referente à entrega final da prestação)"
-"DT_PRESTACAO_CONTAS","data_prestacao_contas","Data de entrega da prestação de contas junto à Justiça Eleitoral"
-"SQ_PRESTADOR_CONTAS",,"Sequencial de identificação do prestador de contas junto à Justiça Eleitoral"
-"CD_ESFERA_PARTIDARIA","codigo_esfera_partidaria","Código da esfera partidária do prestador"
-"DS_ESFERA_PARTIDARIA","esfera_partidaria","Descrição da esfera partidário do prestador. Pode assumir os valores: ‘Nacional’, ‘Estadual/Distritral’ e ‘Munipal’"
-"SG_UF","sigla_unidade_federativa","Sigla da unidade da federação de abrangência do prestador de contas"
-"CD_MUNICIPIO","codigo_unidade_eleitoral","Código do município de abrangência do órgão partidário, quando a esfera partidária for municipal"
-"NM_MUNICIPIO","unidade_eleitoral","Descrição do município de abrangência do órgão partidário, quando a esfera partidária for municipal"
-"NR_CNPJ_PRESTADOR_CONTA","cnpj","Número do CNPJ do prestador de contas"
-"NR_PARTIDO","numero_partido","Número do partido do prestador de contas"
-"SG_PARTIDO","sigla_partido","Sigla do partido do prestador de contas"
-"NM_PARTIDO","partido","Nome do partido do prestador de contas"
-"CD_FONTE_RECEITA","codigo_fonte_recurso","Código de identificação do tipo de fonte de recursos da doação, informado pelo prestador de contas em relação à doação"
-"DS_FONTE_RECEITA","fonte_recurso","Descrição do tipo de fonte de recursos da doação, informado pelo prestador de contas em relação à doação"
-"CD_ORIGEM_RECEITA","codigo_origem","Código de identificação do tipo de origem do recurso (DRD), informado pelo prestador de contas em relação à doação"
-"DS_ORIGEM_RECEITA","origem","Descrição do tipo de origem do recurso (DRD), informado pelo prestador de contas em relação à doação"
-"CD_NATUREZA_RECEITA","codigo_natureza","Código de identificação da natureza do tipo espécie do recursos da doação"
-"DS_NATUREZA_RECEITA","natureza","Descrição da natureza do tipo espécie do recursos da doação. Pode assumir os valores ‘Financeiro’ ou ‘Estimável’"
-"CD_ESPECIE_RECEITA","codigo_especie_recurso","Código de identificação do tipo de espécie de recursos da doação"
-"DS_ESPECIE_RECEITA","especie_recurso","Descrição do tipo de espécie do recurso da doação, quando a natureza do recurso for igual a financeiro. Pode assumir os valores: ‘Cheque’, ‘Em Espécie’, ‘Transferência Eletrônica’, ‘Depósito em Espécie’, ‘Cartão de Crédito’, ‘Cartão e Débito’, ‘Boleto de Cobrança’, ‘Estimado’, e ‘Outros Títulos de Crédito’"
-"CD_CNAE_DOADOR","codigo_setor_economico_doador","Código CNAE do doador, se pessoa jurídica"
-"DS_CNAE_DOADOR","setor_economico_doador","Descrição do CNAE (Código Nacional de Atividade Econômica) do doador, se pessoa jurídica"
-"NR_CPF_CNPJ_DOADOR","cpf_cnpj_doador","Número do CPF/CNPJ do doador declarado à Justiça Eleitoral"
-"NM_DOADOR","doador","Nome do doador declarado à Justiça Eleitoral"
-"NM_DOADOR_RFB","doador_receita_federal","Nome do doador cadastrado na Receita Federal Brasileira"
-"CD_ESFERA_PARTIDARIA_DOADOR","codigo_esfera_partidaria_doador","Código da esfera partidária do doador, quando doador partidário"
-"DS_ESFERA_PARTIDARIA_DOADOR","esfera_partidaria_doador","Descrição da esfera partidária do doador, podendo assumir os valores: ‘Nacional’, ‘Estadual/Distrital’ e ‘Municipal’, quando doador órgão partidário"
-"SG_UF_DOADOR","sigla_unidade_federativa_doador","Sigla da Unidade da Federação do doador, quando doador candidato ou órgão partidário"
-"CD_MUNICIPIO_DOADOR","codigo_unidade_eleitoral_doador","Código do município do doador, quando a esfera partidária do doador for municipal"
-"NM_MUNICIPIO_DOADOR","unidade_eleitoral_doador","Município do doador, quando a esfera partidária do doador for municipal"
-"SQ_CANDIDATO_DOADOR","numero_sequencial_candidatura_doadora","Sequencial do candidato doador, quando a esfera partidária do doador for municipal"
-"NR_CANDIDATO_DOADOR","numero_candidatura_doadora","Número do candidato declarado pelo prestador de contas, quando doação de candidato"
-"CD_CARGO_CANDIDATO_DOADOR","codigo_cargo_doador","Código do cargo do candidato declarado pelo prestador de contas, quando doação de candidato"
-"DS_CARGO_CANDIDATO_DOADOR","cargo_doador","Descrição do cargo do candidato declarado pelo prestador de contas, quando doação de candidato"
-"NR_PARTIDO_DOADOR","numero_partido_doador","Número do partido declarado pelo prestador de contas, quando doador candidato ou órgão partidário"
-"SG_PARTIDO_DOADOR","sigla_partido_doador","Sigla do partido declarado pelo prestador de contas, quando doador candidato ou órgão partidário"
-"NM_PARTIDO_DOADOR","partido_doador","Nome do partido declarado pelo prestador de contas, quando doador candidato ou órgão partidário"
-"NR_RECIBO_DOACAO","numero_recibo","Número de recibo de doação informada pelo prestador de contas"
-"NR_DOCUMENTO_DOACAO","numero_documento","Número de documento de recebimento informado pelo prestador de contas em relação à doação"
-"SQ_RECEITA","sequencial_identificacao_receita","Sequencial de identificação do registro da receita declarada pelo prestador de contas"
-"DT_RECEITA","data","Data da doação declarada à Justiça Eleitoral"
-"DS_RECEITA","descricao","Descrição resumida da doação informada pelo prestador de contas"
-"VR_RECEITA","valor","Valor da doação em Reais (R$)"
+nome_tse,nome_final,descricao
+DT_GERACAO,,Data de geração das informações (data da extração dos dados)
+HH_GERACAO,,Hora de geração das informações (hora da extração dos dados) – Horário de Brasília
+ANO_ELEICAO,ano,Ano da eleição (referente ao ano eleitoral de pesquisa)
+CD_TIPO_ELEICAO,codigo_tipo_eleicao,Código do tipo de eleição
+NM_TIPO_ELEICAO,tipo_eleicao,Nome do tipo de eleição
+TP_PRESTACAO_CONTAS,tipo_prestacao_contas,Tipo de entrega da prestação de contas. Pode assumir os valores: Relatório financeiro (referente à entrega do relatório financeiro); Parcial (referente à entrega parcial de prestação de contas); Final (referente à entrega final da prestação)
+DT_PRESTACAO_CONTAS,data_prestacao_contas,Data de entrega da prestação de contas junto à Justiça Eleitoral
+SQ_PRESTADOR_CONTAS,,Sequencial de identificação do prestador de contas junto à Justiça Eleitoral
+CD_ESFERA_PARTIDARIA,codigo_esfera_partidaria,Código da esfera partidária do prestador
+DS_ESFERA_PARTIDARIA,esfera_partidaria,"Descrição da esfera partidário do prestador. Pode assumir os valores: ‘Nacional’, ‘Estadual/Distritral’ e ‘Munipal’"
+SG_UF,sigla_unidade_federativa,Sigla da unidade da federação de abrangência do prestador de contas
+CD_MUNICIPIO,codigo_unidade_eleitoral,"Código do município de abrangência do órgão partidário, quando a esfera partidária for municipal"
+NM_MUNICIPIO,unidade_eleitoral,"Descrição do município de abrangência do órgão partidário, quando a esfera partidária for municipal"
+NR_CNPJ_PRESTADOR_CONTA,cnpj,Número do CNPJ do prestador de contas
+NR_PARTIDO,numero_partido,Número do partido do prestador de contas
+SG_PARTIDO,sigla_partido,Sigla do partido do prestador de contas
+NM_PARTIDO,partido,Nome do partido do prestador de contas
+CD_FONTE_RECEITA,codigo_fonte_recurso,"Código de identificação do tipo de fonte de recursos da doação, informado pelo prestador de contas em relação à doação"
+DS_FONTE_RECEITA,fonte_recurso,"Descrição do tipo de fonte de recursos da doação, informado pelo prestador de contas em relação à doação"
+CD_ORIGEM_RECEITA,codigo_origem,"Código de identificação do tipo de origem do recurso (DRD), informado pelo prestador de contas em relação à doação"
+DS_ORIGEM_RECEITA,origem,"Descrição do tipo de origem do recurso (DRD), informado pelo prestador de contas em relação à doação"
+CD_NATUREZA_RECEITA,codigo_natureza,Código de identificação da natureza do tipo espécie do recursos da doação
+DS_NATUREZA_RECEITA,natureza,Descrição da natureza do tipo espécie do recursos da doação. Pode assumir os valores ‘Financeiro’ ou ‘Estimável’
+CD_ESPECIE_RECEITA,codigo_especie_recurso,Código de identificação do tipo de espécie de recursos da doação
+DS_ESPECIE_RECEITA,especie_recurso,"Descrição do tipo de espécie do recurso da doação, quando a natureza do recurso for igual a financeiro. Pode assumir os valores: ‘Cheque’, ‘Em Espécie’, ‘Transferência Eletrônica’, ‘Depósito em Espécie’, ‘Cartão de Crédito’, ‘Cartão e Débito’, ‘Boleto de Cobrança’, ‘Estimado’, e ‘Outros Títulos de Crédito’"
+CD_CNAE_DOADOR,codigo_setor_economico_doador,"Código CNAE do doador, se pessoa jurídica"
+DS_CNAE_DOADOR,setor_economico_doador,"Descrição do CNAE (Código Nacional de Atividade Econômica) do doador, se pessoa jurídica"
+NR_CPF_CNPJ_DOADOR,cpf_cnpj_doador,Número do CPF/CNPJ do doador declarado à Justiça Eleitoral
+NM_DOADOR,doador,Nome do doador declarado à Justiça Eleitoral
+NM_DOADOR_RFB,doador_receita_federal,Nome do doador cadastrado na Receita Federal Brasileira
+CD_ESFERA_PARTIDARIA_DOADOR,codigo_esfera_partidaria_doador,"Código da esfera partidária do doador, quando doador partidário"
+DS_ESFERA_PARTIDARIA_DOADOR,esfera_partidaria_doador,"Descrição da esfera partidária do doador, podendo assumir os valores: ‘Nacional’, ‘Estadual/Distrital’ e ‘Municipal’, quando doador órgão partidário"
+SG_UF_DOADOR,sigla_unidade_federativa_doador,"Sigla da Unidade da Federação do doador, quando doador candidato ou órgão partidário"
+CD_MUNICIPIO_DOADOR,codigo_unidade_eleitoral_doador,"Código do município do doador, quando a esfera partidária do doador for municipal"
+NM_MUNICIPIO_DOADOR,unidade_eleitoral_doador,"Município do doador, quando a esfera partidária do doador for municipal"
+SQ_CANDIDATO_DOADOR,numero_sequencial_candidatura_doadora,"Sequencial do candidato doador, quando a esfera partidária do doador for municipal"
+NR_CANDIDATO_DOADOR,numero_candidatura_doadora,"Número do candidato declarado pelo prestador de contas, quando doação de candidato"
+CD_CARGO_CANDIDATO_DOADOR,codigo_cargo_doador,"Código do cargo do candidato declarado pelo prestador de contas, quando doação de candidato"
+DS_CARGO_CANDIDATO_DOADOR,cargo_doador,"Descrição do cargo do candidato declarado pelo prestador de contas, quando doação de candidato"
+NR_PARTIDO_DOADOR,numero_partido_doador,"Número do partido declarado pelo prestador de contas, quando doador candidato ou órgão partidário"
+SG_PARTIDO_DOADOR,sigla_partido_doador,"Sigla do partido declarado pelo prestador de contas, quando doador candidato ou órgão partidário"
+NM_PARTIDO_DOADOR,partido_doador,"Nome do partido declarado pelo prestador de contas, quando doador candidato ou órgão partidário"
+NR_RECIBO_DOACAO,numero_recibo,Número de recibo de doação informada pelo prestador de contas
+NR_DOCUMENTO_DOACAO,numero_documento,Número de documento de recebimento informado pelo prestador de contas em relação à doação
+SQ_RECEITA,numero_sequencial_receita,Sequencial de identificação do registro da receita declarada pelo prestador de contas
+DT_RECEITA,data,Data da doação declarada à Justiça Eleitoral
+DS_RECEITA,descricao,Descrição resumida da doação informada pelo prestador de contas
+VR_RECEITA,valor,Valor da doação em Reais (R$)

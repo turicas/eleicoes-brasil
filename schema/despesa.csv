@@ -5,7 +5,7 @@ codigo_unidade_eleitoral_fornecedor,text
 unidade_eleitoral,text
 unidade_eleitoral_fornecedor,text
 numero_sequencial,text
-sequencial_identificacao_despesa,text
+numero_sequencial_despesa,text
 numero_sequencial_parcelamento,text
 numero_sequencial_comite,text
 sigla_unidade_eleitoral,text
@@ -64,7 +64,7 @@ cpf_administrador,text
 cpf_vice_suplente,text
 data_eleicao,text
 data_prestacao_contas,text
-sequencial_prestador_contas,text
+numero_sequencial_prestador_contas,text
 numero_sequencial_candidatura_fornecedora,text
 eleicao,text
 municipio,text

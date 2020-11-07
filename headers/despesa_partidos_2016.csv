@@ -1,33 +1,22 @@
-"nome_tse","nome_final","descricao"
-"Cód. Eleição",codigo_eleicao,"Código identificador da Eleição"
-"Desc. Eleição","eleicao","Descrição ou nome da Eleição"
-"Data e hora",,"Data e hora de geração da informação"
-"CNPJ Prestador Conta","cnpj_orgao","CNPJ da direção partidária  "
-"Sequencial do Prestador de conta",,"Sequencial da direção partidária na base de dados da Justiça Eleitoral"
-"UF","sigla_unidade_federativa","Unidade da Federação da direção partidária"
-"Sigla da UE","codigo_unidade_eleitoral","Código da Unidade Eleitoral"
-"Nome da UE","unidade_eleitoral","Município de registro da direção partidária"
-"Tipo diretorio","orgao","Esfera partidária, podendo assumir os valores “Direção Nacional”, “Direção Estadual/Distrital”, “Direção Municipal”"
-"Sigla  Partido","sigla_partido","Sigla da legenda da direção partidária registrada na Justiça Eleitoral"
-"Tipo do documento","tipo_documento","Tipo de documento, podendo assumir os valores “Recibo”, “Cupom Fiscal”, “Fatura”, “Nota Fiscal”, “Duplicata”, “Outros”"
-"Número do documento","numero_documento","Número de documento que comprove a despesa"
-"CPF/CNPJ do fornecedor","cpf_cnpj_fornecedor","CPF/CNPJ do fornecedor de bens e/ou serviços declarado à Justiça Eleitoral"
-"Nome do fornecedor","fornecedor","Nome do fornecedor de bens e/ou serviços declarado à Justiça Eleitoral"
-"Nome do fornecedor (Receita Federal)","fornecedor_receita_federal","Nome do fornecedor de bens e/ou serviços cadastrado na Receita Federal do BrasilNome do fornecedor de bens e/ou serviços cadastrado na Receita Federal do Brasil"
-"Cod setor econômico do fornecedor","codigo_setor_economico_fornecedor","Código CNAE do fornecedor de bens e/ou serviços, se pessoa jurídica"
-"Setor econômico do fornecedor","setor_economico_fornecedor","Descrição do CNAE do fornecedor de bens e/ou serviços, se pessoa jurídica"
-"Data da despesa","data","Data da despesa declarada à Justiça Eleitoral"
-"Valor despesa","valor","Valor da despesa em Reais (R$)"
-"Tipo despesa","tipo","Tipo da despesa, podendo ser
-""Despesas com pessoal"", ""Encargos sociais"", ""Impostos, contribuições e taxas"", ""Locação/cessão de bens imóveis"",
-""Despesas com transporte ou deslocamento"", ""Publicidade por carros de som"", ""Locação/cessão de bens móveis (exceto
-veículos)"", ""Correspondências e despesas postais"", ""Materiais de expediente"", ""Combustíveis e lubrificantes"", ""Publicidade
-por placas, estandartes e faixas"", ""Serviços prestados por terceiros"", ""Serviços próprios prestados por terceiros"",
-""Publicidade por jornais e revistas"", ""Publicidade por materiais impressos"", ""Alimentação"", ""Água"", ""Energia elétrica"",
-""Comícios"", ""Pesquisas ou testes eleitorais"", ""Eventos de promoção da candidatura"", ""Encargos financeiros, taxas
-bancárias e/ou op. cartão de crédito"", ""Produção de programas de rádio, televisão ou vídeo"", ""Multas eleitorais"", ""Doações
-financeiras a outros candidatos/partidos"", ""Criação e inclusão de páginas na internet"", ""Diversas a especificar"",
-""Aquisição/Doação de bens móveis ou imóveis"", ""Publicidade por telemarketing”, ""Telefone"", ""Produção de jingles,
-vinhetas e slogans"", ""Pré-instalação física de comitês de campanha"", ""Cessão ou locação de veículos"", ""Baixa de recursos
-estimáveis em dinheiro"", ""Atividades de militância e mobilização de rua"""
-"Descrição da despesa","descricao","Descrição da despesa"
+nome_tse,nome_final,descricao
+Cód. Eleição,codigo_eleicao,Código identificador da Eleição
+Desc. Eleição,eleicao,Descrição ou nome da Eleição
+Data e hora,,Data e hora de geração da informação
+CNPJ Prestador Conta,cnpj_orgao,CNPJ da direção partidária  
+Sequencial do Prestador de conta,,Sequencial da direção partidária na base de dados da Justiça Eleitoral
+UF,sigla_unidade_federativa,Unidade da Federação da direção partidária
+Sigla da UE,codigo_unidade_eleitoral,Código da Unidade Eleitoral
+Nome da UE,unidade_eleitoral,Município de registro da direção partidária
+Tipo diretorio,esfera_orgao,"Esfera partidária, podendo assumir os valores “Direção Nacional”, “Direção Estadual/Distrital”, “Direção Municipal”"
+Sigla  Partido,sigla_partido,Sigla da legenda da direção partidária registrada na Justiça Eleitoral
+Tipo do documento,tipo_documento,"Tipo de documento, podendo assumir os valores “Recibo”, “Cupom Fiscal”, “Fatura”, “Nota Fiscal”, “Duplicata”, “Outros”"
+Número do documento,numero_documento,Número de documento que comprove a despesa
+CPF/CNPJ do fornecedor,cpf_cnpj_fornecedor,CPF/CNPJ do fornecedor de bens e/ou serviços declarado à Justiça Eleitoral
+Nome do fornecedor,fornecedor,Nome do fornecedor de bens e/ou serviços declarado à Justiça Eleitoral
+Nome do fornecedor (Receita Federal),fornecedor_receita_federal,Nome do fornecedor de bens e/ou serviços cadastrado na Receita Federal do BrasilNome do fornecedor de bens e/ou serviços cadastrado na Receita Federal do Brasil
+Cod setor econômico do fornecedor,codigo_setor_economico_fornecedor,"Código CNAE do fornecedor de bens e/ou serviços, se pessoa jurídica"
+Setor econômico do fornecedor,setor_economico_fornecedor,"Descrição do CNAE do fornecedor de bens e/ou serviços, se pessoa jurídica"
+Data da despesa,data,Data da despesa declarada à Justiça Eleitoral
+Valor despesa,valor,Valor da despesa em Reais (R$)
+Tipo despesa,tipo,"Tipo da despesa, podendo ser ""Despesas com pessoal"", ""Encargos sociais"", ""Impostos, contribuições e taxas"", ""Locação/cessão de bens imóveis"", ""Despesas com transporte ou deslocamento"", ""Publicidade por carros de som"", ""Locação/cessão de bens móveis (exceto veículos)"", ""Correspondências e despesas postais"", ""Materiais de expediente"", ""Combustíveis e lubrificantes"", ""Publicidade por placas, estandartes e faixas"", ""Serviços prestados por terceiros"", ""Serviços próprios prestados por terceiros"", ""Publicidade por jornais e revistas"", ""Publicidade por materiais impressos"", ""Alimentação"", ""Água"", ""Energia elétrica"", ""Comícios"", ""Pesquisas ou testes eleitorais"", ""Eventos de promoção da candidatura"", ""Encargos financeiros, taxas bancárias e/ou op. cartão de crédito"", ""Produção de programas de rádio, televisão ou vídeo"", ""Multas eleitorais"", ""Doações financeiras a outros candidatos/partidos"", ""Criação e inclusão de páginas na internet"", ""Diversas a especificar"", ""Aquisição/Doação de bens móveis ou imóveis"", ""Publicidade por telemarketing”, ""Telefone"", ""Produção de jingles, vinhetas e slogans"", ""Pré-instalação física de comitês de campanha"", ""Cessão ou locação de veículos"", ""Baixa de recursos estimáveis em dinheiro"", ""Atividades de militância e mobilização de rua"""
+Descrição da despesa,descricao,Descrição da despesa

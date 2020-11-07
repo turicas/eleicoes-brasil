@@ -1,10 +1,10 @@
-"nome_tse","nome_final","descricao"
-"SG_UF","sigla_unidade_federativa","Unidade da federação do comitê"
-"SG_PART","sigla_partido","Sigla do partido"
-"DS_ORGAO","orgao","Tipo de comitê"
-"DT_RECEITA","data","Data da receita"
-"CD_CPF_CGC_DOA","cpf_cnpj_doador","CPF/CNPJ do doador"
-"SG_UF_DOADOR","sigla_unidade_federativa_doador","Unidade da federação do doador"
-"NO_DOADOR","doador","Nome do doador"
-"VR_RECEITA","valor","Valor da receita"
-"TP_RECURSO","tipo_recurso","Tipo de recurso (Cheque, TED, Dinheiro, etc)"
+nome_tse,nome_final,descricao
+SG_UF,sigla_unidade_federativa,Unidade da federação do comitê
+SG_PART,sigla_partido,Sigla do partido
+DS_ORGAO,esfera_orgao,"Esfera partidária, podendo assumir os valores “Direção Nacional”, “Direção Estadual/Distrital”, “Direção Municipal”"
+DT_RECEITA,data,Data da receita
+CD_CPF_CGC_DOA,cpf_cnpj_doador,CPF/CNPJ do doador
+SG_UF_DOADOR,sigla_unidade_federativa_doador,Unidade da federação do doador
+NO_DOADOR,doador,Nome do doador
+VR_RECEITA,valor,Valor da receita
+TP_RECURSO,tipo_recurso,"Tipo de recurso (Cheque, TED, Dinheiro, etc)"

@@ -1,54 +1,54 @@
-"nome_tse","nome_final","descricao"
-"DT_GERACAO",,"Data de geração das informaçãoes (data da extração dos dados)"
-"HH_GERACAO",,"Hora de geração das informações (hora da extração dos dados) – Horário de Brasília"
-"ANO_ELEICAO",ano,"Ano da eleição (referente ao ano eleitoral da pesquisa)"
-"CD_TIPO_ELEICAO","codigo_tipo_eleicao","Código do tipo de eleição "
-"NM_TIPO_ELEICAO","tipo_eleicao","Nome do tipo de eleião"
-"CD_ELEICAO","codigo_eleicao","Código da eleição"
-"DS_ELEICAO","eleicao","Descrição da eleição"
-"DT_ELEICAO","data_eleicao","Data em que ocorreu a eleição"
-"ST_TURNO","segundo_turno","Indicativo se o prestador de contas participou do segundo turno"
-"TP_PRESTACAO_CONTAS","tipo_prestacao_contas","Tipo de entrega da prestaçao de contas. Pode assumir os valores: Relatório financeiro (referente à entrega do relatório financeiro); Parcial (referente à entrega parcial de prestação de contas); Final (referente à entrega final da prestação)"
-"DT_PRESTACAO_CONTAS","data_prestacao_contas","Data de entrega da prestação de contas junto ao TSE"
-"SQ_PRESTADOR_CONTAS",sequencial_prestador_contas,"Sequencial de identificação do prestador de contas junto à Justiça Eleitoral"
-"SG_UF","sigla_unidade_federativa","Sigla da unidade da federação de abrangência do prestador de contas"
-"SG_UE","sigla_unidade_eleitoral","Sigla da Unidade Eleitoral do candidato (Em caso de eleição majoritária é o nome da UF que o candidato concorre e em caso de eleição municipal é o nome do município)"
-"NM_UE","unidade_eleitoral","Nome da Unidade Eleitoral do candidato (Em caso de eleição majoritária é o nome da UF que o candidato concorre e em caso de eleição municipal é o nome do município)"
-"NR_CNPJ_PRESTADOR_CONTA","cnpj","Número do CNPJ do prestador de contas"
-"CD_CARGO","codigo_cargo","Código do cargo do candidato prestador de contas"
-"DS_CARGO","cargo","Descrição do cargo do candidato prestador de contas"
-"SQ_CANDIDATO","numero_sequencial","Sequencial do candidato prestador de contas"
-"NR_CANDIDATO","numero_candidatura","Número do candidato prestador de contas"
-"NM_CANDIDATO","nome","Nome completo do candidato"
-"NR_CPF_CANDIDATO","cpf","CPF do candidato registrado na Justiça Federal"
-"NR_CPF_VICE_CANDIDATO","cpf_vice_candidato","CPF do candidto à vice/suplente do titular, se houve"
-"NR_PARTIDO","numero_partido","Número do partido do candidato"
-"SG_PARTIDO","sigla_partido","Sigla do partido do candidato"
-"NM_PARTIDO","partido","Nome do partido do candidato"
-"CD_TIPO_FORNECEDOR","codigo_tipo_fornecedor","Código de identificação do tipo de fornecedor informada pelo prestador de contas em relação à despesa."
-"DS_TIPO_FORNECEDOR","tipo_fornecedor","Descrição do tipo de fornecedor informada pelo prestador de contas em relação à despesa. Pode assumir os valores: ‘Pessoa Física’ ou ‘Pessoa Jurídica’"
-"CD_CNAE_FORNECEDOR","codigo_setor_economico_fornecedor","Código CNAE do fornecedor de bens e/ou serviços, se pessoa jurídica"
-"DS_CNAE_FORNECEDOR","setor_economico_fornecedor","Descrição do CNAE (Código Nacional de Atividade Econômico) do fornecedor de bens e/ous serviços, se pessoa jurídica"
-"NR_CPF_CNPJ_FORNECEDOR","cpf_cnpj_fornecedor","Número CPF/CNPJ do fornecedor de bens e/ou serviços informada pelo prestador de contas em relação à despesa"
-"NM_FORNECEDOR","fornecedor","Nome do fornecedor de bens e/ou serviços declarado à Justiça Eleitoral, informada pelo prestador de contas"
-"NM_FORNECEDOR_RFB","fornecedor_receita_federal","Nome do fornecedor cadastrado na Receita Federal do Brasil"
-"CD_ESFERA_PART_FORNECEDOR","codigo_esfera_partidaria_fornecedor","Código do tipo de esfera partidária do fornecedor, quando fornecedor ‘Órgão partidário’"
-"DS_ESFERA_PART_FORNECEDOR","esfera_partidaria_fornecedor","Descrição do tipo de esfera partidária do fornecedor, podendo assumir os valores: ‘Nacional’, ‘Estadual/Distrital’ e ‘Municipal’. Quano fornecedor ‘Órgão partidário’"
-"SG_UF_FORNECEDOR","sigla_unidade_federativa_fornecedor","Sigla da unidade da federação do fornecedor, quando fornecedor for candidato ou órgão partidário"
-"CD_MUNICIPIO_FORNECEDOR","codigo_unidade_eleitoral_fornecedor","Código do município do fornecedor, quando a esfera partidária do fornecedor for municipal"
-"NM_MUNICIPIO_FORNECEDOR","unidade_eleitoral_fornecedor","Descrição do município do fornecedor, quando a esfera partidária do fornecedor for municipal"
-"SQ_CANDIDATO_FORNECEDOR","numero_sequencial_candidatura_fornecedora","Sequencial do candidato fornecedor, quando fornecedor candidato"
-"NR_CANDIDATO_FORNECEDOR","numero_candidatura_fornecedora","Número do candidato declarado pelo prestador de contas, quando fornecedor candidato"
-"CD_CARGO_FORNECEDOR","codigo_cargo_fornecedor","Código do cargo do candidato declarado pelo prestador de contas, quando fornecedor candidato"
-"DS_CARGO_FORNECEDOR","cargo_fornecedor","Descrição do cargo do candidato declarado pelo prestador de contas, quando fornecedor candidato"
-"NR_PARTIDO_FORNECEDOR","numero_partido_doador","Número do partido declarado pelo prestador de contas, quando fornecedor candidato ou órgão partidário"
-"SG_PARTIDO_FORNECEDOR","sigla_partido_fornecedor","Sigla do partido declarado pelo prestador de contas, quando fornecedor candidato ou órgão partidário"
-"NM_PARTIDO_FORNECEDOR","partido_fornecedor","Nome do partido declarado pelo prestador de contas, quando fornecedor candidato ou órgão partidário"
-"DS_TIPO_DOCUMENTO","tipo_documento","Tipo de documento, podendo assumir os valores ‘Recibo’, ‘Cupom Fiscal’, ‘Fatura’, ‘Nota Fiscal’, ‘Duplicata’, ‘Outros’"
-"NR_DOCUMENTO","numero_documento","Número de documento que comprove a despesa"
-"CD_ORIGEM_DESPESA","codigo_origem","Código de identificação do tipo de origem da despesa (DRD), informado pelo prestador de contas em relação à despesa"
-"DS_ORIGEM_DESPESA","origem","Descrição do tipo de origem da despesa (DRD), informado pelo prestador de contas em relação à despesa"
-"SQ_DESPESA",sequencial_identificacao_despesa,"Sequencial de identificação do registro da despesa declarada pelo prestador de contas"
-"DT_DESPESA","data","Data da despesa declarada à Justiça Eleitoral"
-"DS_DESPESA","descricao","Descrição da despesa"
-"VR_DESPESA_CONTRATADA","valor","Valor da despesa contratada, em Reais (R$), informada pelo prestador de contas"
+nome_tse,nome_final,descricao
+DT_GERACAO,,Data de geração das informaçãoes (data da extração dos dados)
+HH_GERACAO,,Hora de geração das informações (hora da extração dos dados) – Horário de Brasília
+ANO_ELEICAO,ano,Ano da eleição (referente ao ano eleitoral da pesquisa)
+CD_TIPO_ELEICAO,codigo_tipo_eleicao,Código do tipo de eleição 
+NM_TIPO_ELEICAO,tipo_eleicao,Nome do tipo de eleião
+CD_ELEICAO,codigo_eleicao,Código da eleição
+DS_ELEICAO,eleicao,Descrição da eleição
+DT_ELEICAO,data_eleicao,Data em que ocorreu a eleição
+ST_TURNO,segundo_turno,Indicativo se o prestador de contas participou do segundo turno
+TP_PRESTACAO_CONTAS,tipo_prestacao_contas,Tipo de entrega da prestaçao de contas. Pode assumir os valores: Relatório financeiro (referente à entrega do relatório financeiro); Parcial (referente à entrega parcial de prestação de contas); Final (referente à entrega final da prestação)
+DT_PRESTACAO_CONTAS,data_prestacao_contas,Data de entrega da prestação de contas junto ao TSE
+SQ_PRESTADOR_CONTAS,numero_sequencial_prestador_contas,Sequencial de identificação do prestador de contas junto à Justiça Eleitoral
+SG_UF,sigla_unidade_federativa,Sigla da unidade da federação de abrangência do prestador de contas
+SG_UE,sigla_unidade_eleitoral,Sigla da Unidade Eleitoral do candidato (Em caso de eleição majoritária é o nome da UF que o candidato concorre e em caso de eleição municipal é o nome do município)
+NM_UE,unidade_eleitoral,Nome da Unidade Eleitoral do candidato (Em caso de eleição majoritária é o nome da UF que o candidato concorre e em caso de eleição municipal é o nome do município)
+NR_CNPJ_PRESTADOR_CONTA,cnpj,Número do CNPJ do prestador de contas
+CD_CARGO,codigo_cargo,Código do cargo do candidato prestador de contas
+DS_CARGO,cargo,Descrição do cargo do candidato prestador de contas
+SQ_CANDIDATO,numero_sequencial,Sequencial do candidato prestador de contas
+NR_CANDIDATO,numero_candidatura,Número do candidato prestador de contas
+NM_CANDIDATO,nome,Nome completo do candidato
+NR_CPF_CANDIDATO,cpf,Número do CPF do candidato
+NR_CPF_VICE_CANDIDATO,cpf_vice_candidato,"CPF do candidto à vice/suplente do titular, se houver"
+NR_PARTIDO,numero_partido,Número do partido do candidato
+SG_PARTIDO,sigla_partido,Sigla do partido do candidato
+NM_PARTIDO,partido,Nome do partido do candidato
+CD_TIPO_FORNECEDOR,codigo_tipo_fornecedor,Código de identificação do tipo de fornecedor informada pelo prestador de contas em relação à despesa.
+DS_TIPO_FORNECEDOR,tipo_fornecedor,Descrição do tipo de fornecedor informada pelo prestador de contas em relação à despesa. Pode assumir os valores: ‘Pessoa Física’ ou ‘Pessoa Jurídica’
+CD_CNAE_FORNECEDOR,codigo_setor_economico_fornecedor,"Código CNAE do fornecedor de bens e/ou serviços, se pessoa jurídica"
+DS_CNAE_FORNECEDOR,setor_economico_fornecedor,"Descrição do CNAE (Código Nacional de Atividade Econômico) do fornecedor de bens e/ous serviços, se pessoa jurídica"
+NR_CPF_CNPJ_FORNECEDOR,cpf_cnpj_fornecedor,Número CPF/CNPJ do fornecedor de bens e/ou serviços informada pelo prestador de contas em relação à despesa
+NM_FORNECEDOR,fornecedor,"Nome do fornecedor de bens e/ou serviços declarado à Justiça Eleitoral, informada pelo prestador de contas"
+NM_FORNECEDOR_RFB,fornecedor_receita_federal,Nome do fornecedor cadastrado na Receita Federal do Brasil
+CD_ESFERA_PART_FORNECEDOR,codigo_esfera_partidaria_fornecedor,"Código do tipo de esfera partidária do fornecedor, quando fornecedor ‘Órgão partidário’"
+DS_ESFERA_PART_FORNECEDOR,esfera_partidaria_fornecedor,"Descrição do tipo de esfera partidária do fornecedor, podendo assumir os valores: ‘Nacional’, ‘Estadual/Distrital’ e ‘Municipal’. Quano fornecedor ‘Órgão partidário’"
+SG_UF_FORNECEDOR,sigla_unidade_federativa_fornecedor,"Sigla da unidade da federação do fornecedor, quando fornecedor for candidato ou órgão partidário"
+CD_MUNICIPIO_FORNECEDOR,codigo_unidade_eleitoral_fornecedor,"Código do município do fornecedor, quando a esfera partidária do fornecedor for municipal"
+NM_MUNICIPIO_FORNECEDOR,unidade_eleitoral_fornecedor,"Descrição do município do fornecedor, quando a esfera partidária do fornecedor for municipal"
+SQ_CANDIDATO_FORNECEDOR,numero_sequencial_candidatura_fornecedora,"Sequencial do candidato fornecedor, quando fornecedor candidato"
+NR_CANDIDATO_FORNECEDOR,numero_candidatura_fornecedora,"Número do candidato declarado pelo prestador de contas, quando fornecedor candidato"
+CD_CARGO_FORNECEDOR,codigo_cargo_fornecedor,"Código do cargo do candidato declarado pelo prestador de contas, quando fornecedor candidato"
+DS_CARGO_FORNECEDOR,cargo_fornecedor,"Descrição do cargo do candidato declarado pelo prestador de contas, quando fornecedor candidato"
+NR_PARTIDO_FORNECEDOR,numero_partido_doador,"Número do partido declarado pelo prestador de contas, quando fornecedor candidato ou órgão partidário"
+SG_PARTIDO_FORNECEDOR,sigla_partido_fornecedor,"Sigla do partido declarado pelo prestador de contas, quando fornecedor candidato ou órgão partidário"
+NM_PARTIDO_FORNECEDOR,partido_fornecedor,"Nome do partido declarado pelo prestador de contas, quando fornecedor candidato ou órgão partidário"
+DS_TIPO_DOCUMENTO,tipo_documento,"Tipo de documento, podendo assumir os valores ‘Recibo’, ‘Cupom Fiscal’, ‘Fatura’, ‘Nota Fiscal’, ‘Duplicata’, ‘Outros’"
+NR_DOCUMENTO,numero_documento,Número de documento que comprove a despesa
+CD_ORIGEM_DESPESA,codigo_origem,"Código de identificação do tipo de origem da despesa (DRD), informado pelo prestador de contas em relação à despesa"
+DS_ORIGEM_DESPESA,origem,"Descrição do tipo de origem da despesa (DRD), informado pelo prestador de contas em relação à despesa"
+SQ_DESPESA,numero_sequencial_despesa,Sequencial de identificação do registro da despesa declarada pelo prestador de contas
+DT_DESPESA,data,Data da despesa declarada à Justiça Eleitoral
+DS_DESPESA,descricao,Descrição da despesa
+VR_DESPESA_CONTRATADA,valor,"Valor da despesa contratada, em Reais (R$), informada pelo prestador de contas"

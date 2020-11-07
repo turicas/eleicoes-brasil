@@ -1,19 +1,19 @@
-"nome_tse","nome_final","descricao"
-"DS_ORGAO","orgao","Tipo de comitê"
-"NR_PARTIDO","numero_partido","Número do partido"
-"SG_PART","sigla_partido","Sigla do partido"
-"SG_UE","sigla_unidade_federativa","Unidade da federação"
-"CNPJ","cnpj_orgao","CNPJ de campanha"
-"VR_DESPESA","valor","Valor da despesa"
-"DT_DOC_DESP","data","Data da despesa"
-"RTRIM(LTRIM(DR.DS_TITULO))","tipo","Tipo de despesa"
-"CD_TITULO","codigo_tipo","Código do tipo de despesa"
-"RV_MEANING","tipo_recurso","Forma de pagamento (EM ESPÉCIE, CHEQUE, ESTIMADO, NÃO INFORMADO)"
-"TP_RECURSO","codigo_forma_pagamento","Código da forma de pagamento"
-"NR_DOC_DESP","numero_documento","Número do documento"
-"RV_MEANING_1","tipo_documento","Tipo de documento (Nota Fiscal, Recibo, Outros)"
-"CD_DOC","codigo_tipo_documento","Código do tipo de documento"
-"NO_FOR","fornecedor","Nome do fornecedor"
-"CD_CPF_CGC","cpf_cnpj_fornecedor","CPF/CNPJ do fornecedor"
-"NO_UE","unidade_eleitoral_fornecedor","Unidade da federação do fornecedor"
-"SITUACAOCADASTRAL","situacao_cadastral","Batimento Receita Federal do Brasil"
+nome_tse,nome_final,descricao
+DS_ORGAO,esfera_orgao,"Esfera partidária, podendo assumir os valores “Direção Nacional”, “Direção Estadual/Distrital”, “Direção Municipal”"
+NR_PARTIDO,numero_partido,Número do partido
+SG_PART,sigla_partido,Sigla do partido
+SG_UE,sigla_unidade_federativa,Unidade da federação
+CNPJ,cnpj_orgao,CNPJ de campanha
+VR_DESPESA,valor,Valor da despesa
+DT_DOC_DESP,data,Data da despesa
+RTRIM(LTRIM(DR.DS_TITULO)),tipo,Tipo de despesa
+CD_TITULO,codigo_tipo,Código do tipo de despesa
+RV_MEANING,tipo_recurso,"Forma de pagamento (EM ESPÉCIE, CHEQUE, ESTIMADO, NÃO INFORMADO)"
+TP_RECURSO,codigo_forma_pagamento,Código da forma de pagamento
+NR_DOC_DESP,numero_documento,Número do documento
+RV_MEANING_1,tipo_documento,"Tipo de documento (Nota Fiscal, Recibo, Outros)"
+CD_DOC,codigo_tipo_documento,Código do tipo de documento
+NO_FOR,fornecedor,Nome do fornecedor
+CD_CPF_CGC,cpf_cnpj_fornecedor,CPF/CNPJ do fornecedor
+NO_UE,unidade_eleitoral_fornecedor,Unidade da federação do fornecedor
+SITUACAOCADASTRAL,situacao_cadastral,Batimento Receita Federal do Brasil

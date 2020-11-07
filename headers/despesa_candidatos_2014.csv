@@ -1,6 +1,6 @@
 nome_tse,nome_final,descricao
-Cód. Eleição,codigo_eleicao,
-Desc. Eleição,eleicao,
+Cód. Eleição,codigo_eleicao,Código da eleição
+Desc. Eleição,eleicao,Descrição ou nome da Eleição
 Data e hora,,
 CNPJ Prestador Conta,cnpj,
 Sequencial Candidato,numero_sequencial,
@@ -9,15 +9,15 @@ Sigla  Partido,sigla_partido,
 Número candidato,numero_candidatura,
 Cargo,cargo,
 Nome candidato,nome,
-CPF do candidato,cpf,
+CPF do candidato,cpf,Número do CPF do candidato
 Tipo do documento,tipo_documento,
 Número do documento,numero_documento,
 CPF/CNPJ do fornecedor,cpf_cnpj_fornecedor,
-Nome do fornecedor,fornecedor,
-Nome do fornecedor (Receita Federal),fornecedor_receita_federal,
-Cod setor econômico do fornecedor,codigo_setor_economico_fornecedor,
-Setor econômico do fornecedor,setor_economico_fornecedor,
+Nome do fornecedor,fornecedor,Nome do fornecedor de bens e/ou serviços declarado à Justiça Eleitoral
+Nome do fornecedor (Receita Federal),fornecedor_receita_federal,Nome do fornecedor de bens e/ou serviços cadastrado na Receita Federal do Brasil
+Cod setor econômico do fornecedor,codigo_setor_economico_fornecedor,"Código CNAE do fornecedor de bens e/ou serviços, se pessoa jurídica"
+Setor econômico do fornecedor,setor_economico_fornecedor,"Descrição da CNAE do fornecedor de bens e/ou serviços, se pessoa jurídica"
 Data da despesa,data,
 Valor despesa,valor,
 Tipo despesa,tipo,
-Descriçao da despesa,descricao,
+Descriçao da despesa,descricao,Descrição da despesa

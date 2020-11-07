@@ -1,35 +1,35 @@
-"nome_tse","nome_final","descricao"
-"Cód. Eleição",codigo_eleicao,"Código identificador da Eleição"
-"Desc. Eleição","eleicao","Descrição ou nome da Eleição"
-"Data e hora",,"Data e hora de geração da informação"
-"CNPJ Prestador Conta","cnpj","CNPJ da direção partidária"
-"Sequencial prestador conta",,"Sequencial da direção partidária na base de dados da Justiça Eleitoral"
-"UF","sigla_unidade_federativa","Unidade da Federação da direção partidária"
-"Sigla da UE","codigo_unidade_eleitoral","Código da Unidade Eleitoral"
-"Nome da UE","unidade_eleitoral","Município de registro da direção partidária"
-"Tipo diretorio","orgao","Esfera partidária, podendo assumir os valores “Direção Nacional”, “Direção Estadual/Distrital”, “Direção Municipal”"
-"Sigla  Partido","sigla_partido","Sigla da legenda da direção partidária registrada na Justiça Eleitoral"
-"Número recibo eleitoral","numero_recibo_eleitoral","Número do recibo eleitoral referente à doação recebida"
-"Número do documento","numero_documento","Número de documento referente à transação bancária ou comprovante da doação estimável"
-"CPF/CNPJ do doador","cpf_cnpj_doador","CPF/CNPJ do doador declarado à Justiça Eleitoral"
-"Nome do doador","doador","Nome do doador declarado à Justiça Eleitoral"
-"Nome do doador (Receita Federal)","doador_receita_federal","Nome do doador cadastrado na Receita Federal do Brasil"
-"Sigla UE doador","sigla_unidade_eleitoral_doador","Sigla da unidade da federação do doador, se candidato ou direção partidária"
-"Número partido doador","numero_partido_doador","Número do partido do doador, se candidato ou direção partidária"
-"Número candidato doador","numero_candidatura_doadora","Número do candidato, se doação de candidato a outro candidato e/ou direção partidária"
-"Cod setor econômico do doador","codigo_setor_economico_doador","Código CNAE do doador, se pessoa jurídica"
-"Setor econômico do doador","setor_economico_doador","Descrição do CNAE do doador, se pessoa jurídica"
-"Data da receita","data","Data da doação declarada à Justiça Eleitoral"
-"Valor receita","valor","Valor da doação em Reais (R$)"
-"Tipo receita","tipo","Tipo da doação, podendo ser “Recursos Próprios”, “Recursos de Pessoas Físicas”, “Doações pela internet”, “Recursos de Outros
+nome_tse,nome_final,descricao
+Cód. Eleição,codigo_eleicao,Código identificador da Eleição
+Desc. Eleição,eleicao,Descrição ou nome da Eleição
+Data e hora,,Data e hora de geração da informação
+CNPJ Prestador Conta,cnpj,CNPJ da direção partidária
+Sequencial prestador conta,,Sequencial da direção partidária na base de dados da Justiça Eleitoral
+UF,sigla_unidade_federativa,Unidade da Federação da direção partidária
+Sigla da UE,codigo_unidade_eleitoral,Código da Unidade Eleitoral
+Nome da UE,unidade_eleitoral,Município de registro da direção partidária
+Tipo diretorio,esfera_orgao,"Esfera partidária, podendo assumir os valores “Direção Nacional”, “Direção Estadual/Distrital”, “Direção Municipal”"
+Sigla  Partido,sigla_partido,Sigla da legenda da direção partidária registrada na Justiça Eleitoral
+Número recibo eleitoral,numero_recibo_eleitoral,Número do recibo eleitoral referente à doação recebida
+Número do documento,numero_documento,Número de documento referente à transação bancária ou comprovante da doação estimável
+CPF/CNPJ do doador,cpf_cnpj_doador,CPF/CNPJ do doador declarado à Justiça Eleitoral
+Nome do doador,doador,Nome do doador declarado à Justiça Eleitoral
+Nome do doador (Receita Federal),doador_receita_federal,Nome do doador cadastrado na Receita Federal do Brasil
+Sigla UE doador,sigla_unidade_eleitoral_doador,"Sigla da unidade da federação do doador, se candidato ou direção partidária"
+Número partido doador,numero_partido_doador,"Número do partido do doador, se candidato ou direção partidária"
+Número candidato doador,numero_candidatura_doadora,"Número do candidato, se doação de candidato a outro candidato e/ou direção partidária"
+Cod setor econômico do doador,codigo_setor_economico_doador,"Código CNAE do doador, se pessoa jurídica"
+Setor econômico do doador,setor_economico_doador,"Descrição do CNAE do doador, se pessoa jurídica"
+Data da receita,data,Data da doação declarada à Justiça Eleitoral
+Valor receita,valor,Valor da doação em Reais (R$)
+Tipo receita,tipo,"Tipo da doação, podendo ser “Recursos Próprios”, “Recursos de Pessoas Físicas”, “Doações pela internet”, “Recursos de Outros
 Candidatos”, “Recursos de Partidos Políticos”, “Recursos de Origem Não Identificada”, “Comercialização de bens ou realização de
 eventos”, “Rendimentos de aplicações financeiras”"
-"Fonte recurso","fonte_recurso","Fonte do recurso da doação, podendo ser “Fundo Partidário” ou “Outros Recursos”"
-"Espécie recurso","tipo_recurso","Espécie do recurso da doação, podendo assumir os valores “Cheque”, “Em Espécie”, “Transferência Eletrônica”, “Depósito em
+Fonte recurso,fonte_recurso,"Fonte do recurso da doação, podendo ser “Fundo Partidário” ou “Outros Recursos”"
+Espécie recurso,tipo_recurso,"Espécie do recurso da doação, podendo assumir os valores “Cheque”, “Em Espécie”, “Transferência Eletrônica”, “Depósito em
 Espécie”, “Cartão de Crédito”, “Cartão de Débito”, “Boleto de Cobrança”, “Estimado” e “Outros Títulos de Crédito”."
-"Descrição da receita","receita","Descrição da doação quando esta for estimável em dinheiro"
-"CPF/CNPJ do doador originário","cpf_cnpj_doador_originario","CPF/CNPJ do doador originário quando a doação se der entre candidatos e/ou direções partidárias"
-"Nome do doador originário","doador_originario","Nome doador originário declarado à Justiça Eleitoral"
-"Tipo doador originário","tipo_doador_originario","Tipo do doador originário, podendo assumir os valores “F” – Pessoa Física ou “J” – Pessoa Jurídica"
-"Setor econômico do doador originário","setor_economico_doador_originario","Código CNAE do doador originário, se pessoa jurídica"
-"Nome do doador originário (Receita Federal)","doador_originario_receita_federal","Nome do doador originário cadastrado na Receita Federal do Brasil"
+Descrição da receita,receita,Descrição da doação quando esta for estimável em dinheiro
+CPF/CNPJ do doador originário,cpf_cnpj_doador_originario,CPF/CNPJ do doador originário quando a doação se der entre candidatos e/ou direções partidárias
+Nome do doador originário,doador_originario,Nome doador originário declarado à Justiça Eleitoral
+Tipo doador originário,tipo_doador_originario,"Tipo do doador originário, podendo assumir os valores “F” – Pessoa Física ou “J” – Pessoa Jurídica"
+Setor econômico do doador originário,setor_economico_doador_originario,"Código CNAE do doador originário, se pessoa jurídica"
+Nome do doador originário (Receita Federal),doador_originario_receita_federal,Nome do doador originário cadastrado na Receita Federal do Brasil

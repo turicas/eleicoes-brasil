@@ -7,7 +7,7 @@ Sequencial prestador conta,,
 UF,sigla_unidade_federativa,Unidade da Federação da direção partidária
 Sigla da UE,sigla_unidade_eleitoral,
 Nome da UE,unidade_eleitoral,Município de registro da direção partidária
-Tipo diretorio,tipo_diretorio,"Esfera partidária, podendo assumir os valores “Direção Nacional”, “Direção Estadual/Distrital”, “Direção Municipal”"
+Tipo diretorio,esfera_orgao,"Esfera partidária, podendo assumir os valores “Direção Nacional”, “Direção Estadual/Distrital”, “Direção Municipal”"
 Sigla  Partido,sigla_partido,Sigla da legenda da direção partidária registrada na Justiça Eleitoral
 Numero candidato,numero_candidatura,
 Número recibo eleitoral,numero_recibo_eleitoral,Número do recibo eleitoral referente à doação recebida

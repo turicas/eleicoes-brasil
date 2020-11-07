@@ -7,7 +7,7 @@ Número candidato,numero_candidatura,Número do candidato registrado na Justiça
 Cargo,cargo,Candidatura a qual concorre o candidato registrado na Justiça Eleitoral
 Nome candidato,nome,Nome do candidato registrado na Justiça Eleitoral
 CPF do candidato,cpf,CPF do candidato registrado na Justiça Eleitoral
-Entrega em conjunto?,entrega_em_conjuto,Entrega em Conjunto
+Entrega em conjunto?,entrega_em_conjuto,Entrega em conjunto?
 Número Recibo Eleitoral,numero_recibo_eleitoral,Número do recibo eleitoral referente à doação recebida
 Número do documento,numero_documento,Número do documento referente à transação bancária ou comprovante da doação estimável
 CPF/CNPJ do doador,cpf_cnpj_doador,CPF/CNPJ do doador declarado à Justiça Eleitoral

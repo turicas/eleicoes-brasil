@@ -1,23 +1,23 @@
-"nome_tse","nome_final","descricao"
-"SEQUENCIAL_CANDIDATO",numero_sequencial,"Número Sequencial do Candidato"
-"NOME_CANDIDATO","nome","Nome do candidato"
-"DESCRICAO_CARGO","cargo","Descrição do cargo"
-"CODIGO_CARGO","codigo_cargo","Código do cargo"
-"NUMERO_CANDIDATO","numero_candidatura","Número do candidato"
-"UNIDADE_ELEITORAL_CANDIDATO","sigla_unidade_federativa","Unidade da federação do candidato"
-"NUMERO_CNPJ_CANDIDATO","cnpj","CNPJ de campanha"
-"NUMERO_PARTIDO","numero_partido","Número do partido"
-"SIGLA_PARTIDO","sigla_partido","Sigla do partido"
-"VALOR_DESPESA","valor","Valor da despesa"
-"DATA_DESPESA","data","Data da despesa"
-"TIPO_DESPESA","tipo","Tipo de despesa"
-"CODIGO_TIPO_DESPESA","codigo_tipo","Código do tipo de despesa"
-"DESCRICAO_FORMA_PAGAMENTO","tipo_recurso","Forma de pagamento (EM ESPÉCIE, CHEQUE, ESTIMADO, NÃO INFORMADO)"
-"CODIGO_FORMA_PAGAMENTO","codigo_forma_pagamento","Código da Forma de pagamento"
-"NUMERO_DOCUMENTO","numero_documento","Número do documento"
-"TIPO_DOCUMENTO","tipo_documento","Tipo de documento (Nota Fiscal, Recibo, Outros)"
-"CODIGO_TIPO_DOCUMENTO","codigo_tipo_documento","Código do tipo de documento"
-"NOME_FORNECEDOR","fornecedor","Nome do fornecedor"
-"NUMERO_CPF_CGC_FORNECEDOR","cpf_cnpj_fornecedor","CPF/CNPJ do fornecedor"
-"UNIDADE_ELEITORAL_FORNECEDOR","sigla_unidade_eleitoral_fornecedor","Unidade da federação do fornecedor"
-"SITUACAO_CADASTRAL","situacao_cadastral","Batimento Receita Federal do Brasil"
+nome_tse,nome_final,descricao
+SEQUENCIAL_CANDIDATO,numero_sequencial,Número Sequencial do Candidato
+NOME_CANDIDATO,nome,Nome do candidato
+DESCRICAO_CARGO,cargo,Descrição do cargo
+CODIGO_CARGO,codigo_cargo,Código do cargo
+NUMERO_CANDIDATO,numero_candidatura,Número do candidato
+UNIDADE_ELEITORAL_CANDIDATO,sigla_unidade_federativa,Unidade da federação do candidato
+NUMERO_CNPJ_CANDIDATO,cnpj,CNPJ de campanha
+NUMERO_PARTIDO,numero_partido,Número do partido
+SIGLA_PARTIDO,sigla_partido,Sigla do partido
+VALOR_DESPESA,valor,Valor da despesa
+DATA_DESPESA,data,Data da despesa
+TIPO_DESPESA,tipo,Tipo de despesa
+CODIGO_TIPO_DESPESA,codigo_tipo,Código do tipo de despesa
+DESCRICAO_FORMA_PAGAMENTO,tipo_recurso,"Forma de pagamento (EM ESPÉCIE, CHEQUE, ESTIMADO, NÃO INFORMADO)"
+CODIGO_FORMA_PAGAMENTO,codigo_forma_pagamento,Código da Forma de pagamento
+NUMERO_DOCUMENTO,numero_documento,Número do documento
+TIPO_DOCUMENTO,tipo_documento,"Tipo de documento (Nota Fiscal, Recibo, Outros)"
+CODIGO_TIPO_DOCUMENTO,codigo_tipo_documento,Código do tipo de documento
+NOME_FORNECEDOR,fornecedor,Nome do fornecedor
+NUMERO_CPF_CGC_FORNECEDOR,cpf_cnpj_fornecedor,CPF/CNPJ do fornecedor
+UNIDADE_ELEITORAL_FORNECEDOR,sigla_unidade_eleitoral_fornecedor,Unidade da federação do fornecedor
+SITUACAO_CADASTRAL,situacao_cadastral,Batimento Receita Federal do Brasil

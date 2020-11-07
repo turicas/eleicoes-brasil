@@ -1,15 +1,15 @@
-"nome_tse","nome_final","descricao"
-"Data e hora",,
-"UF","sigla_unidade_federativa",
-"Tipo partido","orgao",
-"Sigla Partido","sigla_partido",
-"Tipo do documento","tipo_documento",
-"Número do documento","numero_documento",
-"CPF/CNPJ do fornecedor","cpf_cnpj_fornecedor",
-"Nome do fornecedor","fornecedor",
-"Data da despesa","data",
-"Valor despesa","valor",
-"Tipo despesa","tipo",
-"Fonte recurso","fonte_recurso",
-"Espécie recurso","tipo_recurso",
-"Descrição da despesa","descricao",
+nome_tse,nome_final,descricao
+Data e hora,,
+UF,sigla_unidade_federativa,
+Tipo partido,esfera_orgao,"Esfera partidária, podendo assumir os valores “Direção Nacional”, “Direção Estadual/Distrital”, “Direção Municipal”"
+Sigla Partido,sigla_partido,
+Tipo do documento,tipo_documento,
+Número do documento,numero_documento,
+CPF/CNPJ do fornecedor,cpf_cnpj_fornecedor,
+Nome do fornecedor,fornecedor,
+Data da despesa,data,
+Valor despesa,valor,
+Tipo despesa,tipo,
+Fonte recurso,fonte_recurso,"Fonte do recurso da doação, podendo ser “Fundo Partidário” ou “Outros Recursos”"
+Espécie recurso,tipo_recurso,
+Descrição da despesa,descricao,Descrição da despesa

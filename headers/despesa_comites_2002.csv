@@ -1,10 +1,10 @@
-"nome_tse","nome_final","descricao"
-"SG_UF","sigla_unidade_federativa","Unidade da federação do comitê"
-"SG_PART","sigla_partido","Sigla do partido"
-"DS_ORGAO","orgao","Tipo de comitê"
-"DT_DOC_DESP","data","Data da despesa"
-"CD_CPF_CGC","cpf_cnpj_fornecedor","CPF/CNPJ do fornecedor"
-"SG_UF_FORNECEDOR","sigla_unidade_federativa_fornecedor","Unidade da federação do fornecedor"
-"NO_FOR","fornecedor","Nome do fornecedor"
-"VR_DESPESA","valor","Valor da despesa"
-"DS_TITULO","tipo","Tipo de despesa"
+nome_tse,nome_final,descricao
+SG_UF,sigla_unidade_federativa,Unidade da federação do comitê
+SG_PART,sigla_partido,Sigla do partido
+DS_ORGAO,esfera_orgao,"Esfera partidária, podendo assumir os valores “Direção Nacional”, “Direção Estadual/Distrital”, “Direção Municipal”"
+DT_DOC_DESP,data,Data da despesa
+CD_CPF_CGC,cpf_cnpj_fornecedor,CPF/CNPJ do fornecedor
+SG_UF_FORNECEDOR,sigla_unidade_federativa_fornecedor,Unidade da federação do fornecedor
+NO_FOR,fornecedor,Nome do fornecedor
+VR_DESPESA,valor,Valor da despesa
+DS_TITULO,tipo,Tipo de despesa

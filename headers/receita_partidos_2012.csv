@@ -1,27 +1,27 @@
-"nome_tse","nome_final","descricao"
-"Cód. Eleição",codigo_eleicao,
-"Desc. Eleição","eleicao",
-"Data e hora",,
-"Sequencial Diretorio","numero_sequencial_diretorio",
-"UF","sigla_unidade_federativa",
-"Número UE","codigo_unidade_eleitoral",
-"Município","unidade_eleitoral",
-"Tipo diretorio","orgao",
-"Sigla  Partido","sigla_partido",
-"Tipo do documento","tipo_documento",
-"Número Recibo Eleitoral","numero_recibo_eleitoral",
-"Número do documento","numero_documento",
-"CPF/CNPJ do doador","cpf_cnpj_doador",
-"Nome do doador","doador",
-"Nome do doador (Receita Federal)","doador_receita_federal",
-"Sigla UE doador","codigo_unidade_eleitoral_doador",
-"Número partido doador","numero_partido_doador",
-"Número candidato doador","numero_candidatura_doadora",
-"Cod setor econômico do doador","codigo_setor_economico_doador",
-"Setor econômico do doador","setor_economico_doador",
-"Data da receita","data",
-"Valor receita","valor",
-"Tipo receita","tipo",
-"Fonte recurso","fonte_recurso","Fonte do recurso da doação, podendo ser “Fundo Partidário” ou “Outros Recursos”"
-"Espécie recurso","tipo_recurso",
-"Descrição da receita","receita","Descrição da doação quando esta for estimável em dinheiro"
+nome_tse,nome_final,descricao
+Cód. Eleição,codigo_eleicao,Código da eleição
+Desc. Eleição,eleicao,Descrição ou nome da Eleição
+Data e hora,,
+Sequencial Diretorio,numero_sequencial_diretorio,Número sequencial do diretório gerado internamente pelos sistemas eleitorais
+UF,sigla_unidade_federativa,
+Número UE,codigo_unidade_eleitoral,
+Município,unidade_eleitoral,
+Tipo diretorio,esfera_orgao,"Esfera partidária, podendo assumir os valores “Direção Nacional”, “Direção Estadual/Distrital”, “Direção Municipal”"
+Sigla  Partido,sigla_partido,
+Tipo do documento,tipo_documento,
+Número Recibo Eleitoral,numero_recibo_eleitoral,
+Número do documento,numero_documento,
+CPF/CNPJ do doador,cpf_cnpj_doador,
+Nome do doador,doador,
+Nome do doador (Receita Federal),doador_receita_federal,
+Sigla UE doador,codigo_unidade_eleitoral_doador,
+Número partido doador,numero_partido_doador,
+Número candidato doador,numero_candidatura_doadora,
+Cod setor econômico do doador,codigo_setor_economico_doador,"Código CNAE do doador, se pessoa jurídica"
+Setor econômico do doador,setor_economico_doador,"Descrição da CNAE do doador, se pessoa jurídica"
+Data da receita,data,
+Valor receita,valor,
+Tipo receita,tipo,
+Fonte recurso,fonte_recurso,"Fonte do recurso da doação, podendo ser “Fundo Partidário” ou “Outros Recursos”"
+Espécie recurso,tipo_recurso,
+Descrição da receita,receita,Descrição da doação quando esta for estimável em dinheiro

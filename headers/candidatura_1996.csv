@@ -15,7 +15,7 @@ NM_UE,unidade_eleitoral,Nome da Unidade Eleitoral do candidato (em caso de elei�
 CD_CARGO,codigo_cargo,Código do cargo ao qual o candidato concorre
 DS_CARGO,cargo,Descrição do cargo ao qual o candidato concorre
 SQ_CANDIDATO,numero_sequencial,Número sequencial do candidato gerado internamente pelos sistemas eleitorais (não é o número da campanha do candidato)
-NR_CANDIDATO,numero_urna,Nümero do candidato na urna
+NR_CANDIDATO,numero_urna,Número do candidato na urna
 NM_CANDIDATO,nome,Nome completo do candidato
 NM_URNA_CANDIDATO,nome_urna,Nome de urna do candidato
 NM_SOCIAL_CANDIDATO,nome_social,Nome social do candidato
@@ -57,8 +57,8 @@ ST_REELEICAO,concorre_reeleicao,"O indicativo de que o candidato está concorren
 ST_DECLARAR_BENS,declara_bens,O indicativo de que o candidato tem ou não bens a declarar - pode assumiar os valores “S” (em caso positivo) e “N” (em caso negativo)
 NR_PROTOCOLO_CANDIDATURA,numero_protocolo_candidatura,Número do protocolo de registro de candidatura do candidato
 NR_PROCESSO,numero_processo_candidatura,Número do processo de registro de candidatura do candidato
-CD_SITUACAO_CANDIDATO_PLEITO,codigo_situacao_candidatura_pleito,
-DS_SITUACAO_CANDIDATO_PLEITO,situacao_candidatura_pleito,
-CD_SITUACAO_CANDIDATO_URNA,codigo_situacao_candidatura_urna,
-DS_SITUACAO_CANDIDATO_URNA,situacao_candidatura_urna,
-ST_CANDIDATO_INSERIDO_URNA,candidatura_inserida_urna,
+CD_SITUACAO_CANDIDATO_PLEITO,codigo_situacao_candidatura_pleito,Código da situação da candidatura no dia do Pleito
+DS_SITUACAO_CANDIDATO_PLEITO,situacao_candidatura_pleito,Descrição da situação da candidatura no dia do Pleito
+CD_SITUACAO_CANDIDATO_URNA,codigo_situacao_candidatura_urna,Código da situação da candidatura na urna
+DS_SITUACAO_CANDIDATO_URNA,situacao_candidatura_urna,Descrição da situação da candidatura na urna
+ST_CANDIDATO_INSERIDO_URNA,candidatura_inserida_urna,Informa se o candidato foi inserido na urna eletrônica

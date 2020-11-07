@@ -9,7 +9,10 @@ unidade_eleitoral,"Nome da unidade da federação. Aparece no TSE como: NO_UE (2
 unidade_eleitoral_doador,"Nome da unidade da federação do doador. Aparece no TSE como: UNIDADE_ELEITORAL_DOADOR (2006), NO_UE (2006), NM_UE_1 (2008), NM_MUNICIPIO_DOADOR (2018). Coluna adicionada em 2006."
 cpf_vice_candidato,"CPF do candidato à vice/suplente do titular, se houver. Aparece no TSE como: NR_CPF_VICE_CANDIDATO (2018). Coluna adicionada em 2018."
 numero_sequencial,"Número Sequencial do Candidato. Aparece no TSE como: SEQUENCIAL_CANDIDATO (2002), Sequencial Candidato (2010), SQ_CANDIDATO (2018)."
-numero_sequencial_comite,Número sequencial do Comitê. Aparece no TSE como: Sequencial Comite (2012). Coluna adicionada em 2012.
+numero_sequencial_candidatura_doadora,"Sequencial do candidato doador, quando a esfera partidária do doador for municipal. Aparece no TSE como: SQ_CANDIDATO_DOADOR (2018). Coluna adicionada em 2018."
+numero_sequencial_comite,Número sequencial do comitê gerado internamente pelos sistemas eleitorais. Aparece no TSE como: Sequencial Comite (2012). Coluna adicionada em 2012.
+numero_sequencial_diretorio,Número sequencial do diretório gerado internamente pelos sistemas eleitorais. Aparece no TSE como: Sequencial Diretorio (2012). Coluna adicionada em 2012.
+numero_sequencial_receita,Sequencial de identificação do registro da receita declarada pelo prestador de contas. Aparece no TSE como: SQ_RECEITA (2018). Coluna adicionada em 2018.
 numero_partido,"Número do partido. Aparece no TSE como: NR_PART (2004), NUMERO_PARTIDO (2006), NR_PARTIDO (2006). Coluna adicionada em 2004."
 numero_partido_doador,"Número do partido do doador, se candidato ou direção partidária. Aparece no TSE como: Número partido doador (2012), NR_PARTIDO_DOADOR (2018). Coluna adicionada em 2012."
 partido,Nome do partido do prestador de contas. Aparece no TSE como: NM_PARTIDO (2018). Coluna adicionada em 2018.
@@ -60,7 +63,8 @@ data_eleicao,Data em que ocorreu a eleição. Aparece no TSE como: DT_ELEICAO (2
 data_prestacao_contas,Data de entrega da prestação de contas junto à Justiça Eleitoral. Aparece no TSE como: DT_PRESTACAO_CONTAS (2018). Coluna adicionada em 2018.
 descricao,"Descrição da doação quando esta for estimável em dinheiro. Aparece no TSE como: Descrição da receita (2010), Descricao da receita (2012), DS_RECEITA (2018). Coluna adicionada em 2010."
 eleicao,"Descrição ou nome da Eleição. Aparece no TSE como: Desc. Eleição (2012), DS_ELEICAO (2018). Coluna adicionada em 2012."
-entrega_em_conjuto,Entrega em Conjunto. Aparece no TSE como: Entrega em conjunto? (2010). Coluna adicionada em 2010.
+entrega_em_conjuto,Entrega em conjunto?. Aparece no TSE como: Entrega em conjunto? (2010). Coluna adicionada em 2010.
+esfera_orgao,"Esfera partidária, podendo assumir os valores “Direção Nacional”, “Direção Estadual/Distrital”, “Direção Municipal”. Aparece no TSE como: DS_ORGAO (2002), Tipo diretorio (2012), Tipo Comite (2014). Coluna adicionada em 2002."
 esfera_partidaria,"Descrição da esfera partidário do prestador. Pode assumir os valores: ‘Nacional’, ‘Estadual/Distritral’ e ‘Munipal’. Aparece no TSE como: DS_ESFERA_PARTIDARIA (2018). Coluna adicionada em 2018."
 natureza,Descrição da natureza do tipo espécie do recursos da doação. Pode assumir os valores ‘Financeiro’ ou ‘Estimável’. Aparece no TSE como: DS_NATUREZA_RECEITA (2018). Coluna adicionada em 2018.
 nome,"Nome do candidato. Aparece no TSE como: NO_CAND (2002), NOME_CANDIDATO (2006), NM_CANDIDATO (2008), Nome candidato (2010)."

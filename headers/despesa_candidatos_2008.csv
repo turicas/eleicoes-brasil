@@ -1,30 +1,30 @@
-"nome_tse","nome_final","descricao"
-"SEQUENCIAL_CANDIDATO",numero_sequencial,"Número Sequencial do Candidato"
-"NM_CANDIDATO","nome","Nome do candidato"
-"DS_CARGO","cargo","Descrição do cargo"
-"CD_CARGO","codigo_cargo","Código do cargo"
-"NR_CANDIDATO","numero_candidatura","Número do candidato"
-"SG_UE_SUPERIOR","sigla_unidade_federativa","Unidade da federação"
-"NM_UE","unidade_eleitoral","Nome da unidade eleitoral"
-"SG_UE","codigo_unidade_eleitoral","Código da unidade eleitoral"
-"CD_NUM_CNPJ","cnpj","CNPJ de campanha"
-"NR_PARTIDO","numero_partido","Número do partido"
-"SG_PARTIDO","sigla_partido","Sigla do partido"
-"VR_DESPESA","valor","Valor da despesa"
-"DT_DESPESA","data","Data da despesa"
-"DS_TITULO","tipo","Tipo de despesa"
-"CD_TITULO","codigo_tipo","Código do tipo de despesa"
-"DS_ESP_RECURSO","tipo_recurso","Forma de pagamento (EM ESPÉCIE, CHEQUE, ESTIMADO, NÃO INFORMADO);"
-"CD_ESP_RECURSO","codigo_forma_pagamento","Código da Forma de pagamento"
-"DS_NR_DOCUMENTO","numero_documento","Número do documento"
-"DS_TIPO_DOCUMENTO","tipo_documento","Tipo de documento (Nota Fiscal, Recibo, Outros)"
-"CD_TIPO_DOCUMENTO","codigo_tipo_documento","Código do tipo de documento"
-"NM_FORNECEDOR","fornecedor","Nome do fornecedor"
-"CD_CPF_CNPJ_FORNECEDOR","cpf_cnpj_fornecedor","CPF/CNPJ do fornecedor"
-"SG_UE_SUPERIOR_1","sigla_unidade_federativa_fornecedor","Unidade da federação do fornecedor"
-"NM_UE_1","unidade_eleitoral_fornecedor","Nome da unidade eleitoral do fornecedor"
-"SG_UE_1","codigo_unidade_eleitoral_fornecedor","Código da unidade eleitoral do fornecedor"
-"NO_UE",sigla_unidade_federativa_fornecedor,"Sigla da unidade da federação do fornecedor"
-"SITUACAOCADASTRAL","situacao_cadastral","Batimento Receita Federal do Brasil"
-"NM_ADM","administrador","Nome do presidente do comitê financeiro"
-"CD_CPF_ADM","cpf_administrador","CPF do presidente do comitê"
+nome_tse,nome_final,descricao
+SEQUENCIAL_CANDIDATO,numero_sequencial,Número Sequencial do Candidato
+NM_CANDIDATO,nome,Nome do candidato
+DS_CARGO,cargo,Descrição do cargo
+CD_CARGO,codigo_cargo,Código do cargo
+NR_CANDIDATO,numero_candidatura,Número do candidato
+SG_UE_SUPERIOR,sigla_unidade_federativa,Unidade da federação
+NM_UE,unidade_eleitoral,Nome da unidade eleitoral
+SG_UE,codigo_unidade_eleitoral,Código da unidade eleitoral
+CD_NUM_CNPJ,cnpj,CNPJ de campanha
+NR_PARTIDO,numero_partido,Número do partido
+SG_PARTIDO,sigla_partido,Sigla do partido
+VR_DESPESA,valor,Valor da despesa
+DT_DESPESA,data,Data da despesa
+DS_TITULO,tipo,Tipo de despesa
+CD_TITULO,codigo_tipo,Código do tipo de despesa
+DS_ESP_RECURSO,tipo_recurso,"Forma de pagamento (EM ESPÉCIE, CHEQUE, ESTIMADO, NÃO INFORMADO);"
+CD_ESP_RECURSO,codigo_forma_pagamento,Código da Forma de pagamento
+DS_NR_DOCUMENTO,numero_documento,Número do documento
+DS_TIPO_DOCUMENTO,tipo_documento,"Tipo de documento (Nota Fiscal, Recibo, Outros)"
+CD_TIPO_DOCUMENTO,codigo_tipo_documento,Código do tipo de documento
+NM_FORNECEDOR,fornecedor,Nome do fornecedor
+CD_CPF_CNPJ_FORNECEDOR,cpf_cnpj_fornecedor,CPF/CNPJ do fornecedor
+SG_UE_SUPERIOR_1,sigla_unidade_federativa_fornecedor,Unidade da federação do fornecedor
+NM_UE_1,unidade_eleitoral_fornecedor,Nome da unidade eleitoral do fornecedor
+SG_UE_1,codigo_unidade_eleitoral_fornecedor,Código da unidade eleitoral do fornecedor
+NO_UE,sigla_unidade_federativa_fornecedor,Sigla da unidade da federação do fornecedor
+SITUACAOCADASTRAL,situacao_cadastral,Batimento Receita Federal do Brasil
+NM_ADM,administrador,Nome do presidente do comitê financeiro
+CD_CPF_ADM,cpf_administrador,CPF do presidente do comitê

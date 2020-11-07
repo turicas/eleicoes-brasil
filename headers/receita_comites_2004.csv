@@ -1,16 +1,16 @@
-"nome_tse","nome_final","descricao"
-"DS_ORGAO","orgao","Tipo de comitê"
-"NR_PART","numero_partido","Número do partido"
-"SG_PART","sigla_partido","Sigla do partido"
-"SG_UE_SUP","sigla_unidade_federativa","Unidade da federação"
-"NO_UE","unidade_eleitoral","Nome da unidade da federação"
-"SG_UE","codigo_unidade_eleitoral","Código do município"
-"VR_RECEITA","valor","Valor da receita"
-"DT_RECEITA","data","Data da receita"
-"RTRIM(LTRIM(DR.CD_TITULO))","tipo","Tipo de receita"
-"CD_TITULO","codigo_tipo","Código do tipo de receita"
-"DECODE(REC.TP_RECURSO,0,'EMESPÉCIE',1,'CHEQUE',2,'ESTIMADO','NÃOINFORMADO')","tipo_recurso","Tipo de recurso (Em espécie, Cheque, Estimado, não informado)"
-"TP_RECURSO","codigo_tipo_recurso","Código do tipo de recurso"
-"NO_DOADOR","doador","Nome do doador"
-"CD_CPF_CGC_DOA","cpf_cnpj_doador","CPF/CNPJ doador"
-"RV_MEANING","situacao_cadastral","Batimento Receita Federal do Brasil"
+nome_tse,nome_final,descricao
+DS_ORGAO,esfera_orgao,"Esfera partidária, podendo assumir os valores “Direção Nacional”, “Direção Estadual/Distrital”, “Direção Municipal”"
+NR_PART,numero_partido,Número do partido
+SG_PART,sigla_partido,Sigla do partido
+SG_UE_SUP,sigla_unidade_federativa,Unidade da federação
+NO_UE,unidade_eleitoral,Nome da unidade da federação
+SG_UE,codigo_unidade_eleitoral,Código do município
+VR_RECEITA,valor,Valor da receita
+DT_RECEITA,data,Data da receita
+RTRIM(LTRIM(DR.CD_TITULO)),tipo,Tipo de receita
+CD_TITULO,codigo_tipo,Código do tipo de receita
+"DECODE(REC.TP_RECURSO,0,'EMESPÉCIE',1,'CHEQUE',2,'ESTIMADO','NÃOINFORMADO')",tipo_recurso,"Tipo de recurso (Em espécie, Cheque, Estimado, não informado)"
+TP_RECURSO,codigo_tipo_recurso,Código do tipo de recurso
+NO_DOADOR,doador,Nome do doador
+CD_CPF_CGC_DOA,cpf_cnpj_doador,CPF/CNPJ doador
+RV_MEANING,situacao_cadastral,Batimento Receita Federal do Brasil

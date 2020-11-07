@@ -1,23 +1,23 @@
-"nome_tse","nome_final","descricao"
-"Cód. Eleição",codigo_eleicao,
-"Desc. Eleição","eleicao",
-"Data e hora",,
-"Sequencial Comite","numero_sequencial_comite","Número sequencial do Comitê"
-"UF","sigla_unidade_federativa",
-"Número UE","codigo_unidade_eleitoral",
-"Município","unidade_eleitoral",
-"Tipo comite","tipo_comite","Tipo do Comitê"
-"Sigla  Partido","sigla_partido",
-"Tipo do documento","tipo_documento",
-"Número do documento","numero_documento",
-"CPF/CNPJ do doador","cpf_cnpj_doador",
-"Nome do doador","doador",
-"Nome do doador (Receita Federal)","doador_receita_federal",
-"Sigla UE doador","codigo_unidade_eleitoral_doador",
-"Setor econômico do doador","setor_economico_doador",
-"Data da receita","data",
-"Valor receita","valor",
-"Tipo receita","tipo",
-"Fonte recurso","fonte_recurso","Fonte do recurso da doação, podendo ser “Fundo Partidário” ou “Outros Recursos”"
-"Espécie recurso","tipo_recurso",
-"Descrição da receita","receita","Descrição da doação quando esta for estimável em dinheiro"
+nome_tse,nome_final,descricao
+Cód. Eleição,codigo_eleicao,
+Desc. Eleição,eleicao,Descrição ou nome da Eleição
+Data e hora,,
+Sequencial Comite,numero_sequencial_comite,Número sequencial do comitê gerado internamente pelos sistemas eleitorais
+UF,sigla_unidade_federativa,
+Número UE,codigo_unidade_eleitoral,
+Município,unidade_eleitoral,
+Tipo comite,tipo_comite,Tipo do Comitê
+Sigla  Partido,sigla_partido,
+Tipo do documento,tipo_documento,
+Número do documento,numero_documento,
+CPF/CNPJ do doador,cpf_cnpj_doador,
+Nome do doador,doador,
+Nome do doador (Receita Federal),doador_receita_federal,
+Sigla UE doador,codigo_unidade_eleitoral_doador,
+Setor econômico do doador,setor_economico_doador,
+Data da receita,data,
+Valor receita,valor,
+Tipo receita,tipo,
+Fonte recurso,fonte_recurso,"Fonte do recurso da doação, podendo ser “Fundo Partidário” ou “Outros Recursos”"
+Espécie recurso,tipo_recurso,
+Descrição da receita,receita,Descrição da doação quando esta for estimável em dinheiro

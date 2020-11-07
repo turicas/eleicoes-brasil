@@ -1,24 +1,24 @@
-"nome_tse","nome_final","descricao"
-"DT_GERACAO",,"Data de geração das informações (data da extração dos dados)"
-"HH_GERACAO",,"Hora de geração das informações (hora da extração dos dados) – Horário de Brasília"
-"ANO_ELEICAO",ano,"Ano da eleição (referente ao ano eleitoral de pesquisa)"
-"CD_TIPO_ELEICAO","codigo_tipo_eleicao","Código do tipo de eleição"
-"NM_TIPO_ELEICAO","tipo_eleicao","Nome do tipo de eleição"
-"CD_ELEICAO","codigo_eleicao","Código da eleição"
-"DS_ELEICAO","eleicao","Descrição da eleição"
-"DT_ELEICAO","data_eleicao","Data em que ocorreu a eleição"
-"ST_TURNO","segundo_turno","Indicativo se o prestador de contas participou de segundo turno"
-"TP_PRESTACAO_CONTAS","tipo_prestacao_contas","Tipo de entrega da prestação de contas. Pode assumir os valores: Relatório financeiro (referente à entrega do relatório financeiro); Parcial (referente à entrega parcial de prestação de contas); Final (referente à entrega final da prestação)"
-"DT_PRESTACAO_CONTAS","data_prestacao_contas","Data de entrega da prestação de contas junto à Justiça Eleitoral"
-"SQ_PRESTADOR_CONTAS",,"Sequencial de identificação do prestador de contas junto à Justiça Eleitoral"
-"SG_UF","sigla_unidade_federativa","Sigla da unidade da federação de abrangência do prestador de contas"
-"NR_CPF_CNPJ_DOADOR_ORIGINARIO","cpf_cnpj_doador_originario","CPF/CNPJ do doador originário quando a doação se der entre candidatos e/ou órgãos partidários ou quando a doação advém de Financiamento Coletivo de Campanha"
-"NM_DOADOR_ORIGINARIO","doador_originario","Nome do doador originário declarado à Justiça Eleitoral"
-"NM_DOADOR_ORIGINARIO_RFB","doador_originario_receita_federal","Nome do doador originário cadastrado na Receita Federal do Brasil"
-"TP_DOADOR_ORIGINARIO","tipo_doador_originario","Tipo do doador originário, podendo assumir os valores ‘F’ para pessoa física ou ‘J’ para pessoa jurídica"
-"CD_CNAE_DOADOR_ORIGINARIO","codigo_setor_economico_doador_originario","Código CNAE do doador, se pessoa jurídica"
-"DS_CNAE_DOADOR_ORIGINARIO","setor_economico_doador_originario","Descrição do CNAE (Código Nacional de Atividade Econômica) do doador, se pessoa jurídica"
-"SQ_RECEITA","sequencial_identificacao_receita","Sequencial de identificação do registro da receita declarada pelo prestador de contas"
-"DT_RECEITA","data","Data da doação declarada à Justiça Eleitoral"
-"DS_RECEITA","descricao","Descrição da Receita informada pelo prestador de contas"
-"VR_RECEITA","valor","Valor da doação em Reais (R$)"
+nome_tse,nome_final,descricao
+DT_GERACAO,,Data de geração das informações (data da extração dos dados)
+HH_GERACAO,,Hora de geração das informações (hora da extração dos dados) – Horário de Brasília
+ANO_ELEICAO,ano,Ano da eleição (referente ao ano eleitoral de pesquisa)
+CD_TIPO_ELEICAO,codigo_tipo_eleicao,Código do tipo de eleição
+NM_TIPO_ELEICAO,tipo_eleicao,Nome do tipo de eleição
+CD_ELEICAO,codigo_eleicao,Código da eleição
+DS_ELEICAO,eleicao,Descrição ou nome da Eleição
+DT_ELEICAO,data_eleicao,Data em que ocorreu a eleição
+ST_TURNO,segundo_turno,Indicativo se o prestador de contas participou de segundo turno
+TP_PRESTACAO_CONTAS,tipo_prestacao_contas,Tipo de entrega da prestação de contas. Pode assumir os valores: Relatório financeiro (referente à entrega do relatório financeiro); Parcial (referente à entrega parcial de prestação de contas); Final (referente à entrega final da prestação)
+DT_PRESTACAO_CONTAS,data_prestacao_contas,Data de entrega da prestação de contas junto à Justiça Eleitoral
+SQ_PRESTADOR_CONTAS,,Sequencial de identificação do prestador de contas junto à Justiça Eleitoral
+SG_UF,sigla_unidade_federativa,Sigla da unidade da federação de abrangência do prestador de contas
+NR_CPF_CNPJ_DOADOR_ORIGINARIO,cpf_cnpj_doador_originario,CPF/CNPJ do doador originário quando a doação se der entre candidatos e/ou órgãos partidários ou quando a doação advém de Financiamento Coletivo de Campanha
+NM_DOADOR_ORIGINARIO,doador_originario,Nome do doador originário declarado à Justiça Eleitoral
+NM_DOADOR_ORIGINARIO_RFB,doador_originario_receita_federal,Nome do doador originário cadastrado na Receita Federal do Brasil
+TP_DOADOR_ORIGINARIO,tipo_doador_originario,"Tipo do doador originário, podendo assumir os valores ‘F’ para pessoa física ou ‘J’ para pessoa jurídica"
+CD_CNAE_DOADOR_ORIGINARIO,codigo_setor_economico_doador_originario,"Código CNAE do doador, se pessoa jurídica"
+DS_CNAE_DOADOR_ORIGINARIO,setor_economico_doador_originario,"Descrição do CNAE (Código Nacional de Atividade Econômica) do doador, se pessoa jurídica"
+SQ_RECEITA,numero_sequencial_receita,Sequencial de identificação do registro da receita declarada pelo prestador de contas
+DT_RECEITA,data,Data da doação declarada à Justiça Eleitoral
+DS_RECEITA,descricao,Descrição da Receita informada pelo prestador de contas
+VR_RECEITA,valor,Valor da doação em Reais (R$)
