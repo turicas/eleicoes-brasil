@@ -70,12 +70,14 @@ eleicao,text
 municipio,text
 orgao,text
 entrega_em_conjuto,text
+esfera_orgao,text
 esfera_partidaria,text
 administrador,text
 tipo_eleicao,text
 numero_documento,text
 segundo_turno,text
 situacao_cadastral,text
+numero_sequencial_diretorio,text
 tipo_diretorio,text
 tipo_documento,text
 tipo_prestacao_contas,text
