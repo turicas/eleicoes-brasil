@@ -171,6 +171,11 @@ def fix_titulo_eleitoral(value):
 
 
 def fix_data(value):
+    """
+    >>> fix_data("30/10/0056")
+    '1956-10-30'
+    """
+
     original_value = value
     new_dt = ""
     value = value.replace("00:00:00", "").replace("0002", "2002").strip()
@@ -178,6 +183,9 @@ def fix_data(value):
         return None
 
     possible_date_formats = ("%d/%m/%Y", "%d/%m/%y", "%d-%b-%y")
+    if "/" in value and value.split("/")[-1].startswith("00"):
+        value = value[:6] + "19" + value[-2:]
+
     dt = None
     for date_format in possible_date_formats:
         try:
