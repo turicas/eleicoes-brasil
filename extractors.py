@@ -204,7 +204,7 @@ def get_organization(internal_filename, year):
 
 class Extractor:
 
-    base_url = "http://agencia.tse.jus.br/estatistica/sead/odsele/"
+    base_url = "http://cdn.tse.jus.br/estatistica/sead/odsele/"
     encoding = "latin-1"
     schema_filename = ""
 
