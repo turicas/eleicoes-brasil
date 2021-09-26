@@ -1,13 +1,20 @@
 nome_tse,nome_final,descricao
-DATA_GERACAO,,Data de geração do arquivo (data da extração)
-HORA_GERACAO,,Hora de geração do arquivo (hora da extração) - Horário de Brasília
+DT_GERACAO,,Data de geração do arquivo (data da extração)
+HH_GERACAO,,Hora de geração do arquivo (hora da extração) - Horário de Brasília
 ANO_ELEICAO,ano,Ano da eleição
-DESCRICAO_ELEICAO,eleicao,Descrição da eleição
-SIGLA_UF,sigla_unidade_federativa,Sigla da Unidade da Federação em que ocorreu a eleição
+CD_TIPO_ELEICAO,codigo_tipo_eleicao,Código do tipo de eleição
+NM_TIPO_ELEICAO,tipo_eleicao,Nome do tipo de eleição
+CD_ELEICAO,codigo_eleicao,Código da eleição
+DS_ELEICAO,eleicao,Descrição da eleição
+DT_ELEICAO,data_eleicao,Data em que ocorreu a eleição
+SG_UF,sigla_unidade_federativa,Sigla da Unidade da Federação em que ocorreu a eleição
+SG_UE,sigla_unidade_eleitoral,Sigla da Unidade Eleitoral do candidato (em caso de eleição majoritária é a sigla da UF que o candidato concorre e em caso de eleição municipal é o código TSE do município)
+NM_UE,unidade_eleitoral,Nome da Unidade Eleitoral do candidato (em caso de eleição majoritária é a sigla da UF que o candidato concorre e em caso de eleição municipal é o código TSE do município)
 SQ_CANDIDATO,numero_sequencial,Número sequencial do candidato gerado internamente pelos sistemas eleitorais. Não é o número de campanha do candidato.
+NR_ORDEM_CANDIDATO,numero_ordem,Número da ordem do bem declarado do candidato
 CD_TIPO_BEM_CANDIDATO,codigo_tipo,Código do tipo do bem do candidato
 DS_TIPO_BEM_CANDIDATO,tipo,Descrição do tipo do bem do candidato
-DETALHE_BEM,detalhe,Detalhe do bem do candidato
-VALOR_BEM,valor,Valor declarado do bem do candidato
-DATA_ULTIMA_ATUALIZACAO,data_ultima_atualizacao,Data da última atualização do registro do bem
-HORA_ULTIMA_ATUALIZACAO,hora_ultima_atualizacao,Hora da última atualização do registro do bem
+DS_BEM_CANDIDATO,detalhe,Detalhe do bem do candidato
+VR_BEM_CANDIDATO,valor,Valor declarado do bem do candidato
+DT_ULTIMA_ATUALIZACAO,data_ultima_atualizacao,Data da última atualização do registro do bem
+HH_ULTIMA_ATUALIZACAO,hora_ultima_atualizacao,Hora da última atualização do registro do bem
