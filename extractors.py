@@ -354,7 +354,7 @@ class CandidaturaExtractor(Extractor):
             new = {}
             for key in final_field_names:
                 value = row.get(key, "").strip()
-                if value in ("#NULO", "#NULO#", "#NE#"):
+                if value in ("#NULO", "#NULO#", "#NE#", "#NE"):
                     value = ""
                 new[key] = value = utils.unaccent(value).upper()
 
