@@ -802,7 +802,8 @@ class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
                     value = ""
                 new[key] = value = utils.unaccent(value).upper()
 
-            new["ano"] = year
+            cleaned_year, *_unused_suffix = str(year).split('-')
+            new["ano"] = int(cleaned_year)
             new["valor"] = fix_valor(new["valor"])
             new["data"] = fix_data(new["data"])
             new["data_prestacao_contas"] = fix_data(new["data_prestacao_contas"])
@@ -832,7 +833,8 @@ class PrestacaoContasDespesasExtractor(PrestacaoContasExtractor):
                     value = ""
                 new[key] = value = utils.unaccent(value).upper()
 
-            new["ano"] = year  # TODO: replace "2018-candidatos" with "2018"
+            cleaned_year, *_unused_suffix = str(year).split('-')
+            new["ano"] = int(cleaned_year)
             new["valor"] = fix_valor(new["valor"])
             new["data"] = fix_data(new["data"])
             new["data_prestacao_contas"] = fix_data(new["data_prestacao_contas"])
