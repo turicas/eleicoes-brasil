@@ -189,7 +189,16 @@ def fix_data(value):
         # ou gravar valor em outra coluna
         return None
 
-    return dt.strftime("%Y-%m-%d")
+    result = dt.strftime("%Y-%m-%d")
+    if len(result) == 9 and re.match("^9[0-9]{2}-", result):
+        # Corrige valores como: '941-09-03', '942-08-23', '955-12-13',
+        # '964-12-10', '983-09-17', '989-01-15', '992-01-20'
+        result = "1" + result
+
+    if len(result) != 10:
+        return None
+
+    return result
 
 
 def clean_header(header):
@@ -392,6 +401,14 @@ class CandidaturaExtractor(Extractor):
             )
             new["data_eleicao"] = fix_data(new["data_eleicao"])
             new["data_nascimento"] = fix_data(new["data_nascimento"])
+            # TODO: seria interessante confirmar a idade na data da posse com
+            # os valores corrigidos, para verificar se a correção é compatível
+            # TODO: existem casos em que row['idade_data_eleicao'] é '' e
+            # row['idade_data_posse'] é '999' - esses provavelmente devem ser
+            # corrigidos (e a data de nascimento provavelmente deve ficar em
+            # branco).
+            # TODO: idade_data_eleicao está em branco em muitos casos, porém
+            # conseguimos preenchê-lo caso a data de nascimento esteja correta
             if censor:
                 row["cpf"] = obfuscate_cpf(row["cpf"])
                 row["email"] = ""
