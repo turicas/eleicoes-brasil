@@ -28,7 +28,7 @@ conversões dos dados, como:
 
 - Retirar todos os acentos: alguns nomes aparecem com acentos em um ano e sem
   em outros, dificultando muito os agrupamentos;
-- Retirar strings inúteis: valores como `#NULO#`, `#NULO` e `#NE#` são
+- Retirar strings inúteis: valores como `#NULO#`, `#NULO`, `#NE` e `#NE#` são
   retirados, deixando as células em branco;
 - Normalização dos códigos de cargo: os códigos de cargo variam para alguns
   anos, tornando difícil o agrupamento entre anos e, para facilitar as

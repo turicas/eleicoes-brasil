@@ -184,10 +184,10 @@ def get_organization(internal_filename, year):
             return internal_filename.split("Receitas")[1].replace(".txt", "").lower()
         else:
             return internal_filename.split("Despesas")[1].replace(".txt", "").lower()
-    elif year in (2008, 2014, 2016):
+    elif year in (2014, 2016):
         return internal_filename.split("_")[1]
-    elif year in (2002, 2004, 2006):
-        return "comites" if "Comit" in internal_filename else "candidatos"
+    elif year in (2002, 2004, 2006, 2008):
+        return "comites" if "comit" in internal_filename.lower() else "candidatos"
     elif year == 2012:
         return internal_filename.split("_")[1]
     elif "2018" in year:
@@ -798,11 +798,12 @@ class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
             new = {}
             for key in final_field_names:
                 value = row.get(key, "").strip()
-                if value in ("#NULO", "#NULO#", "#NE#"):
+                if value in ("#NULO", "#NULO#", "#NE#", "#NE"):
                     value = ""
                 new[key] = value = utils.unaccent(value).upper()
 
-            new["ano"] = year
+            cleaned_year, *_unused_suffix = str(year).split('-')
+            new["ano"] = int(cleaned_year)
             new["valor"] = fix_valor(new["valor"])
             new["data"] = fix_data(new["data"])
             new["data_prestacao_contas"] = fix_data(new["data_prestacao_contas"])
@@ -828,11 +829,12 @@ class PrestacaoContasDespesasExtractor(PrestacaoContasExtractor):
             new = {}
             for key in final_field_names:
                 value = row.get(key, "").strip()
-                if value in ("#NULO", "#NULO#", "#NE#"):
+                if value in ("#NULO", "#NULO#", "#NE#", "#NE"):
                     value = ""
                 new[key] = value = utils.unaccent(value).upper()
 
-            new["ano"] = year  # TODO: replace "2018-candidatos" with "2018"
+            cleaned_year, *_unused_suffix = str(year).split('-')
+            new["ano"] = int(cleaned_year)
             new["valor"] = fix_valor(new["valor"])
             new["data"] = fix_data(new["data"])
             new["data_prestacao_contas"] = fix_data(new["data_prestacao_contas"])
