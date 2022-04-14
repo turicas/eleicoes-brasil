@@ -1,13 +1,10 @@
-import io
 import os
 import random
 import string
 import tempfile
-from collections import OrderedDict
 from urllib.parse import urljoin
 from pathlib import Path
 
-import rows
 import scrapy
 
 import settings

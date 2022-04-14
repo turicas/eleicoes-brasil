@@ -50,10 +50,15 @@ CD_COR_RACA,codigo_etnia,Código da etnia (cor/raça) do candidato (auto declara
 DS_COR_RACA,etnia,Etnia (cor/raça) do candidato (auto declaração)
 CD_OCUPACAO,codigo_ocupacao,Código da ocupação do candidato
 DS_OCUPACAO,ocupacao,Descrição da ocupação do candidato
-NR_DESPESA_MAX_CAMPANHA,despesa_maxima_campanha,"Despesa máxima de campanha declarada pelo partido para aquele cargo, em reais - os valores máximos para candidatos a vice e suplentes serão incluídos nos valores indicados para os titulares (quando não informado o valor será -1)"
+VR_DESPESA_MAX_CAMPANHA,despesa_maxima_campanha,"Despesa máxima de campanha declarada pelo partido para aquele cargo, em reais - os valores máximos para candidatos a vice e suplentes serão incluídos nos valores indicados para os titulares (quando não informado o valor será -1)"
 CD_SIT_TOT_TURNO,codigo_totalizacao_turno,Código da situação de totalização do candidato naquele turno
 DS_SIT_TOT_TURNO,totalizacao_turno,Descrição da situação de totalização do candidato naquele turno
 ST_REELEICAO,concorre_reeleicao,"O indicativo de que o candidato está concorrendo ou não à reeleição - pode assumir os valores “S” (sim) e “N” (não) -apenas para os cargos de presidente, governador e prefeito é possível candidatura à reeleição"
 ST_DECLARAR_BENS,declara_bens,O indicativo de que o candidato tem ou não bens a declarar - pode assumiar os valores “S” (em caso positivo) e “N” (em caso negativo)
 NR_PROTOCOLO_CANDIDATURA,numero_protocolo_candidatura,Número do protocolo de registro de candidatura do candidato
 NR_PROCESSO,numero_processo_candidatura,Número do processo de registro de candidatura do candidato
+CD_SITUACAO_CANDIDATO_PLEITO,codigo_situacao_candidatura_pleito,
+DS_SITUACAO_CANDIDATO_PLEITO,situacao_candidatura_pleito,
+CD_SITUACAO_CANDIDATO_URNA,codigo_situacao_candidatura_urna,
+DS_SITUACAO_CANDIDATO_URNA,situacao_candidatura_urna,
+ST_CANDIDATO_INSERIDO_URNA,candidatura_inserida_urna,

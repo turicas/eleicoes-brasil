@@ -2,9 +2,8 @@ import csv
 import re
 from datetime import datetime
 from functools import lru_cache
-from io import StringIO, TextIOWrapper, BytesIO
+from io import StringIO, TextIOWrapper
 from pathlib import Path
-from shutil import move as move_file
 from shutil import move as rename_file
 from urllib.parse import urljoin
 from zipfile import ZipFile
@@ -354,7 +353,7 @@ class CandidaturaExtractor(Extractor):
             new = {}
             for key in final_field_names:
                 value = row.get(key, "").strip()
-                if value in ("#NULO", "#NULO#", "#NE#"):
+                if value in ("#NULO", "#NULO#", "#NE#", "#NE"):
                     value = ""
                 new[key] = value = utils.unaccent(value).upper()
 
