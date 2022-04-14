@@ -1,6 +1,6 @@
 import csv
+import datetime
 import re
-from datetime import datetime
 from functools import lru_cache
 from io import StringIO, TextIOWrapper
 from pathlib import Path
@@ -64,11 +64,30 @@ MAP_DESCRICAO_CARGO = {
     "VICE-PREFEITO": "VICE-PREFEITO",
     "VEREADOR": "VEREADOR",
 }
-NOW = datetime.now()
-if NOW >= datetime(NOW.year, 12, 1, 0, 0, 0):
-    FINAL_VOTATION_YEAR = NOW.year + 1
-else:
-    FINAL_VOTATION_YEAR = NOW.year
+
+
+@lru_cache
+def last_elections_year(reference=None):
+    """
+    >>> import datetime
+    >>> last_elections_year(datetime.date(2021, 1, 1))
+    2020
+    >>> last_elections_year(datetime.date(2021, 12, 1))
+    2020
+    >>> last_elections_year(datetime.date(2022, 1, 1))
+    2020
+    >>> last_elections_year(datetime.date(2022, 12, 1))
+    2022
+    """
+
+    reference = reference or datetime.datetime.now().date()
+    if reference.year % 2 == 1:  # Não é ano de eleição retorna o anterior
+        return reference.year - 1
+
+    if reference >= datetime.date(reference.year, 12, 1):  # Passou a eleição desse ano
+        return reference.year
+
+    return reference.year - 2
 
 
 def obfuscate_cpf(cpf):
@@ -162,7 +181,7 @@ def fix_data(value):
     dt = None
     for date_format in possible_date_formats:
         try:
-            dt = datetime.strptime(value, date_format)
+            dt = datetime.datetime.strptime(value, date_format)
         except ValueError:
             continue
     if dt is None:
@@ -288,7 +307,7 @@ class Extractor:
 
 class CandidaturaExtractor(Extractor):
 
-    year_range = tuple(range(1996, FINAL_VOTATION_YEAR + 1, 2))
+    year_range = tuple(range(1996, last_elections_year() + 1, 2))
     schema_filename = settings.SCHEMA_PATH / "candidatura.csv"
 
     def filename(self, year):
@@ -427,7 +446,7 @@ class CandidaturaExtractor(Extractor):
 
 class BemDeclaradoExtractor(Extractor):
 
-    year_range = tuple(range(2006, FINAL_VOTATION_YEAR + 1, 2))
+    year_range = tuple(range(2006, last_elections_year() + 1, 2))
     schema_filename = settings.SCHEMA_PATH / "bem-declarado.csv"
 
     def filename(self, year):
@@ -499,7 +518,7 @@ class BemDeclaradoExtractor(Extractor):
 
 class VotacaoZonaExtractor(Extractor):
 
-    year_range = tuple(range(1996, FINAL_VOTATION_YEAR, 2))
+    year_range = tuple(range(1996, last_elections_year(), 2))
     schema_filename = settings.SCHEMA_PATH / "votacao-zona.csv"
 
     @cached_property
