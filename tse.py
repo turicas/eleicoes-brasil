@@ -56,7 +56,7 @@ def create_final_headers(header_type, order_columns, final_filename):
     filenames = sorted(
         [
             (REGEXP_HEADER_YEAR.findall(filename)[0], filename)
-            for filename in glob(str(settings.HEADERS_PATH / f"{header_type}-*.csv"))
+            for filename in glob(str(settings.HEADERS_PATH / f"{header_type}_*.csv"))
             if REGEXP_HEADER_YEAR.findall(filename)
         ]
     )
@@ -117,13 +117,13 @@ if __name__ == "__main__":
             "extractor_class": CandidaturaExtractor,
             "output_filename": settings.OUTPUT_PATH / "candidatura.csv.gz",
         },
-        "bem-declarado": {
+        "bem_declarado": {
             "extractor_class": BemDeclaradoExtractor,
-            "output_filename": settings.OUTPUT_PATH / "bem-declarado.csv.gz",
+            "output_filename": settings.OUTPUT_PATH / "bem_declarado.csv.gz",
         },
-        "votacao-zona": {
+        "votacao_zona": {
             "extractor_class": VotacaoZonaExtractor,
-            "output_filename": settings.OUTPUT_PATH / "votacao-zona.csv.gz",
+            "output_filename": settings.OUTPUT_PATH / "votacao_zona.csv.gz",
         },
         "receita": {
              "extractor_class": PrestacaoContasReceitasExtractor,
@@ -150,7 +150,7 @@ if __name__ == "__main__":
     if args.type == "headers":
         for header_type in extractors.keys():
             extractor = extractors[header_type]["extractor_class"]()
-            final_filename = settings.HEADERS_PATH / f"{header_type}-final.csv"
+            final_filename = settings.HEADERS_PATH / f"{header_type}_final.csv"
             print(f"Creating {final_filename}")
             create_final_headers(header_type, extractor.order_columns, final_filename)
 

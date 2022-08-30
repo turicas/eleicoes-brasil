@@ -74,8 +74,8 @@ tipo de dado quer baixar/tratar/extrair:
 
 ```bash
 python tse.py candidatura
-python tse.py bem-declarado
-python tse.py votacao-zona
+python tse.py bem_declarado
+python tse.py votacao_zona
 python tse.py receita
 python tse.py despesa
 ```

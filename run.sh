@@ -16,7 +16,7 @@ fi
 time python tse.py headers
 
 time python tse.py $OPTS candidatura
-time python tse.py $OPTS bem-declarado
+time python tse.py $OPTS bem_declarado
 time python tse.py $OPTS receita
 time python tse.py $OPTS despesa
-time python tse.py $OPTS votacao-zona
+time python tse.py $OPTS votacao_zona

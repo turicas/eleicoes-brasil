@@ -1,11 +1,11 @@
 nome_final,descricao
 codigo_unidade_eleitoral,"Código do município. Aparece no TSE como: SG_UE (2004), Numero UE (2012), Número UE (2012), Sigla da UE (2016), CD_MUNICIPIO (2018). Coluna adicionada em 2004."
 codigo_unidade_eleitoral_doador,"Código do município. Aparece no TSE como: SG_UE_1 (2008), Sigla UE doador (2012), CD_MUNICIPIO_DOADOR (2018). Coluna adicionada em 2008."
-sigla_unidade_eleitoral,"Código da Unidade Eleitoral. Aparece no TSE como: Sigla da UE (2014-suplementar), SG_UE (2018). Coluna adicionada em 2014-suplementar."
+sigla_unidade_eleitoral,"Código da Unidade Eleitoral. Aparece no TSE como: Sigla da UE (2014_suplementar), SG_UE (2018). Coluna adicionada em 2014_suplementar."
 sigla_unidade_eleitoral_doador,"Unidade da federação do doador. Aparece no TSE como: SG_UE_SUPERIOR_1 (2008), Sigla UE doador (2012). Coluna adicionada em 2008."
 sigla_unidade_federativa,"Unidade da federação do candidato. Aparece no TSE como: SG_UF (2002), SG_UE_SUP (2004), UNIDADE_ELEITORAL_CANDIDATO (2006), SG_UE (2006), SG_UE_SUPERIOR (2008), UF (2010)."
 sigla_unidade_federativa_doador,Unidade da federação do doador. Aparece no TSE como: SG_UF_DOADOR (2002).
-unidade_eleitoral,"Nome da unidade da federação. Aparece no TSE como: NO_UE (2004), NM_UE (2008), Municipio (2012), Município (2012), Nome da UE (2014-suplementar), NM_MUNICIPIO (2018). Coluna adicionada em 2004."
+unidade_eleitoral,"Nome da unidade da federação. Aparece no TSE como: NO_UE (2004), NM_UE (2008), Municipio (2012), Município (2012), Nome da UE (2014_suplementar), NM_MUNICIPIO (2018). Coluna adicionada em 2004."
 unidade_eleitoral_doador,"Nome da unidade da federação do doador. Aparece no TSE como: UNIDADE_ELEITORAL_DOADOR (2006), NO_UE (2006), NM_UE_1 (2008), NM_MUNICIPIO_DOADOR (2018). Coluna adicionada em 2006."
 cpf_vice_candidato,"CPF do candidato à vice/suplente do titular, se houver. Aparece no TSE como: NR_CPF_VICE_CANDIDATO (2018). Coluna adicionada em 2018."
 numero_sequencial,"Número Sequencial do Candidato. Aparece no TSE como: SEQUENCIAL_CANDIDATO (2002), Sequencial Candidato (2010), SQ_CANDIDATO (2018)."
@@ -56,7 +56,7 @@ codigo_tipo,Código do tipo de receita. Aparece no TSE como: CD_TITULO (2004). C
 codigo_tipo_eleicao,Código do tipo de eleição. Aparece no TSE como: CD_TIPO_ELEICAO (2018). Coluna adicionada em 2018.
 cpf,"CPF do candidato. Aparece no TSE como: CD_NUM_CPF (2008), CPF do candidato (2010), NR_CPF_CANDIDATO (2018). Coluna adicionada em 2008."
 cpf_administrador,"CPF do administrador financeiro de campanha. Aparece no TSE como: CD_CPF_ADM (2008), NR_CPF (2008). Coluna adicionada em 2008."
-cpf_vice_suplente,"CPF do candidato a vice/suplente do titular, se houver. Aparece no TSE como: CPF do vice/suplente (2014-suplementar). Coluna adicionada em 2014-suplementar."
+cpf_vice_suplente,"CPF do candidato a vice/suplente do titular, se houver. Aparece no TSE como: CPF do vice/suplente (2014_suplementar). Coluna adicionada em 2014_suplementar."
 data,"Data da receita. Aparece no TSE como: DT_RECEITA (2002), DATA_RECEITA (2006), Data da receita (2010)."
 data_eleicao,Data em que ocorreu a eleição. Aparece no TSE como: DT_ELEICAO (2018). Coluna adicionada em 2018.
 data_prestacao_contas,Data de entrega da prestação de contas junto à Justiça Eleitoral. Aparece no TSE como: DT_PRESTACAO_CONTAS (2018). Coluna adicionada em 2018.
@@ -68,13 +68,13 @@ nome,"Nome do candidato. Aparece no TSE como: NO_CAND (2002), NOME_CANDIDATO (20
 numero_candidatura,"Número da candidatura. Aparece no TSE como: NR_CAND (2002), NUMERO_CANDIDATO (2006), NR_CANDIDATO (2008), Número candidato (2010), Numero candidato (2012), NR_PARTIDO (2018)."
 numero_documento,"Número do documento referente à transação bancária ou comprovante da doação estimável. Aparece no TSE como: Número do documento (2010), Numero do documento (2012), NR_DOCUMENTO_DOACAO (2018). Coluna adicionada em 2010."
 numero_recibo,Número de recibo de doação informada pelo prestador de contas. Aparece no TSE como: NR_RECIBO_DOACAO (2018). Coluna adicionada em 2018.
-numero_recibo_eleitoral,"Número do recibo eleitoral referente à doação recebida. Aparece no TSE como: Número Recibo Eleitoral (2010), Numero Recibo Eleitoral (2012), Número recibo eleitoral (2014-suplementar). Coluna adicionada em 2010."
+numero_recibo_eleitoral,"Número do recibo eleitoral referente à doação recebida. Aparece no TSE como: Número Recibo Eleitoral (2010), Numero Recibo Eleitoral (2012), Número recibo eleitoral (2014_suplementar). Coluna adicionada em 2010."
 orgao,"Tipo de comitê. Aparece no TSE como: DS_ORGAO (2002), Tipo diretorio (2012), Tipo Comite (2014). Coluna adicionada em 2002."
 segundo_turno,O indicativo se prestador de contas teve prestação de contas para segundo turno. Aparece no TSE como: ST_TURNO (2018). Coluna adicionada em 2018.
 sexo,Sexo do(a) candidato(a). Aparece no TSE como: SEXO (2008). Coluna adicionada em 2008.
 situacao_cadastral,"Batimento Receita Federal do Brasil. Aparece no TSE como: RV_MEANING (2004), SITUACAO_CADASTRAL (2006), SITUACAOCADASTRAL (2006). Coluna adicionada em 2004."
 tipo,"Tipo de receita. Aparece no TSE como: RTRIM(LTRIM(DR.DS_TITULO)) (2004), RTRIM(LTRIM(DR.CD_TITULO)) (2004), TIPO_RECEITA (2006), DS_TITULO (2008), Tipo receita (2010). Coluna adicionada em 2004."
-tipo_diretorio,"Esfera partidária, podendo assumir os valores “Direção Nacional”, “Direção Estadual/Distrital”, “Direção Municipal”. Aparece no TSE como: Tipo diretorio (2014-suplementar). Coluna adicionada em 2014-suplementar."
+tipo_diretorio,"Esfera partidária, podendo assumir os valores “Direção Nacional”, “Direção Estadual/Distrital”, “Direção Municipal”. Aparece no TSE como: Tipo diretorio (2014_suplementar). Coluna adicionada em 2014_suplementar."
 tipo_documento,Tipo do Documento. Aparece no TSE como: Tipo do documento (2010). Coluna adicionada em 2010.
 tipo_eleicao,Nome do tipo de eleição. Aparece no TSE como: NM_TIPO_ELEICAO (2018). Coluna adicionada em 2018.
 tipo_prestacao_contas,Tipo de entrega da prestação de contas. Pode assumir os valores: Relatório financeiro (referente à entrega do relatório financeiro); Parcial (referente à entrega parcial de prestação de contas); Final (referente à entrega final da prestação). Aparece no TSE como: TP_PRESTACAO_CONTAS (2018). Coluna adicionada em 2018.
