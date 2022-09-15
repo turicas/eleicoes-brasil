@@ -47,14 +47,14 @@ partido,"Nome do partido. Aparece no TSE como: NOME_PARTIDO (1994_BR), NM_PARTID
 sigla_legenda,Sigla da legenda. Aparece no TSE como: SIGLA_LEGENDA (1994_BR).
 sigla_partido,"Sigla do partido. Aparece no TSE como: SIGLA_PARTIDO (1994_BR), SG_PARTIDO (1996)."
 tipo_agremiacao,Tipo de agremiação - pode assumir os valores “coligação” (quando o candidato concorre por coligação) e “partido isolado” (quando o candidato concorre somente pelo partido). Aparece no TSE como: TP_AGREMIACAO (1996). Coluna adicionada em 1996.
-candidatura_inserida_urna,. Aparece no TSE como: ST_CANDIDATO_INSERIDO_URNA (1996). Coluna adicionada em 1996.
+candidatura_inserida_urna,Informa se o candidato foi inserido na urna eletrônica. Aparece no TSE como: ST_CANDIDATO_INSERIDO_URNA (1996). Coluna adicionada em 1996.
 cargo,"Descrição do cargo a que o candidato concorre. Aparece no TSE como: DESCRICAO_CARGO (1994_BR), DS_CARGO (1996)."
 codigo_cargo,"Código do cargo a que o candidato concorre. Aparece no TSE como: CODIGO_CARGO (1994_BR), CD_CARGO (1996)."
 codigo_detalhe_situacao_candidatura,Código do detalhe da situação do registro de candidatura do candidato. Aparece no TSE como: CD_DETALHE_SITUACAO_CAND (1996). Coluna adicionada em 1996.
 codigo_situacao_candidato_tot,? (trocar “tot”). Aparece no TSE como: CD_SITUACAO_CANDIDATO_TOT (2022). Coluna adicionada em 2022.
 codigo_situacao_candidatura,"Código da situação de candidatura. Aparece no TSE como: COD_SITUACAO_CANDIDATURA (1994_BR), CD_SITUACAO_CANDIDATURA (1996)."
-codigo_situacao_candidatura_pleito,. Aparece no TSE como: CD_SITUACAO_CANDIDATO_PLEITO (1996). Coluna adicionada em 1996.
-codigo_situacao_candidatura_urna,. Aparece no TSE como: CD_SITUACAO_CANDIDATO_URNA (1996). Coluna adicionada em 1996.
+codigo_situacao_candidatura_pleito,Código da situação da candidatura no dia do Pleito. Aparece no TSE como: CD_SITUACAO_CANDIDATO_PLEITO (1996). Coluna adicionada em 1996.
+codigo_situacao_candidatura_urna,Código da situação da candidatura na urna. Aparece no TSE como: CD_SITUACAO_CANDIDATO_URNA (1996). Coluna adicionada em 1996.
 concorre_reeleicao,"O indicativo de que o candidato está concorrendo ou não à reeleição - pode assumir os valores “S” (sim) e “N” (não) -apenas para os cargos de presidente, governador e prefeito é possível candidatura à reeleição. Aparece no TSE como: ST_REELEICAO (1996). Coluna adicionada em 1996."
 declara_bens,O indicativo de que o candidato tem ou não bens a declarar - pode assumiar os valores “S” (em caso positivo) e “N” (em caso negativo). Aparece no TSE como: ST_DECLARAR_BENS (1996). Coluna adicionada em 1996.
 despesa_maxima_campanha,"Despesa máxima de campanha declarada pelo partido para aquele cargo. Valores em Reais.. Aparece no TSE como: DESPESA_MAX_CAMPANHA (1994_BR), VR_DESPESA_MAX_CAMPANHA (1996)."
@@ -68,5 +68,5 @@ numero_sequencial,"Número sequencial do candidato gerado internamente pelos sis
 numero_urna,"Número do candidato na urna. Aparece no TSE como: NUMERO_CANDIDATO (1994_BR), NR_CANDIDATO (1996)."
 situacao_candidato_tot,? (trocar “tot”). Aparece no TSE como: DS_SITUACAO_CANDIDATO_TOT (2022). Coluna adicionada em 2022.
 situacao_candidatura,"Descrição da situação de candidatura. Aparece no TSE como: DES_SITUACAO_CANDIDATURA (1994_BR), DS_SITUACAO_CANDIDATURA (1996)."
-situacao_candidatura_pleito,. Aparece no TSE como: DS_SITUACAO_CANDIDATO_PLEITO (1996). Coluna adicionada em 1996.
-situacao_candidatura_urna,. Aparece no TSE como: DS_SITUACAO_CANDIDATO_URNA (1996). Coluna adicionada em 1996.
+situacao_candidatura_pleito,Descrição da situação da candidatura no dia do Pleito. Aparece no TSE como: DS_SITUACAO_CANDIDATO_PLEITO (1996). Coluna adicionada em 1996.
+situacao_candidatura_urna,Descrição da situação da candidatura na urna. Aparece no TSE como: DS_SITUACAO_CANDIDATO_URNA (1996). Coluna adicionada em 1996.

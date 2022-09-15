@@ -72,13 +72,11 @@ numero_candidatura,"Número da candidatura. Aparece no TSE como: NR_CAND (2002),
 numero_documento,"Número do documento referente à transação bancária ou comprovante da doação estimável. Aparece no TSE como: Número do documento (2010), Numero do documento (2012), NR_DOCUMENTO_DOACAO (2018). Coluna adicionada em 2010."
 numero_recibo,Número de recibo de doação informada pelo prestador de contas. Aparece no TSE como: NR_RECIBO_DOACAO (2018). Coluna adicionada em 2018.
 numero_recibo_eleitoral,"Número do recibo eleitoral referente à doação recebida. Aparece no TSE como: Número Recibo Eleitoral (2010), Numero Recibo Eleitoral (2012), Número recibo eleitoral (2014_suplementar). Coluna adicionada em 2010."
-orgao,"Tipo de comitê. Aparece no TSE como: DS_ORGAO (2002), Tipo diretorio (2012), Tipo Comite (2014). Coluna adicionada em 2002."
 origem,"Descrição do tipo de origem do recurso (DRD), informado pelo prestador de contas em relação à doação. Aparece no TSE como: DS_ORIGEM_RECEITA (2018). Coluna adicionada em 2018."
 segundo_turno,O indicativo se prestador de contas teve prestação de contas para segundo turno. Aparece no TSE como: ST_TURNO (2018). Coluna adicionada em 2018.
 sexo,Sexo do(a) candidato(a). Aparece no TSE como: SEXO (2008). Coluna adicionada em 2008.
 situacao_cadastral,"Batimento Receita Federal do Brasil. Aparece no TSE como: RV_MEANING (2004), SITUACAO_CADASTRAL (2006), SITUACAOCADASTRAL (2006). Coluna adicionada em 2004."
 tipo,"Tipo de receita. Aparece no TSE como: RTRIM(LTRIM(DR.DS_TITULO)) (2004), RTRIM(LTRIM(DR.CD_TITULO)) (2004), TIPO_RECEITA (2006), DS_TITULO (2008), Tipo receita (2010). Coluna adicionada em 2004."
-tipo_diretorio,"Esfera partidária, podendo assumir os valores “Direção Nacional”, “Direção Estadual/Distrital”, “Direção Municipal”. Aparece no TSE como: Tipo diretorio (2014_suplementar). Coluna adicionada em 2014_suplementar."
 tipo_documento,Tipo do Documento. Aparece no TSE como: Tipo do documento (2010). Coluna adicionada em 2010.
 tipo_eleicao,Nome do tipo de eleição. Aparece no TSE como: NM_TIPO_ELEICAO (2018). Coluna adicionada em 2018.
 tipo_prestacao_contas,Tipo de entrega da prestação de contas. Pode assumir os valores: Relatório financeiro (referente à entrega do relatório financeiro); Parcial (referente à entrega parcial de prestação de contas); Final (referente à entrega final da prestação). Aparece no TSE como: TP_PRESTACAO_CONTAS (2018). Coluna adicionada em 2018.

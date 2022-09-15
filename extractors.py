@@ -669,6 +669,8 @@ class PrestacaoContasExtractor(Extractor):
         "2018_candidatos",
         "2020_orgaos",
         "2020_candidatos",
+        "2022_orgaos",
+        "2022_candidatos",
     )
 
     def filename(self, year):
@@ -687,6 +689,8 @@ class PrestacaoContasExtractor(Extractor):
             "2018_candidatos": "de_contas_eleitorais_candidatos_2018",
             "2020_orgaos": "de_contas_eleitorais_orgaos_partidarios_2020",
             "2020_candidatos": "de_contas_eleitorais_candidatos_2020",
+            "2022_orgaos": "de_contas_eleitorais_orgaos_partidarios_2022",
+            "2022_candidatos": "de_contas_eleitorais_candidatos_2022",
         }
         return f"prestacao_contas/prestacao_{urls[year]}.zip"
 
@@ -728,7 +732,8 @@ class PrestacaoContasExtractor(Extractor):
             # 2014
             header_year = year
             year = 2014
-        elif isinstance(year, str) and ("2018" in year or "2020" in year):
+        elif isinstance(year, str) and ("2018" in year or "2020" in year or
+                                        "2022" in year):
             header_year = "2018"
         else:
             header_year = str(year)

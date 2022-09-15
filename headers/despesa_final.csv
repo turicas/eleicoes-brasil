@@ -2,7 +2,7 @@ nome_final,descricao
 codigo_unidade_eleitoral,"Código do município. Aparece no TSE como: SG_UE (2004), Número UE (2012), Sigla da UE (2014_suplementar), CD_MUNICIPIO (2018). Coluna adicionada em 2004."
 codigo_unidade_eleitoral_fornecedor,"Código da unidade eleitoral do fornecedor. Aparece no TSE como: SG_UE_1 (2008), CD_MUNICIPIO_FORNECEDOR (2018). Coluna adicionada em 2008."
 municipio,Município do fornecedor. Aparece no TSE como: DS_MUNIC (2004). Coluna adicionada em 2004.
-sigla_unidade_eleitoral,"Código da Unidade Eleitoral. Aparece no TSE como: Sigla da UE (2014-suplementar), SG_UE (2018). Coluna adicionada em 2014-suplementar."
+sigla_unidade_eleitoral,"Código da Unidade Eleitoral. Aparece no TSE como: Sigla da UE (2014_suplementar), SG_UE (2018). Coluna adicionada em 2014_suplementar."
 sigla_unidade_eleitoral_fornecedor,"Unidade da federação do fornecedor. Aparece no TSE como: UNIDADE_ELEITORAL_FORNECEDOR (2006), SG_UE_SUPERIOR_1 (2008). Coluna adicionada em 2006."
 sigla_unidade_federativa,"Unidade da federação do candidat. Aparece no TSE como: SG_UF (2002), SG_UE_SUP (2004), UNIDADE_ELEITORAL_CANDIDATO (2006), SG_UE (2006), SG_UE_SUPERIOR (2008), UF (2010)."
 sigla_unidade_federativa_fornecedor,"Unidade da federação do fornecedor. Aparece no TSE como: SG_UF_FORNECEDOR (2002), SG_UE_SUPERIOR_1 (2008), NO_UE (2008)."
@@ -57,7 +57,7 @@ codigo_tipo_eleicao,Código do tipo de eleição . Aparece no TSE como: CD_TIPO_
 cpf,"Número do CPF do candidato. Aparece no TSE como: CPF do candidato (2010), NR_CPF_CANDIDATO (2018). Coluna adicionada em 2010."
 cpf_administrador,"CPF do presidente do comitê. Aparece no TSE como: CD_CPF_ADM (2008), NR_CPF (2008). Coluna adicionada em 2008."
 cpf_vice_suplente,"CPF do candidato a vice/suplente do titular, se houver. Aparece no TSE como: CPF do vice/suplente (2014_suplementar). Coluna adicionada em 2014_suplementar."
-data,"Data da despesa. Aparece no TSE como: DT_DOC_DESP (2002), DATA_DESPESA (2006), DT_DESPESA (2008), Data da despesa (2010), DS_DESPESA (2018), DT_PAGTO_DESPESA (2018)."
+data,"Data da despesa. Aparece no TSE como: DT_DOC_DESP (2002), DATA_DESPESA (2006), DT_DESPESA (2008), Data da despesa (2010), DT_PAGTO_DESPESA (2018)."
 data_eleicao,Data em que ocorreu a eleição. Aparece no TSE como: DT_ELEICAO (2018). Coluna adicionada em 2018.
 data_prestacao_contas,Data de entrega da prestação de contas junto ao TSE. Aparece no TSE como: DT_PRESTACAO_CONTAS (2018). Coluna adicionada em 2018.
 descricao,"Descrição da despesa. Aparece no TSE como: Descriçao da despesa (2010), Descrição da despesa (2010), DS_DESPESA (2018). Coluna adicionada em 2010."
@@ -72,8 +72,7 @@ numero_documento,"Número do documento. Aparece no TSE como: NR_DOC_DESP (2004),
 origem,"Descrição do tipo de origem da despesa (DRD), informado pelo prestador de contas em relação à despesa. Aparece no TSE como: DS_ORIGEM_DESPESA (2018). Coluna adicionada em 2018."
 segundo_turno,Indicativo se o prestador de contas participou do segundo turno. Aparece no TSE como: ST_TURNO (2018). Coluna adicionada em 2018.
 situacao_cadastral,"Batimento Receita Federal do Brasil. Aparece no TSE como: RV_MEANING (2004), SITUACAO_CADASTRAL (2006), SITUACAOCADASTRAL (2006). Coluna adicionada em 2004."
-tipo,"Tipo de despesa. Aparece no TSE como: DS_TITULO (2002), RTRIM(LTRIM(DR.DS_TITULO)) (2004), TIPO_DESPESA (2006), Tipo despesa (2010)."
-tipo_diretorio,. Aparece no TSE como: Tipo diretorio (2014_suplementar). Coluna adicionada em 2014_suplementar.
+tipo,"Tipo de despesa. Aparece no TSE como: DS_TITULO (2002), RTRIM(LTRIM(DR.DS_TITULO)) (2004), RTRIM(LTRIM(DR.CD_TITULO)) (2004), TIPO_DESPESA (2006), Tipo despesa (2010)."
 tipo_documento,"Tipo de documento (Nota Fiscal, Recibo, Outros). Aparece no TSE como: DS_TIPO_DOCUMENTO (2004), TIPO_DOCUMENTO (2006), RV_MEANING_1 (2006), Tipo do documento (2010), Tipo de documento (2014_suplementar). Coluna adicionada em 2004."
 tipo_eleicao,Nome do tipo de eleião. Aparece no TSE como: NM_TIPO_ELEICAO (2018). Coluna adicionada em 2018.
 tipo_prestacao_contas,Tipo de entrega da prestaçao de contas. Pode assumir os valores: Relatório financeiro (referente à entrega do relatório financeiro); Parcial (referente à entrega parcial de prestação de contas); Final (referente à entrega final da prestação). Aparece no TSE como: TP_PRESTACAO_CONTAS (2018). Coluna adicionada em 2018.
