@@ -313,6 +313,9 @@ class Extractor:
                         field.nome_tse: field.nome_final or field.nome_tse
                         for field in header_meta["year_fields"]
                     }
+                    not_found = set(row) - set(field_map.keys())
+                    if not_found:
+                        raise ValueError(f"Fields not found: {', '.join(sorted(not_found))}")
                     year_fields = [field_map[field_name] for field_name in row]
                     convert_function = self.convert_row(year_fields, final_fields)
                     continue
@@ -393,7 +396,7 @@ class CandidaturaExtractor(Extractor):
                 value = row.get(key, "").strip()
                 if value in ("#NULO", "#NULO#", "#NE#", "#NE"):
                     value = ""
-                new[key] = value = utils.unaccent(value).upper()
+                new[key] = value = utils.unaccent(value).upper()  # TODO: e nomes com acento?
 
             # TODO: fix data_nascimento (dd/mm/yyyy, dd/mm/yy, yyyymmdd, xx/xx/)
             # TODO: fix situacao
@@ -410,6 +413,7 @@ class CandidaturaExtractor(Extractor):
                 new["candidatura_inserida_urna"]
             )
             new["data_eleicao"] = fix_data(new["data_eleicao"])
+            new["data_aceite"] = fix_data(new["data_aceite"])
             new["data_nascimento"] = fix_data(new["data_nascimento"])
             # TODO: seria interessante confirmar a idade na data da posse com
             # os valores corrigidos, para verificar se a correção é compatível
@@ -824,10 +828,8 @@ class PrestacaoContasExtractor(Extractor):
                     or "RV_MEANING" in row
                     or "SEQUENCIAL_CANDIDATO" in row
                 ):
-                    # It's a header, we should skip it as a data row but
-                    # use the information to get field ordering (better
-                    # trust it then our headers files, TSE may change the
-                    # order)
+                    # It's a header, we should skip it as a data row but use the information to get field ordering
+                    # (better trust it then our headers files, TSE may change the order)
                     field_map = {
                         field.nome_tse: field.nome_final or field.nome_tse
                         for field in header_meta["year_fields"]

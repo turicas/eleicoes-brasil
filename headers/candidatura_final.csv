@@ -20,11 +20,15 @@ codigo_nacionalidade,"Código da nacionalidade do candidato. Aparece no TSE como
 codigo_ocupacao,"Código da ocupação do candidato. Aparece no TSE como: CODIGO_OCUPACAO (1994_BR), CD_OCUPACAO (1996)."
 composicao_federacao,Descrição da federação. Aparece no TSE como: DS_COMPOSICAO_FEDERACAO (2022). Coluna adicionada em 2022.
 cpf,"CPF do candidato. Aparece no TSE como: CPF_CANDIDATO (1994_BR), NR_CPF_CANDIDATO (1996)."
+data_aceite,. Aparece no TSE como: DT_ACEITE_CANDIDATURA (2020). Coluna adicionada em 2020.
 data_nascimento,"Data de nascimento do candidato. Aparece no TSE como: DATA_NASCIMENTO (1994_BR), DT_NASCIMENTO (1996)."
 email,Endereço de e-mail do candidato. Aparece no TSE como: NM_EMAIL (1996). Coluna adicionada em 1996.
 estado_civil,"Descrição do estado civil do candidato. Aparece no TSE como: DESCRICAO_ESTADO_CIVIL (1994_BR), DS_ESTADO_CIVIL (1996)."
 etnia,Etnia (cor/raça) do candidato (auto declaração). Aparece no TSE como: DS_COR_RACA (1996). Coluna adicionada em 1996.
-federacao,Federação. Aparece no TSE como: NM_FEDERACAO (2022). Coluna adicionada em 2022.
+federacao,. Aparece no TSE como: NM_FEDERACAO (2020). Coluna adicionada em 2020.
+federacao_composicao,. Aparece no TSE como: DS_COMPOSICAO_FEDERACAO (2020). Coluna adicionada em 2020.
+federacao_numero,. Aparece no TSE como: NR_FEDERACAO (2020). Coluna adicionada em 2020.
+federacao_sigla,. Aparece no TSE como: SG_FEDERACAO (2020). Coluna adicionada em 2020.
 genero,"Descrição do sexo do candidato. Aparece no TSE como: DESCRICAO_SEXO (1994_BR), DS_GENERO (1996)."
 grau_instrucao,"Descrição do grau de instrução do candidato. Aparece no TSE como: DESCRICAO_GRAU_INSTRUCAO (1994_BR), DS_GRAU_INSTRUCAO (1996)."
 municipio_nascimento,"Nome do município de nascimento do candidato. Aparece no TSE como: NOME_MUNICIPIO_NASCIMENTO (1994_BR), NM_MUNICIPIO_NASCIMENTO (1996)."
@@ -33,10 +37,13 @@ nome,"Nome completo do candidato. Aparece no TSE como: NOME_CANDIDATO (1994_BR),
 nome_social,Nome social do candidato. Aparece no TSE como: NM_SOCIAL_CANDIDATO (1996). Coluna adicionada em 1996.
 numero_federacao,Número da federação. Aparece no TSE como: NR_FEDERACAO (2022). Coluna adicionada em 2022.
 ocupacao,"Descrição da ocupação do candidato. Aparece no TSE como: DESCRICAO_OCUPACAO (1994_BR), DS_OCUPACAO (1996)."
+ordem_suplencia,. Aparece no TSE como: SQ_ORDEM_SUPLENCIA (2020). Coluna adicionada em 2020.
+sequencial_substituido,. Aparece no TSE como: SQ_SUBSTITUIDO (2020). Coluna adicionada em 2020.
 sigla_federacao,Sigla da federação. Aparece no TSE como: SG_FEDERACAO (2022). Coluna adicionada em 2022.
 sigla_unidade_federativa_nascimento,"Sigla da UF de nascimento do candidato. Aparece no TSE como: SIGLA_UF_NASCIMENTO (1994_BR), SG_UF_NASCIMENTO (1996)."
-situacao_prestacao_contas,Situação da prestação de contas. Aparece no TSE como: ST_PREST_CONTAS (2022). Coluna adicionada em 2022.
-tipo_destinacao_votos,?. Aparece no TSE como: NM_TIPO_DESTINACAO_VOTOS (2022). Coluna adicionada em 2022.
+situacao_prestacao_contas,Situação da prestação de contas. Aparece no TSE como: ST_PREST_CONTAS (2020). Coluna adicionada em 2020.
+status_substituido,status?. Aparece no TSE como: ST_SUBSTITUIDO (2020). Coluna adicionada em 2020.
+tipo_destinacao_votos,?. Aparece no TSE como: NM_TIPO_DESTINACAO_VOTOS (2020). Coluna adicionada em 2020.
 titulo_eleitoral,"Número do título eleitoral do candidato. Aparece no TSE como: NUM_TITULO_ELEITORAL_CANDIDATO (1994_BR), NR_TITULO_ELEITORAL_CANDIDATO (1996)."
 unidade_eleitoral,"Descrição da Unidade Eleitoral. Aparece no TSE como: DESCRICAO_UE (1994_BR), NM_UE (1996)."
 codigo_legenda,"Código sequencial da legenda gerado pela Justiça Eleitoral. Aparece no TSE como: CODIGO_LEGENDA (1994_BR), SQ_COLIGACAO (1996)."
@@ -51,7 +58,7 @@ candidatura_inserida_urna,Informa se o candidato foi inserido na urna eletrônic
 cargo,"Descrição do cargo a que o candidato concorre. Aparece no TSE como: DESCRICAO_CARGO (1994_BR), DS_CARGO (1996)."
 codigo_cargo,"Código do cargo a que o candidato concorre. Aparece no TSE como: CODIGO_CARGO (1994_BR), CD_CARGO (1996)."
 codigo_detalhe_situacao_candidatura,Código do detalhe da situação do registro de candidatura do candidato. Aparece no TSE como: CD_DETALHE_SITUACAO_CAND (1996). Coluna adicionada em 1996.
-codigo_situacao_candidato_tot,? (trocar “tot”). Aparece no TSE como: CD_SITUACAO_CANDIDATO_TOT (2022). Coluna adicionada em 2022.
+codigo_situacao_candidato_tot,? (trocar “tot”). Aparece no TSE como: CD_SITUACAO_CANDIDATO_TOT (2020). Coluna adicionada em 2020.
 codigo_situacao_candidatura,"Código da situação de candidatura. Aparece no TSE como: COD_SITUACAO_CANDIDATURA (1994_BR), CD_SITUACAO_CANDIDATURA (1996)."
 codigo_situacao_candidatura_pleito,Código da situação da candidatura no dia do Pleito. Aparece no TSE como: CD_SITUACAO_CANDIDATO_PLEITO (1996). Coluna adicionada em 1996.
 codigo_situacao_candidatura_urna,Código da situação da candidatura na urna. Aparece no TSE como: CD_SITUACAO_CANDIDATO_URNA (1996). Coluna adicionada em 1996.
@@ -66,7 +73,7 @@ numero_processo_candidatura,Número do processo de registro de candidatura do ca
 numero_protocolo_candidatura,Número do protocolo de registro de candidatura do candidato. Aparece no TSE como: NR_PROTOCOLO_CANDIDATURA (1996). Coluna adicionada em 1996.
 numero_sequencial,"Número sequencial do candidato gerado internamente pelos sistemas eleitorais. Não é o número de campanha do candidato.. Aparece no TSE como: SEQUENCIAL_CANDIDATO (1994_BR), SQ_CANDIDATO (1996)."
 numero_urna,"Número do candidato na urna. Aparece no TSE como: NUMERO_CANDIDATO (1994_BR), NR_CANDIDATO (1996)."
-situacao_candidato_tot,? (trocar “tot”). Aparece no TSE como: DS_SITUACAO_CANDIDATO_TOT (2022). Coluna adicionada em 2022.
+situacao_candidato_tot,? (trocar “tot”). Aparece no TSE como: DS_SITUACAO_CANDIDATO_TOT (2020). Coluna adicionada em 2020.
 situacao_candidatura,"Descrição da situação de candidatura. Aparece no TSE como: DES_SITUACAO_CANDIDATURA (1994_BR), DS_SITUACAO_CANDIDATURA (1996)."
 situacao_candidatura_pleito,Descrição da situação da candidatura no dia do Pleito. Aparece no TSE como: DS_SITUACAO_CANDIDATO_PLEITO (1996). Coluna adicionada em 1996.
 situacao_candidatura_urna,Descrição da situação da candidatura na urna. Aparece no TSE como: DS_SITUACAO_CANDIDATO_URNA (1996). Coluna adicionada em 1996.
