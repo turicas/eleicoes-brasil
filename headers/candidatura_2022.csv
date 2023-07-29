@@ -70,3 +70,7 @@
 "CD_SITUACAO_CANDIDATO_TOT","codigo_situacao_candidato_tot","? (trocar “tot”)"
 "DS_SITUACAO_CANDIDATO_TOT","situacao_candidato_tot","? (trocar “tot”)"
 "ST_PREST_CONTAS","situacao_prestacao_contas","Situação da prestação de contas"
+"DT_ACEITE_CANDIDATURA","data_aceite",""
+"SQ_ORDEM_SUPLENCIA","ordem_suplencia",""
+"SQ_SUBSTITUIDO","sequencial_substituido",""
+"ST_SUBSTITUIDO","status_substituido","status?"
