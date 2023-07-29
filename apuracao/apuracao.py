@@ -137,10 +137,6 @@ if __name__ == "__main__":
     data_path = Path(__file__).parent / "data"
     if not data_path.exists():
         data_path.mkdir(parents=True)
-    credentials_filename = "credentials/eleicoes-2022-brasil-io-sheets.json"
-    with open(credentials_filename) as fobj:
-        credentials = json.load(fobj)
-        account = ServiceAccountCredentials.from_json_keyfile_dict(credentials)
 
     if args.turno == 1:
         sheet_id = "1Oy1mHo78313Ls1jSKayyVWW4KeqFyS94eg3LIIe1UXU"
@@ -154,6 +150,10 @@ if __name__ == "__main__":
         states = ("AL", "AM", "BA", "ES", "MS", "PB", "PE", "RO", "RS", "SC", "SE", "SP")
 
     if not args.print_only:
+        credentials_filename = "credentials/eleicoes-2022-brasil-io-sheets.json"
+        with open(credentials_filename) as fobj:
+            credentials = json.load(fobj)
+            account = ServiceAccountCredentials.from_json_keyfile_dict(credentials)
         client = gspread.authorize(account)
         workbook = client.open_by_key(sheet_id)
         sheet = workbook.worksheet("Presidente")
