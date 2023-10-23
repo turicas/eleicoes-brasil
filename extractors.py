@@ -1,6 +1,7 @@
 import csv
 import datetime
 import re
+import uuid
 from functools import lru_cache
 from io import StringIO, TextIOWrapper
 from pathlib import Path
@@ -13,12 +14,13 @@ import rows
 from cached_property import cached_property
 from rows.utils import download_file, load_schema
 
-import utils
+from utils import FixQuotes, TSEDialect, unaccent
 import settings
 
 
 # TODO: may add validators to convert_row methods
 
+REGEXP_CPF_NUMBERS = re.compile("[0-9*]+")  # Inclui '*', diferente de outros documentos
 REGEXP_NUMBERS = re.compile("([0-9]+)")
 REGEXP_WRONGQUOTE = re.compile(r';"([^;\r\n]+"[^;\r\n]*)";')
 MAP_CODIGO_CARGO = {
@@ -90,6 +92,10 @@ def last_elections_year(reference=None):
     return reference.year - 2
 
 
+def only_numbers(value):
+    return "".join(REGEXP_NUMBERS.findall(value))
+
+
 def obfuscate_cpf(cpf):
     """
     >>> obfuscate_cpf("12345678901")
@@ -100,6 +106,22 @@ def obfuscate_cpf(cpf):
     if len(cpf) == 11:
         cpf = f"***{cpf[3:9]}**"
     return cpf
+
+
+def gerar_pessoa_uuid(cpf, nome):
+    """Gera o URLid com base na descrição do Brasil.IO para entidade do tipo Pessoa (física)"""
+    # TODO: em vez da linha abaixo talvez possamos usar fix_cpf (porém com o suporte a '*')
+    cpf = ("00000000000" + "".join(REGEXP_CPF_NUMBERS.findall(cpf)))[-11:]
+    nome = unaccent(nome).upper().replace(" ", "-")
+    return uuid.uuid5(uuid.NAMESPACE_URL, f"https://id.brasil.io/person/v1/{cpf[3:9]}-{nome}/")
+
+
+def gerar_candidatura_uuid(ano, numero_sequencial):
+    """Gera o URLid com base na descrição do Brasil.IO para entidade do tipo Candidatura"""
+    ano = str(ano or "").strip()
+    assert len(ano) == 4, f"Ano inválido: {ano}"
+    numero_sequencial = only_numbers(str(numero_sequencial or "").strip())
+    return uuid.uuid5(uuid.NAMESPACE_URL, f"https://id.brasil.io/candidacy/v1/{ano}-{numero_sequencial}/")
 
 
 class SimNaoBooleanField(rows.fields.BoolField):
@@ -150,8 +172,8 @@ def fix_cpf(value):
     >>> fix_cpf("000.000.000-00")
     ''
     """
-
-    value = "".join(REGEXP_NUMBERS.findall(value))
+    # TODO: talvez incluir também '*'
+    value = only_numbers(value)
     if len(value) < 11:
         value = "0" * (11 - len(value)) + value
     if set(value) == {"0"}:
@@ -167,7 +189,7 @@ def fix_cnpj_cpf(value):
 
 
 def fix_titulo_eleitoral(value):
-    return "".join(REGEXP_NUMBERS.findall(value))
+    return only_numbers(value)
 
 
 def fix_data(value):
@@ -291,7 +313,7 @@ class Extractor:
                 continue
             fobj = TextIOWrapper(zfile.open(internal_filename), encoding=self.encoding)
             fobj = self.fix_fobj(fobj)
-            reader = csv.reader(fobj, dialect=utils.TSEDialect)
+            reader = csv.reader(fobj, dialect=TSEDialect)
             header_meta = self.get_headers(year, filename, internal_filename)
             year_fields = [
                 field.nome_final or field.nome_tse
@@ -423,10 +445,10 @@ class CandidaturaExtractor(Extractor):
             # branco).
             # TODO: idade_data_eleicao está em branco em muitos casos, porém
             # conseguimos preenchê-lo caso a data de nascimento esteja correta
+
             if censor:
                 row["cpf"] = obfuscate_cpf(row["cpf"])
                 row["email"] = ""
-
             return new
 
         return convert
@@ -517,7 +539,7 @@ class BemDeclaradoExtractor(Extractor):
                 value = row.get(key, "").strip()
                 if value in ("#NULO", "#NULO#", "#NE#"):
                     value = ""
-                new[key] = value = utils.unaccent(value).upper()
+                new[key] = value = unaccent(value).upper()
 
             new["sigla_unidade_federativa"] = fix_sigla_unidade_federativa(new["sigla_unidade_federativa"])
             new["valor"] = fix_valor(new["valor"])
@@ -607,7 +629,7 @@ class VotacaoZonaExtractor(Extractor):
                 value = row.get(key, "").strip()
                 if value in ("#NULO", "#NULO#", "#NE#"):
                     value = ""
-                new[key] = value = utils.unaccent(value).upper()
+                new[key] = value = unaccent(value).upper()
 
             new["sigla_unidade_federativa"] = fix_sigla_unidade_federativa(new["sigla_unidade_federativa"])
             new["nome"] = fix_nome(new["nome"])
@@ -724,7 +746,7 @@ class PrestacaoContasExtractor(Extractor):
 
     def fix_fobj(self, fobj, year):
         if year == 2002 or year == 2004 or year == 2006 or year == 2008:
-            fobj = utils.FixQuotes(fobj, encoding=self.encoding)
+            fobj = FixQuotes(fobj, encoding=self.encoding)
         else:
             fobj = TextIOWrapper(fobj, encoding=self.encoding)
 
@@ -856,7 +878,7 @@ class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
                 value = row.get(key, "").strip()
                 if value in ("#NULO", "#NULO#", "#NE#", "#NE"):
                     value = ""
-                new[key] = value = utils.unaccent(value).upper()
+                new[key] = value = unaccent(value).upper()
 
             cleaned_year, *_unused_suffix = str(year).split('_')
             new["ano"] = int(cleaned_year)
@@ -887,7 +909,7 @@ class PrestacaoContasDespesasExtractor(PrestacaoContasExtractor):
                 value = row.get(key, "").strip()
                 if value in ("#NULO", "#NULO#", "#NE#", "#NE"):
                     value = ""
-                new[key] = value = utils.unaccent(value).upper()
+                new[key] = value = unaccent(value).upper()
 
             cleaned_year, *_unused_suffix = str(year).split('_')
             new["ano"] = int(cleaned_year)
