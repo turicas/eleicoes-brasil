@@ -97,16 +97,21 @@ def create_final_headers(header_type, order_columns, final_filename):
         final_headers.values(), key=lambda row: order_columns(row["nome_final"])
     )
     for row in header_list:
-        row_data = {"descricao": row["descricao"] or "", "nome_final": row["nome_final"]}
+        descricao = []
+        if row["descricao"]:
+            descricao.append(row["descricao"])
+        row_data = {"nome_final": row["nome_final"]}
         introduced_on = row.get("introduced_on", None)
         original_names = ", ".join(
             f"{item[1]} ({item[0]})" for item in row.get("original_names")
         )
-        row_data["descricao"] += f". Aparece no TSE como: {original_names}"
+        descricao.append(f"Aparece no TSE como: {original_names}")
         if introduced_on:
-            row_data["descricao"] += f". Coluna adicionada em {introduced_on}"
-        if row_data["descricao"][-1] != ".":
-            row_data["descricao"] += "."
+            descricao.append(f"Coluna adicionada em {introduced_on}")
+        descricao = ". ".join(descricao)
+        if descricao[-1] != ".":
+            descricao += "."
+        row_data["descricao"] = descricao
         table.append(row_data)
     rows.export_to_csv(table, final_filename)
 
