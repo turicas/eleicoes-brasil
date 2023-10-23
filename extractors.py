@@ -247,7 +247,7 @@ def get_organization(internal_filename, year):
         return "comites" if "comit" in internal_filename.lower() else "candidatos"
     elif year == 2012:
         return internal_filename.split("_")[1]
-    elif "2018" in year or "2020" in year:
+    elif isinstance(year, str) and year.split("_")[0] in ("2018", "2020", "2022"):  # TODO: reuse the logic in PrestacaoContasExtractor.get_headers()
         cand_or_party = (
             "candidatos" if "candidatos" in internal_filename else "partidos"
         )
@@ -257,6 +257,8 @@ def get_organization(internal_filename, year):
             cand_or_party = "contratadas-" + cand_or_party
         origin = "originarios-" if "originario" in internal_filename else ""
         return origin + cand_or_party
+    else:
+        raise ValueError(f"Cannot get organization for year {year} and filename {internal_filename}")
 
 
 class Extractor:
@@ -758,8 +760,7 @@ class PrestacaoContasExtractor(Extractor):
             # 2014
             header_year = year
             year = 2014
-        elif isinstance(year, str) and ("2018" in year or "2020" in year or
-                                        "2022" in year):
+        elif isinstance(year, str) and year.split("_")[0] in ("2018", "2020", "2022"):
             header_year = "2018"
         else:
             header_year = str(year)
