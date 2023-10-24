@@ -1,4 +1,6 @@
 "field_name","field_type"
+"pessoa_uuid","uuid"
+"candidatura_uuid","uuid"
 "ano","integer"
 "candidatura_inserida_urna","bool"
 "codigo_cargo","integer"

@@ -415,30 +415,37 @@ class CandidaturaExtractor(Extractor):
                 return None
 
             row = dict(zip(row_field_names, row_data))
-            new = {}
             for key in final_field_names:
                 value = row.get(key, "").strip()
                 if value in ("#NULO", "#NULO#", "#NE#", "#NE"):
                     value = ""
-                new[key] = value = utils.unaccent(value).upper()  # TODO: e nomes com acento?
+                row[key] = unaccent(value).upper()  # TODO: e nomes com acento?
+
+            codigo_cargo, cargo, pergunta = fix_cargo(row["codigo_cargo"], row["cargo"])
+            cpf = fix_cpf(row["cpf"])
+            nome = fix_nome(row["nome"])
+            new = {
+                "candidatura_uuid": gerar_candidatura_uuid(row["ano"], row["numero_sequencial"]),
+                "pessoa_uuid": gerar_pessoa_uuid(cpf, nome),
+                "data_eleicao": fix_data(row["data_eleicao"]),
+                "data_aceite": fix_data(row["data_aceite"]),
+                "data_nascimento": fix_data(row["data_nascimento"]),
+                "codigo_cargo": codigo_cargo,
+                "cpf": cpf,
+                "nome": nome,
+                "cargo": cargo,
+                "sigla_unidade_federativa": fix_sigla_unidade_federativa(row["sigla_unidade_federativa"]),
+                "sigla_unidade_federativa_nascimento": fix_sigla_unidade_federativa(row["sigla_unidade_federativa_nascimento"]),
+                "titulo_eleitoral": fix_titulo_eleitoral(row["titulo_eleitoral"]),
+                "pergunta": pergunta,
+                "candidatura_inserida_urna": SimNaoBooleanField.deserialize(row["candidatura_inserida_urna"]),
+            }
+            for key in set(final_field_names) - set(new.keys()):
+                new[key] = row[key]
 
             # TODO: fix data_nascimento (dd/mm/yyyy, dd/mm/yy, yyyymmdd, xx/xx/)
             # TODO: fix situacao
             # TODO: fix totalizacao
-            new["cpf"] = fix_cpf(new["cpf"])
-            new["nome"] = fix_nome(new["nome"])
-            new["sigla_unidade_federativa"] = fix_sigla_unidade_federativa(new["sigla_unidade_federativa"])
-            new["sigla_unidade_federativa_nascimento"] = fix_sigla_unidade_federativa(new["sigla_unidade_federativa_nascimento"])
-            new["titulo_eleitoral"] = fix_titulo_eleitoral(new["titulo_eleitoral"])
-            new["codigo_cargo"], new["cargo"], new["pergunta"] = fix_cargo(
-                new["codigo_cargo"], new["cargo"]
-            )
-            new["candidatura_inserida_urna"] = SimNaoBooleanField.deserialize(
-                new["candidatura_inserida_urna"]
-            )
-            new["data_eleicao"] = fix_data(new["data_eleicao"])
-            new["data_aceite"] = fix_data(new["data_aceite"])
-            new["data_nascimento"] = fix_data(new["data_nascimento"])
             # TODO: seria interessante confirmar a idade na data da posse com
             # os valores corrigidos, para verificar se a correção é compatível
             # TODO: existem casos em que row['idade_data_eleicao'] é '' e
@@ -536,15 +543,18 @@ class BemDeclaradoExtractor(Extractor):
     def convert_row(self, row_field_names, final_field_names):
         def convert(row_data):
             row = dict(zip(row_field_names, row_data))
-            new = {}
             for key in final_field_names:
                 value = row.get(key, "").strip()
                 if value in ("#NULO", "#NULO#", "#NE#"):
                     value = ""
-                new[key] = value = unaccent(value).upper()
-
-            new["sigla_unidade_federativa"] = fix_sigla_unidade_federativa(new["sigla_unidade_federativa"])
-            new["valor"] = fix_valor(new["valor"])
+                row[key] = unaccent(value).upper()  # TODO: e nomes com acento?
+            new = {
+                "candidatura_uuid": gerar_candidatura_uuid(row["ano"], row["numero_sequencial"]),
+                "sigla_unidade_federativa": fix_sigla_unidade_federativa(row["sigla_unidade_federativa"]),
+                "valor": fix_valor(row["valor"]),
+            }
+            for key in set(final_field_names) - set(new.keys()):
+                new[key] = row[key]
 
             return new
 
@@ -626,23 +636,23 @@ class VotacaoZonaExtractor(Extractor):
     def convert_row(self, row_field_names, final_field_names):
         def convert(row_data):
             row = dict(zip(row_field_names, row_data))
-            new = {}
             for key in final_field_names:
                 value = row.get(key, "").strip()
                 if value in ("#NULO", "#NULO#", "#NE#"):
                     value = ""
-                new[key] = value = unaccent(value).upper()
-
-            new["sigla_unidade_federativa"] = fix_sigla_unidade_federativa(new["sigla_unidade_federativa"])
-            new["nome"] = fix_nome(new["nome"])
-            new["codigo_cargo"], new["cargo"], _ = fix_cargo(
-                new["codigo_cargo"], new["cargo"]
-            )
-
-            key = (new["codigo_situacao_candidatura"],
-                    new["situacao_candidatura"])
-            new["codigo_situacao_candidatura"] = self.codigo_situacao_candidatura[key]
-            new["situacao_candidatura"] = self.situacao_candidatura[key]
+                row[key] = unaccent(value).upper()  # TODO: e nomes com acento?
+            situacao_key = (row["codigo_situacao_candidatura"], row["situacao_candidatura"])
+            codigo_cargo, cargo, _ = fix_cargo(row["codigo_cargo"], row["cargo"])
+            new = {
+                "sigla_unidade_federativa": fix_sigla_unidade_federativa(row["sigla_unidade_federativa"]),
+                "nome": fix_nome(row["nome"]),
+                "codigo_cargo": codigo_cargo,
+                "cargo": cargo,
+                "codigo_situacao_candidatura": self.codigo_situacao_candidatura[situacao_key],
+                "situacao_candidatura": self.situacao_candidatura[situacao_key],
+            }
+            for key in set(final_field_names) - set(new.keys()):
+                new[key] = row[key]
 
             return new
 
@@ -873,25 +883,29 @@ class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
 
     def convert_row(self, row_field_names, final_field_names, year):
         def convert(row_data):
+            cleaned_year, *_unused_suffix = str(year).split('_')
             row = dict(zip(row_field_names, row_data))
-            new = {}
             for key in final_field_names:
                 value = row.get(key, "").strip()
                 if value in ("#NULO", "#NULO#", "#NE#", "#NE"):
                     value = ""
-                new[key] = value = unaccent(value).upper()
+                row[key] = unaccent(value).upper()  # TODO: e nomes com acento?
+            # TODO: não preencher `candidatura_uuid` quando o registro não é referente a uma candidatura
+            # TODO: talvez adicionar outros campos `*_uuid`
+            new = {
+                "candidatura_uuid": gerar_candidatura_uuid(cleaned_year, row["numero_sequencial"]),
+                "ano": int(cleaned_year),
+                "valor": fix_valor(row["valor"]),
+                "data": fix_data(row["data"]),
+                "data_prestacao_contas": fix_data(row["data_prestacao_contas"]),
+                "data_eleicao": fix_data(row["data_eleicao"]),
+                "cnpj": fix_cnpj_cpf(row["cnpj"]),
+                "cpf_cnpj_doador": fix_cnpj_cpf(row["cpf_cnpj_doador"]),
+                "cpf_cnpj_doador_originario": fix_cnpj_cpf(row["cpf_cnpj_doador_originario"]),
+            }
+            for key in set(final_field_names) - set(new.keys()):
+                new[key] = row[key]
 
-            cleaned_year, *_unused_suffix = str(year).split('_')
-            new["ano"] = int(cleaned_year)
-            new["valor"] = fix_valor(new["valor"])
-            new["data"] = fix_data(new["data"])
-            new["data_prestacao_contas"] = fix_data(new["data_prestacao_contas"])
-            new["data_eleicao"] = fix_data(new["data_eleicao"])
-            new["cnpj"] = fix_cnpj_cpf(new["cnpj"])
-            new["cpf_cnpj_doador"] = fix_cnpj_cpf(new["cpf_cnpj_doador"])
-            new["cpf_cnpj_doador_originario"] = fix_cnpj_cpf(
-                new["cpf_cnpj_doador_originario"]
-            )
             return new
 
         return convert
@@ -904,22 +918,28 @@ class PrestacaoContasDespesasExtractor(PrestacaoContasExtractor):
 
     def convert_row(self, row_field_names, final_field_names, year):
         def convert(row_data):
+            cleaned_year, *_unused_suffix = str(year).split('_')
             row = dict(zip(row_field_names, row_data))
-            new = {}
             for key in final_field_names:
                 value = row.get(key, "").strip()
                 if value in ("#NULO", "#NULO#", "#NE#", "#NE"):
                     value = ""
-                new[key] = value = unaccent(value).upper()
+                row[key] = unaccent(value).upper()  # TODO: e nomes com acento?
 
-            cleaned_year, *_unused_suffix = str(year).split('_')
-            new["ano"] = int(cleaned_year)
-            new["valor"] = fix_valor(new["valor"])
-            new["data"] = fix_data(new["data"])
-            new["data_prestacao_contas"] = fix_data(new["data_prestacao_contas"])
-            new["data_eleicao"] = fix_data(new["data_eleicao"])
-            new["cnpj"] = fix_cnpj_cpf(new["cnpj"])
-            new["cpf_cnpj_fornecedor"] = fix_cnpj_cpf(new["cpf_cnpj_fornecedor"])
+            # TODO: não preencher `candidatura_uuid` quando o registro não é referente a uma candidatura
+            # TODO: talvez adicionar outros campos `*_uuid`
+            new = {
+                "candidatura_uuid": gerar_candidatura_uuid(cleaned_year, row["numero_sequencial"]),
+                "ano": int(cleaned_year),
+                "data_prestacao_contas": fix_data(row["data_prestacao_contas"]),
+                "data_eleicao": fix_data(row["data_eleicao"]),
+                "valor": fix_valor(row["valor"]),
+                "data": fix_data(row["data"]),
+                "cnpj": fix_cnpj_cpf(row["cnpj"]),
+                "cpf_cnpj_fornecedor": fix_cnpj_cpf(row["cpf_cnpj_fornecedor"]),
+            }
+            for key in set(final_field_names) - set(new.keys()):
+                new[key] = row[key]
             return new
 
         return convert
