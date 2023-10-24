@@ -583,6 +583,13 @@ class BemDeclaradoExtractor(Extractor):
 
 class VotacaoZonaExtractor(Extractor):
 
+    # TODO: corrigir headers para novos anos:
+    # ValueError: Fields not found: CD_CARGO, CD_DETALHE_SITUACAO_CAND, CD_ELEICAO, CD_MUNICIPIO,
+    # CD_SITUACAO_CANDIDATURA, CD_SIT_TOT_TURNO, CD_TIPO_ELEICAO, DS_CARGO, DS_COMPOSICAO_COLIGACAO,
+    # DS_DETALHE_SITUACAO_CAND, DS_ELEICAO, DS_SITUACAO_CANDIDATURA, DS_SIT_TOT_TURNO, DT_ELEICAO, DT_GERACAO,
+    # HH_GERACAO, NM_CANDIDATO, NM_COLIGACAO, NM_MUNICIPIO, NM_PARTIDO, NM_SOCIAL_CANDIDATO, NM_TIPO_ELEICAO, NM_UE,
+    # NM_URNA_CANDIDATO, NR_CANDIDATO, NR_PARTIDO, NR_TURNO, NR_ZONA, QT_VOTOS_NOMINAIS, SG_PARTIDO, SG_UE, SG_UF,
+    # SQ_COLIGACAO, ST_VOTO_EM_TRANSITO, TP_ABRANGENCIA, TP_AGREMIACAO
     year_range = tuple(range(1996, last_elections_year(), 2))
     schema_filename = settings.SCHEMA_PATH / "votacao_zona.csv"
 
@@ -878,6 +885,7 @@ class PrestacaoContasExtractor(Extractor):
 
 class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
 
+    # TODO: corrigir para: 2018_orgaos, 2018_candidatos, 2020_orgaos, 2020_candidatos, 2022_orgaos, 2022_candidatos
     type_mov = "receita"
     schema_filename = settings.SCHEMA_PATH / "receita.csv"
 
@@ -913,6 +921,7 @@ class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
 
 class PrestacaoContasDespesasExtractor(PrestacaoContasExtractor):
 
+    # TODO: corrigir para: 2018_orgaos, 2018_candidatos, 2020_orgaos, 2020_candidatos, 2022_orgaos, 2022_candidatos
     type_mov = "despesa"
     schema_filename = settings.SCHEMA_PATH / "despesa.csv"
 
