@@ -8,11 +8,11 @@ sigla_unidade_federativa,Sigla da Unidade da Federação em que ocorreu a eleiç
 numero_sequencial,Número sequencial do candidato gerado internamente pelos sistemas eleitorais. Não é o número de campanha do candidato.. Aparece no TSE como: SQ_CANDIDATO (2006).
 ano,Ano da eleição. Aparece no TSE como: ANO_ELEICAO (2006).
 codigo_tipo,Código do tipo do bem do candidato. Aparece no TSE como: CD_TIPO_BEM_CANDIDATO (2006).
-data_ultima_atualizacao,Data da última atualização do registro do bem. Aparece no TSE como: DT_ULTIMA_ATUALIZACAO (2006).
+data_ultima_atualizacao,"Data da última atualização do registro do bem. Aparece no TSE como: DT_ULTIMA_ATUALIZACAO (2006), DT_ULT_ATUAL_BEM_CANDIDATO (2022)."
 detalhe,Detalhe do bem do candidato. Aparece no TSE como: DS_BEM_CANDIDATO (2006).
 eleicao,Descrição da eleição. Aparece no TSE como: DS_ELEICAO (2006).
-hora_ultima_atualizacao,Hora da última atualização do registro do bem. Aparece no TSE como: HH_ULTIMA_ATUALIZACAO (2006).
-numero_ordem,Número da ordem do bem declarado do candidato. Aparece no TSE como: NR_ORDEM_CANDIDATO (2006).
+hora_ultima_atualizacao,"Hora da última atualização do registro do bem. Aparece no TSE como: HH_ULTIMA_ATUALIZACAO (2006), HH_ULT_ATUAL_BEM_CANDIDATO (2022)."
+numero_ordem,"Número da ordem do bem declarado do candidato. Aparece no TSE como: NR_ORDEM_CANDIDATO (2006), NR_ORDEM_BEM_CANDIDATO (2022)."
 tipo,Descrição do tipo do bem do candidato. Aparece no TSE como: DS_TIPO_BEM_CANDIDATO (2006).
 unidade_eleitoral,Nome da Unidade Eleitoral do candidato (em caso de eleição majoritária é a sigla da UF que o candidato concorre e em caso de eleição municipal é o código TSE do município). Aparece no TSE como: NM_UE (2006).
 valor,Valor declarado do bem do candidato. Aparece no TSE como: VR_BEM_CANDIDATO (2006).

@@ -523,11 +523,12 @@ class BemDeclaradoExtractor(Extractor):
         )
 
     def get_headers(self, year, filename, internal_filename):
-        uf = self.extract_state_from_filename(internal_filename)
         if 2006 <= year <= 2012:
             header_year = "2006"
-        elif 2014 <= year <= 2022:
+        elif 2014 <= year <= 2020:
             header_year = "2014"
+        elif 2022 <= year <= 2024:
+            header_year = "2022"
         else:
             raise ValueError("Unrecognized year")
 
@@ -624,7 +625,6 @@ class VotacaoZonaExtractor(Extractor):
         return filename.startswith("votacao_candidato_munzona_")
 
     def get_headers(self, year, filename, internal_filename):
-        uf = self.extract_state_from_filename(internal_filename)
         if year < 2014:
             header_year = "1994"
         elif 2014 <= year <= 2018:
