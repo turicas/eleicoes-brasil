@@ -338,8 +338,11 @@ class Extractor:
                         for field in header_meta["year_fields"]
                     }
                     not_found = set(row) - set(field_map.keys())
+                    extra_fields = set(field_map.keys()) - set(row)
                     if not_found:
-                        raise ValueError(f"Fields not found: {', '.join(sorted(not_found))}")
+                        raise ValueError(f"Colunas não encontradas em {filename}/{internal_filename}: {', '.join(sorted(not_found))} -- colunas extras: {', '.join(sorted(extra_fields))}")
+                    if extra_fields:
+                        print(f"Colunas extras: {', '.join(sorted(extra_fields))}")
                     year_fields = [field_map[field_name] for field_name in row]
                     convert_function = self.convert_row(year_fields, final_fields)
                     continue
@@ -398,7 +401,7 @@ class CandidaturaExtractor(Extractor):
         elif year in (2020, 2022):
             header_year = "2022"
         else:
-            raise ValueError(f"Unrecognized year ({year}, {uf})")
+            raise ValueError(f"Ano e UF não reconhecidos para arquivo de candidatura: {repr(year)}, {repr(uf)} ({filename}, {internal_filename})")
         return {
             "year_fields": read_header(
                 settings.HEADERS_PATH / f"candidatura_{header_year}.csv"
@@ -530,7 +533,7 @@ class BemDeclaradoExtractor(Extractor):
         elif 2022 <= year <= 2024:
             header_year = "2022"
         else:
-            raise ValueError("Unrecognized year")
+            raise ValueError(f"Ano não reconhecido para arquivo de bens declarados: {repr(year)} ({filename}, {internal_filename})")
 
         return {
             "year_fields": read_header(
@@ -630,7 +633,7 @@ class VotacaoZonaExtractor(Extractor):
         elif 2014 <= year <= 2018:
             header_year = "2014"
         else:
-            raise ValueError("Unrecognized year")
+            raise ValueError(f"Ano não reconhecido para arquivo de votação por zona eleitoral: {repr(year)} ({filename}, {internal_filename})")
         return {
             "year_fields": read_header(
                 settings.HEADERS_PATH / f"votacao_zona_{header_year}.csv"
