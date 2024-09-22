@@ -62,11 +62,3 @@
 "CD_SITUACAO_CANDIDATO_URNA","codigo_situacao_candidatura_urna",
 "DS_SITUACAO_CANDIDATO_URNA","situacao_candidatura_urna",
 "ST_CANDIDATO_INSERIDO_URNA","candidatura_inserida_urna",
-"NR_FEDERACAO","federacao_numero",
-"NM_FEDERACAO","federacao",
-"SG_FEDERACAO","federacao_sigla",
-"DS_COMPOSICAO_FEDERACAO","federacao_composicao",
-"ST_PREST_CONTAS","situacao_prestacao_contas","Situação da prestação de contas"
-"NM_TIPO_DESTINACAO_VOTOS","tipo_destinacao_votos","?"
-"DS_SITUACAO_CANDIDATO_TOT","situacao_candidato_tot","? (trocar “tot”)"
-"CD_SITUACAO_CANDIDATO_TOT","codigo_situacao_candidato_tot","? (trocar “tot”)"
