@@ -21,7 +21,7 @@ from extractors import (
     PrestacaoContasDespesasExtractor,
 )
 
-REGEXP_HEADER_YEAR = re.compile("([0-9]{4}.*)\.csv")
+REGEXP_HEADER_YEAR = re.compile(r"([0-9]{4}.*)\.csv")
 
 
 def extract_data(ExtractorClass, year_range, output_filename, base_url,
