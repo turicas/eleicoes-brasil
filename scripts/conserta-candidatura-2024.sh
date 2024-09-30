@@ -2,6 +2,26 @@
 # Script utilizado para preencher o campo `cpf` na tabela de candidaturas para 2024 com os dados de CPF das
 # candidaturas de anos anteriores e os dados de filiação partidária (que contém título eleitoral e CPF) coletados do
 # sistema disponibilizado pelo TSE em 2024.
+#
+# Atenção: o arquivo `data/Filiacao.csv` gerado pelo scraper de filiação partidária é muito grande e, por isso, pode
+# é necessário simplificá-lo para rodar nesse script. Use o comando:
+#     python scripts/simplifica_filiacao.py data/Filiacao.csv data/output/filiacao_partidaria.csv.gz
+#
+# Além disso, pode ser útil juntar mais de um arquivo resultante desse processo, dado que o scraping pode retornar
+# resultados diferentes em execuções feitas em dias diferentes (e nem sempre a última execução terá todos os dados da
+# anterior). Para isso, execute os comandos:
+#     python scripts/simplifica_filiacao.py data/2024-09-22-Filiacao.csv.gz data/output/filiacao_partidaria_1.csv.gz
+#     python scripts/simplifica_filiacao.py data/2024-09-29-Filiacao.csv.gz data/output/filiacao_partidaria_2.csv.gz
+#     rows pgimport -s :text: -e utf-8 -d excel data/output/filiacao_partidaria_1.csv.gz $DATABASE_URL filiacao_1
+#     rows pgimport -s :text: -e utf-8 -d excel data/output/filiacao_partidaria_2.csv.gz $DATABASE_URL filiacao_2
+#     query="
+#     SELECT DISTINCT * FROM (
+#       SELECT titulo_eleitor, cpf, situacao_eleitor, data_filiacao, nome FROM filiacao_1
+#       UNION
+#       SELECT titulo_eleitor, cpf, situacao_eleitor, data_filiacao, nome FROM filiacao_2
+#     ) AS t
+#     "
+#     rows pgexport --is-query $DATABASE_URL "$query" data/output/filiacao_partidaria.csv.gz
 
 function log() {
 	echo "[$(date --iso=seconds)] $@";
