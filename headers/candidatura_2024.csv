@@ -8,7 +8,7 @@
 "CD_ELEICAO","codigo_eleicao","Código da eleição"
 "DS_ELEICAO","eleicao","Descrição da eleição"
 "DT_ELEICAO","data_eleicao","Data em que ocorreu a eleição"
-"TP_ABRANGENCIA_ELEICAO","tipo_abrangencia_eleicao","Tipo de abrangência da eleição"
+"TP_ABRANGENCIA","tipo_abrangencia_eleicao","Tipo de abrangência da eleição"
 "SG_UF","sigla_unidade_federativa","Sigla da Unidade da Federação em que ocorreu a eleição"
 "SG_UE","sigla_unidade_eleitoral","Sigla da Unidade Eleitoral do candidato (em caso de eleição majoritária é a sigla da UF que o candidato concorre e em caso de eleição municipal é o código TSE do município)"
 "NM_UE","unidade_eleitoral","Nome da Unidade Eleitoral do candidato (em caso de eleição majoritária é a sigla da UF que o candidato concorre e em caso de eleição municipal é o código TSE do município)"
