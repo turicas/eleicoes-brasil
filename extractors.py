@@ -534,9 +534,9 @@ class BemDeclaradoExtractor(Extractor):
     def get_headers(self, year, filename, internal_filename):
         if 2006 <= year <= 2012:
             header_year = "2006"
-        elif 2014 <= year <= 2018:
+        elif 2014 <= year <= 2016:
             header_year = "2014"
-        elif 2020 <= year <= 2024:
+        elif 2018 <= year <= 2024:
             header_year = "2022"
         else:
             raise ValueError(f"Ano não reconhecido para arquivo de bens declarados: {repr(year)} ({filename}, {internal_filename})")
