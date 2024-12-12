@@ -399,11 +399,11 @@ class CandidaturaExtractor(Extractor):
         elif year == 2016:
             header_year = "2016"
         elif year == 2018:
-            header_year = "2018"
+            header_year = "2024"
         elif year == 2020:
-            header_year = "2020"
-        elif year == 2022:
             header_year = "2022"
+        elif year == 2022:
+            header_year = "2024"
         elif year == 2024:
             header_year = "2024"
         else:
