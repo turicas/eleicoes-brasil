@@ -10,18 +10,31 @@
 # Além disso, pode ser útil juntar mais de um arquivo resultante desse processo, dado que o scraping pode retornar
 # resultados diferentes em execuções feitas em dias diferentes (e nem sempre a última execução terá todos os dados da
 # anterior). Para isso, execute os comandos:
-#     python scripts/simplifica_filiacao.py data/2024-09-22-Filiacao.csv.gz data/output/filiacao_partidaria_1.csv.gz
-#     python scripts/simplifica_filiacao.py data/2024-09-29-Filiacao.csv.gz data/output/filiacao_partidaria_2.csv.gz
-#     rows pgimport -s :text: -e utf-8 -d excel data/output/filiacao_partidaria_1.csv.gz $DATABASE_URL filiacao_1
-#     rows pgimport -s :text: -e utf-8 -d excel data/output/filiacao_partidaria_2.csv.gz $DATABASE_URL filiacao_2
-#     query="
+#     python scripts/simplifica_filiacao.py data/2024-08-16-Filiacao.csv.gz data/output/filiacao_partidaria_1.csv.gz
+#     python scripts/simplifica_filiacao.py data/2024-09-22-Filiacao.csv.gz data/output/filiacao_partidaria_2.csv.gz
+#     python scripts/simplifica_filiacao.py data/2024-09-29-Filiacao.csv.gz data/output/filiacao_partidaria_3.csv.gz
+#     python scripts/simplifica_filiacao.py data/2024-12-10-Filiacao.csv.gz data/output/filiacao_partidaria_4.csv.gz
+#     echo 'DROP TABLE IF EXISTS filiacao_1' | psql --no-psqlrc "$DATABASE_URL"
+#     echo 'DROP TABLE IF EXISTS filiacao_2' | psql --no-psqlrc "$DATABASE_URL"
+#     echo 'DROP TABLE IF EXISTS filiacao_3' | psql --no-psqlrc "$DATABASE_URL"
+#     echo 'DROP TABLE IF EXISTS filiacao_4' | psql --no-psqlrc "$DATABASE_URL"
+#     rows pgimport -s :text: -e utf-8 -d excel data/output/filiacao_partidaria_1.csv.gz "$DATABASE_URL" filiacao_1
+#     rows pgimport -s :text: -e utf-8 -d excel data/output/filiacao_partidaria_2.csv.gz "$DATABASE_URL" filiacao_2
+#     rows pgimport -s :text: -e utf-8 -d excel data/output/filiacao_partidaria_3.csv.gz "$DATABASE_URL" filiacao_3
+#     rows pgimport -s :text: -e utf-8 -d excel data/output/filiacao_partidaria_4.csv.gz "$DATABASE_URL" filiacao_4
+#     cat > /tmp/filiacao.sql <<'EOL'
 #     SELECT DISTINCT * FROM (
 #       SELECT titulo_eleitor, cpf, situacao_eleitor, data_filiacao, nome FROM filiacao_1
 #       UNION
 #       SELECT titulo_eleitor, cpf, situacao_eleitor, data_filiacao, nome FROM filiacao_2
+#       UNION
+#       SELECT titulo_eleitor, cpf, situacao_eleitor, data_filiacao, nome FROM filiacao_3
+#       UNION
+#       SELECT titulo_eleitor, cpf, situacao_eleitor, data_filiacao, nome FROM filiacao_4
 #     ) AS t
-#     "
-#     rows pgexport --is-query $DATABASE_URL "$query" data/output/filiacao_partidaria.csv.gz
+#     EOL
+#     time rows pgexport --is-query $DATABASE_URL "$(cat /tmp/filiacao.sql)" data/output/filiacao_partidaria.csv.gz
+#     rm /tmp/filiacao.sql
 
 function log() {
 	echo "[$(date --iso=seconds)] $@";
@@ -44,20 +57,22 @@ elif [[ ! -e $candidatura_csv ]]; then
 	exit 3
 fi
 
+echo "DROP TABLE IF EXISTS filiacao_orig" | psql --no-psqlrc "$DATABASE_URL"
 rows pgimport \
 	--input-encoding=utf-8 \
 	--schema=:text: \
 	--dialect=excel \
 	"${filiacao_csv}" \
-	$DATABASE_URL \
+	"$DATABASE_URL" \
 	filiacao_orig
 
+echo "DROP TABLE IF EXISTS candidatura_orig" | psql --no-psqlrc "$DATABASE_URL"
 rows pgimport \
 	--input-encoding=utf-8 \
 	--schema=schema/candidatura.csv \
 	--dialect=excel \
 	"${candidatura_csv}" \
-	$DATABASE_URL \
+	"$DATABASE_URL" \
 	candidatura_orig
 
 log "Criando tabela com mapeamento de títulos de eleitor com CPFs"
