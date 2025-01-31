@@ -390,21 +390,11 @@ class CandidaturaExtractor(Extractor):
             if uf != "PI":
                 uf = "BR"
             header_year = f"1994_{uf}"
-        elif 1996 <= year <= 2010:
+        elif year in (1996, 1998, 2000, 2002, 2004, 2006, 2008, 2010):
             header_year = "1996"
-        elif year == 2012:
-            header_year = "2012"
-        elif year == 2014:
-            header_year = "2014"
-        elif year == 2016:
-            header_year = "2016"
-        elif year == 2018:
-            header_year = "2024"
-        elif year == 2020:
-            header_year = "2022"
-        elif year == 2022:
-            header_year = "2024"
-        elif year == 2024:
+        elif year in (2012, 2014, 2016):
+            header_year = str(year)
+        elif year in (2018, 2020, 2022, 2024):
             header_year = "2024"
         else:
             raise ValueError(f"Ano e UF não reconhecidos para arquivo de candidatura: {repr(year)}, {repr(uf)} ({filename}, {internal_filename})")
