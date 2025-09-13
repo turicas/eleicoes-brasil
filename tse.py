@@ -143,13 +143,13 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("type", choices=list(extractors.keys()) + ["headers", "mirror"])
-    parser.add_argument("--force-redownload", action="store_true", default=False)
-    parser.add_argument("--download-only", action="store_true", default=False)
-    parser.add_argument("--output")
-    parser.add_argument("--years", default="all")
-    parser.add_argument("--use-mirror", action="store_true")
+    parser.add_argument("--force-redownload", "-f", action="store_true", default=False)
+    parser.add_argument("--download-only", "-d", action="store_true", default=False)
+    parser.add_argument("--output", "-o")
+    parser.add_argument("--years", "-y", default="all")
+    parser.add_argument("--use-mirror", "-m", action="store_true")
     parser.add_argument("--mirror-url", default="https://data.brasil.io/mirror/eleicoes-brasil/", help="Use the default data repository from TSE or a mirror")
-    parser.add_argument("--no-censorship", action="store_true")
+    parser.add_argument("--no-censorship", "-n", action="store_true")
     args = parser.parse_args()
 
     if args.type == "headers":
