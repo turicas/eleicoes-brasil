@@ -267,10 +267,11 @@ class Extractor:
     encoding = "latin-1"
     schema_filename = ""
 
-    def __init__(self, base_url=None, censor=False):
+    def __init__(self, base_url=None, censor=False, proxy_url=None):
         if base_url is not None:
             self.base_url = base_url
         self.censor = censor
+        self.proxy_url = proxy_url
 
     def filename(self, year):
         """Caminho para arquivo de um ano, que será juntado com self.base_url"""
@@ -294,7 +295,10 @@ class Extractor:
             return {"downloaded": False, "filename": filename}
 
         url = self.url(year)
-        file_data = download_file(url, progress=True, chunk_size=256 * 1024, user_agent="Mozilla/4")
+        proxies = None
+        if self.proxy_url:
+            proxies = {"http": self.proxy_url, "https": self.proxy_url}
+        file_data = download_file(url, progress=True, chunk_size=256 * 1024, user_agent="Mozilla/4", proxies=proxies)
         rename_file(file_data.uri, filename)
         return {"downloaded": True, "filename": filename}
 
