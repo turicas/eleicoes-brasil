@@ -152,14 +152,16 @@ livre).
 Instale as dependências de desenvolvimento:
 
 ```bash
-pip install -r dev-requirements.txt
+pip install -r requirements-development.txt
 ```
 
 Rode os testes:
 
 ```bash
-pytest tests.py
+make test
 ```
 
-Ao alterar os arquivos, rode o comando `black .` para normalizá-los com relação
-à [PEP-0008](https://www.python.org/dev/peps/pep-0008/).
+Ao alterar os arquivos, execute `make lint` para normalizá-los com relação à
+[PEP-0008](https://www.python.org/dev/peps/pep-0008/).
+
+Veja outros atalhos executando `make help`.
