@@ -503,7 +503,9 @@ class BemDeclaradoExtractor(Extractor):
     def get_headers(self, year, filename, internal_filename):
         if 2006 <= year <= 2012:
             header_year = "2006"
-        elif 2014 <= year <= 2024:
+        elif year == 2016:
+            header_year = "2016"
+        elif 2014 == year or 2018 <= year <= 2024:
             header_year = "2022"
         else:
             raise ValueError(
