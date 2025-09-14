@@ -13,19 +13,20 @@ from tqdm import tqdm
 
 import settings
 from extractors import (
-    read_header,
-    CandidaturaExtractor,
     BemDeclaradoExtractor,
-    VotacaoZonaExtractor,
-    PrestacaoContasReceitasExtractor,
+    CandidaturaExtractor,
     PrestacaoContasDespesasExtractor,
+    PrestacaoContasReceitasExtractor,
+    VotacaoZonaExtractor,
+    read_header,
 )
 
 REGEXP_HEADER_YEAR = re.compile(r"([0-9]{4}.*)\.csv")
 
 
-def extract_data(ExtractorClass, year_range, output_filename, base_url,
-        force_redownload=False, download_only=False, proxy_url=None):
+def extract_data(
+    ExtractorClass, year_range, output_filename, base_url, force_redownload=False, download_only=False, proxy_url=None
+):
     extractor_name = ExtractorClass.__name__.replace("Extractor", "")
     extractor = ExtractorClass(base_url, proxy_url=proxy_url)
     output_fobj = open_compressed(output_filename, mode="w", encoding="utf-8")
@@ -40,7 +41,7 @@ def extract_data(ExtractorClass, year_range, output_filename, base_url,
         print("  Downloading...", end="")
         result = extractor.download(year, force=force_redownload)
         if not result["downloaded"]:
-            print(f" file has already been downloaded.")
+            print(" file has already been downloaded.")
 
         if not download_only:
             data = extractor.extract(year)
@@ -93,18 +94,14 @@ def create_final_headers(header_type, order_columns, final_filename):
         )
     )
 
-    header_list = sorted(
-        final_headers.values(), key=lambda row: order_columns(row["nome_final"])
-    )
+    header_list = sorted(final_headers.values(), key=lambda row: order_columns(row["nome_final"]))
     for row in header_list:
         descricao = []
         if row["descricao"]:
             descricao.append(row["descricao"])
         row_data = {"nome_final": row["nome_final"]}
         introduced_on = row.get("introduced_on", None)
-        original_names = ", ".join(
-            f"{item[1]} ({item[0]})" for item in row.get("original_names")
-        )
+        original_names = ", ".join(f"{item[1]} ({item[0]})" for item in row.get("original_names"))
         descricao.append(f"Aparece no TSE como: {original_names}")
         if introduced_on:
             descricao.append(f"Coluna adicionada em {introduced_on}")
@@ -131,12 +128,12 @@ if __name__ == "__main__":
             "output_filename": settings.OUTPUT_PATH / "votacao_zona.csv.gz",
         },
         "receita": {
-             "extractor_class": PrestacaoContasReceitasExtractor,
-             "output_filename": settings.OUTPUT_PATH / "receita.csv.gz"
+            "extractor_class": PrestacaoContasReceitasExtractor,
+            "output_filename": settings.OUTPUT_PATH / "receita.csv.gz",
         },
         "despesa": {
-             "extractor_class": PrestacaoContasDespesasExtractor,
-             "output_filename": settings.OUTPUT_PATH / "despesa.csv.gz"
+            "extractor_class": PrestacaoContasDespesasExtractor,
+            "output_filename": settings.OUTPUT_PATH / "despesa.csv.gz",
         },
     }
     # TODO: clear '##VERIFICAR BASE 1994##' so we can add 1994 too
@@ -147,9 +144,15 @@ if __name__ == "__main__":
     parser.add_argument("--download-only", "-d", action="store_true", default=False)
     parser.add_argument("--output", "-o")
     parser.add_argument("--years", "-y", default="all")
-    parser.add_argument("--proxy", "-p", help="URL para proxy (o tipo de proxy deve ser suportado pela biblioteca requests)")
+    parser.add_argument(
+        "--proxy", "-p", help="URL para proxy (o tipo de proxy deve ser suportado pela biblioteca requests)"
+    )
     parser.add_argument("--use-mirror", "-m", action="store_true")
-    parser.add_argument("--mirror-url", default="https://data.brasil.io/mirror/eleicoes-brasil/", help="Use the default data repository from TSE or a mirror")
+    parser.add_argument(
+        "--mirror-url",
+        default="https://data.brasil.io/mirror/eleicoes-brasil/",
+        help="Use the default data repository from TSE or a mirror",
+    )
     args = parser.parse_args()
 
     if args.type == "headers":
@@ -186,7 +189,9 @@ if __name__ == "__main__":
                         created_paths.append(save_path)
                     fobj.write(f"time aria2c -s 8 -x 8 -k 1M -o '{download_filename}' '{url}'\n")
                     fobj.write(f"time s3cmd put '{download_filename}' s3://mirror/tse/{filename}\n")
-                    fobj.write(f"time echo \"$(sha512sum '{download_filename}' | cut -d' ' -f 1) {filename}\" >> {sha512sums_filename}\n")
+                    fobj.write(
+                        f"time echo \"$(sha512sum '{download_filename}' | cut -d' ' -f 1) {filename}\" >> {sha512sums_filename}\n"
+                    )
                 fobj.write("\n")
         # chmod 750 {settings.MIRROR_FILENAME}
         os.chmod(settings.MIRROR_FILENAME, stat.S_IRUSR + stat.S_IWUSR + stat.S_IXUSR + stat.S_IRGRP + stat.S_IXGRP)

@@ -1,4 +1,3 @@
-import csv
 import datetime
 import json
 from dataclasses import dataclass
@@ -47,6 +46,7 @@ class UF:
             sigla=obj["sglUf"],
         )
 
+
 @dataclass
 class Municipio:
     id_tse: int
@@ -76,6 +76,7 @@ class Municipio:
             uf_obj=uf_obj,
         )
 
+
 @dataclass
 class Partido:
     id: int
@@ -100,6 +101,7 @@ class Partido:
             descricao=obj["descricao"],
         )
 
+
 @dataclass
 class Zona:
     id: str
@@ -117,6 +119,7 @@ class Zona:
             numero=int(obj["numZona"]),
             municipio_obj=municipio_obj,
         )
+
 
 @dataclass
 class Filiacao:
@@ -211,12 +214,12 @@ class MultiCSVItemPipeline:
     def open_spider(self, spider):
         output_path = Path("data")
         output_path.mkdir(parents=True, exist_ok=True)
-        for dataclass in [UF, Municipio, Partido, Zona, Filiacao]:
-            file = open(output_path / f"{dataclass.__name__}.csv", "w+b")
-            self.files[dataclass] = file
+        for klass in [UF, Municipio, Partido, Zona, Filiacao]:
+            file = open(output_path / f"{klass.__name__}.csv", "w+b")
+            self.files[klass] = file
             exporter = CsvItemExporter(file)
             exporter.start_exporting()
-            self.exporters[dataclass] = exporter
+            self.exporters[klass] = exporter
 
     def close_spider(self, spider):
         for exporter in self.exporters.values():
@@ -262,7 +265,7 @@ class FiliacaoSpider(scrapy.Spider):
                 yield obj
                 yield scrapy.Request(
                     f"https://filia2-consulta.tse.jus.br/filia-consulta/rest/v1/localidade/{obj.id}/municipios",
-                    meta={"tipo": "municipio", "uf": obj}
+                    meta={"tipo": "municipio", "uf": obj},
                 )
 
         elif tipo == "municipio":
@@ -295,10 +298,13 @@ class FiliacaoSpider(scrapy.Spider):
         elif tipo == "filiacao":
             zona = response.request.meta["zona"]
             data = json.loads(response.text)
-            assert len(data["entitys"]) == data["totalElements"], f"Quantidade de elementos difere: {data['totalElements']}"
+            assert (
+                len(data["entitys"]) == data["totalElements"]
+            ), f"Quantidade de elementos difere: {data['totalElements']}"
             for item in data["entitys"]:
                 obj = Filiacao.from_dict(item, zona_obj=zona)
                 yield obj
+
 
 # Links:
 # - lista de UFs: https://filia2-consulta.tse.jus.br/filia-consulta/rest/v1/uf/todas

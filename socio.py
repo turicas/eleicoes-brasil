@@ -203,8 +203,7 @@ if __name__ == "__main__":
         Company(company_filename, company_type_filename, file_type="full").convert_to(filtered_company_filename)
 
     candidate_uuids = set(
-        person_uuid
-        for person_uuid, _ in Candidate(filtered_candidate_filename, file_type="filtered").keys()
+        person_uuid for person_uuid, _ in Candidate(filtered_candidate_filename, file_type="filtered").keys()
     )
     print(f"Total de candidatos com CPF: {len(candidate_uuids)}")
 

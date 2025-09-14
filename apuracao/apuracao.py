@@ -54,27 +54,21 @@ def first_sheet_rows(data):
     lines = [header] + [[row[field] for field in header] for row in data["apuracao"]]
     lines.extend([[], [], [], [], []])
     lines.append(["Eleitorado apurado", "Eleitorado total", "Percentual"])
-    lines.append([
-        data["eleitorado_apurado"],
-        data["eleitorado"],
-        perc(data["eleitorado_apurado"], data["eleitorado"])
-    ])
+    lines.append([data["eleitorado_apurado"], data["eleitorado"], perc(data["eleitorado_apurado"], data["eleitorado"])])
     lines.append(["Seções apuradas", "Seções totais", "Percentual"])
-    lines.append([
-        data["secoes_apuradas"],
-        data["secoes"],
-        perc(data["secoes_apuradas"], data["secoes"])
-    ])
+    lines.append([data["secoes_apuradas"], data["secoes"], perc(data["secoes_apuradas"], data["secoes"])])
     lines.append(["Votos válidos", "(%)", "Nulos", "(%)", "Brancos", "(%)", "Totais"])
-    lines.append([
-        data["total_validos"],
-        perc(data["total_validos"], data["total_votos"]),
-        data["total_nulos"],
-        perc(data["total_nulos"], data["total_votos"]),
-        data["total_brancos"],
-        perc(data["total_brancos"], data["total_votos"]),
-        data["total_votos"]
-    ])
+    lines.append(
+        [
+            data["total_validos"],
+            perc(data["total_validos"], data["total_votos"]),
+            data["total_nulos"],
+            perc(data["total_nulos"], data["total_votos"]),
+            data["total_brancos"],
+            perc(data["total_brancos"], data["total_votos"]),
+            data["total_votos"],
+        ]
+    )
     return lines
 
 
@@ -92,12 +86,14 @@ def second_sheet_rows(filenames):
         dt = datetime.datetime.fromisoformat(filename.name.split("-r-")[1].replace(".json", ""))
         bolsonaro = [item for item in old_data["apuracao"] if item["candidato"] == "JAIR BOLSONARO"][0]
         lula = [item for item in old_data["apuracao"] if item["candidato"] == "LULA"][0]
-        lines.append([
-            f"{dt.hour:02d}:{dt.minute:02d}:{dt.second:02d}",
-            old_data["secoes_apuradas"] / old_data["secoes"],
-            bolsonaro["votos_apurados"] / old_data["total_validos"],
-            lula["votos_apurados"] / old_data["total_validos"]
-        ])
+        lines.append(
+            [
+                f"{dt.hour:02d}:{dt.minute:02d}:{dt.second:02d}",
+                old_data["secoes_apuradas"] / old_data["secoes"],
+                bolsonaro["votos_apurados"] / old_data["total_validos"],
+                lula["votos_apurados"] / old_data["total_validos"],
+            ]
+        )
     return lines
 
 
@@ -140,7 +136,35 @@ if __name__ == "__main__":
         sheet_id = "1Oy1mHo78313Ls1jSKayyVWW4KeqFyS94eg3LIIe1UXU"
         codigo_eleicao_main = 544
         codigo_eleicao_uf = 546
-        states = ("AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO")
+        states = (
+            "AC",
+            "AL",
+            "AM",
+            "AP",
+            "BA",
+            "CE",
+            "DF",
+            "ES",
+            "GO",
+            "MA",
+            "MG",
+            "MS",
+            "MT",
+            "PA",
+            "PB",
+            "PE",
+            "PI",
+            "PR",
+            "RJ",
+            "RN",
+            "RO",
+            "RR",
+            "RS",
+            "SC",
+            "SE",
+            "SP",
+            "TO",
+        )
     elif args.turno == 2:
         sheet_id = "1r9UmthUo9IPSLqNN89r_fhrsXo-igSjzCMv2sViwNZo"
         codigo_eleicao_main = 545

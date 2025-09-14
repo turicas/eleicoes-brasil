@@ -2,8 +2,8 @@ import os
 import random
 import string
 import tempfile
-from urllib.parse import urljoin
 from pathlib import Path
+from urllib.parse import urljoin
 
 import scrapy
 
@@ -82,6 +82,7 @@ STATES = [
 def random_string(length):
     return "".join(random.choice(string.ascii_letters) for _ in range(length))
 
+
 def random_file():
     tmp = tempfile.NamedTemporaryFile(delete=False, suffix="txt")
     with open(tmp.name, mode="w") as fobj:
@@ -121,7 +122,7 @@ class FiliadosFileListSpider(scrapy.Spider):
                     # Hack to yield an already downloaded file from here
                     temp_filename = random_file()
                     yield scrapy.Request(
-                       "file://" + str(temp_filename),
+                        "file://" + str(temp_filename),
                         meta={
                             "row": {
                                 "filename": download_filename,

@@ -6,7 +6,6 @@ from pathlib import Path
 
 from tqdm import tqdm
 
-
 REGEXP_REPLACES = (
     (re.compile(r'([^;"])"([^;"])'), r'\1""\2'),
     (re.compile(r'([^;"])"([^;"])'), r'\1""\2'),  # Repeated so on '... "C" ...' the replace works for both quotes
@@ -15,11 +14,12 @@ REGEXP_REPLACES = (
     (re.compile(r';""([^"]+)'), r';"""\1'),
 )
 
+
 def fix_line(text):
     finish = ""
     for endline in ("\r\n", "\n"):
         if text.endswith(endline):
-            text = text[:- len(endline)]
+            text = text[: -len(endline)]
             finish = endline
             break
     for regexp, replace in REGEXP_REPLACES:
@@ -81,9 +81,9 @@ def test_fix_line_1_6():
     line = """
     "09/04/2023";"10:01:10";"2018";"2";"Ordinria";"297";"Eleies Gerais Estaduais 2018";"07/10/2018";"1";"Final";"19/11/2018";"420248423";"RO";"Nota Fiscal";"850033";"2";"Fundo Especial de Financiamento de Campanha";"20100000";"Combustveis e lubrificantes";"1";"Financeiro";"0";"Cheque";"24008896";"16157885";"14/09/2018";"GASOLINA TIPO "C" ONU 1203 CL 3 EMB II";"1452,00"
     """.strip()
-    expected = '''
+    expected = """
     "09/04/2023";"10:01:10";"2018";"2";"Ordinria";"297";"Eleies Gerais Estaduais 2018";"07/10/2018";"1";"Final";"19/11/2018";"420248423";"RO";"Nota Fiscal";"850033";"2";"Fundo Especial de Financiamento de Campanha";"20100000";"Combustveis e lubrificantes";"1";"Financeiro";"0";"Cheque";"24008896";"16157885";"14/09/2018";"GASOLINA TIPO ""C"" ONU 1203 CL 3 EMB II";"1452,00"
-    '''.strip()
+    """.strip()
     assert fix_line(line + "\n") == expected + "\n"
 
 
@@ -129,7 +129,9 @@ if __name__ == "__main__":
         output_fobj = open(output_filename, encoding=output_encoding, mode="w")
     input_filename_str = "stdin" if input_filename == "-" else Path(input_filename).name
     output_filename_str = "stdout" if output_filename == "-" else Path(output_filename).name
-    progress = tqdm(desc=f"Fixing quotes: {input_filename_str} -> {output_filename_str}", unit_scale=True, dynamic_ncols=True)
+    progress = tqdm(
+        desc=f"Fixing quotes: {input_filename_str} -> {output_filename_str}", unit_scale=True, dynamic_ncols=True
+    )
     while True:
         text = input_fobj.readline()
         if not text:

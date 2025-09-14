@@ -6,9 +6,8 @@ from zipfile import ZipFile
 import rows
 import scrapy
 
-import utils
 import settings
-
+import utils
 
 field_map = {
     "codigo_municipio": "CODIGO DO MUNICIPIO",
@@ -47,12 +46,9 @@ class FiliadosFileParserSpider(scrapy.Spider):
     def start_requests(self):
         links = rows.import_from_csv(settings.OUTPUT_PATH / "filiacao-links.csv")
         for row in links:
-            yield scrapy.Request(
-                url="file://" + str(Path(row.filename).absolute()), meta=row._asdict()
-            )
+            yield scrapy.Request(url="file://" + str(Path(row.filename).absolute()), meta=row._asdict())
 
     def parse(self, response):
-        meta = response.request.meta
         zf = ZipFile(BytesIO(response.body))
         files = sorted(zf.filelist, key=lambda row: row.filename, reverse=True)
         csv_fobj = None
@@ -63,8 +59,6 @@ class FiliadosFileParserSpider(scrapy.Spider):
                 break
 
         if csv_fobj is not None:
-            reader = csv.DictReader(
-                TextIOWrapper(csv_fobj, encoding="iso-8859-15"), dialect=utils.TSEDialect
-            )
+            reader = csv.DictReader(TextIOWrapper(csv_fobj, encoding="iso-8859-15"), dialect=utils.TSEDialect)
             for row in reader:
                 yield convert_row(row)

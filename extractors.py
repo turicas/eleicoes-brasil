@@ -14,9 +14,8 @@ import rows
 from cached_property import cached_property
 from rows.utils import download_file, load_schema
 
-from utils import FixQuotes, TSEDialect, unaccent
 import settings
-
+from utils import FixQuotes, TSEDialect, unaccent
 
 # TODO: may add validators to convert_row methods
 
@@ -198,8 +197,6 @@ def fix_data(value):
     '1956-10-30'
     """
 
-    original_value = value
-    new_dt = ""
     value = value.replace("00:00:00", "").replace("0002", "2002").strip()
     if not value:
         return None
@@ -247,10 +244,12 @@ def get_organization(internal_filename, year):
         return "comites" if "comit" in internal_filename.lower() else "candidatos"
     elif year == 2012:
         return internal_filename.split("_")[1]
-    elif isinstance(year, str) and year.split("_")[0] in ("2018", "2020", "2022"):  # TODO: reuse the logic in PrestacaoContasExtractor.get_headers()
-        cand_or_party = (
-            "candidatos" if "candidatos" in internal_filename else "partidos"
-        )
+    elif isinstance(year, str) and year.split("_")[0] in (
+        "2018",
+        "2020",
+        "2022",
+    ):  # TODO: reuse the logic in PrestacaoContasExtractor.get_headers()
+        cand_or_party = "candidatos" if "candidatos" in internal_filename else "partidos"
         if "pagas" in internal_filename:
             cand_or_party = "pagas-" + cand_or_party
         elif "contratadas" in internal_filename:
@@ -302,7 +301,7 @@ class Extractor:
         return {"downloaded": True, "filename": filename}
 
     def extract_state_from_filename(self, filename):
-        """ 'bem_candidato_2006_AC.csv' -> 'AC' """
+        """'bem_candidato_2006_AC.csv' -> 'AC'"""
         return filename.split(".")[0].split("_")[-1]
 
     def fix_fobj(self, fobj):
@@ -320,15 +319,8 @@ class Extractor:
             fobj = self.fix_fobj(fobj)
             reader = csv.reader(fobj, dialect=TSEDialect)
             header_meta = self.get_headers(year, filename, internal_filename)
-            year_fields = [
-                field.nome_final or field.nome_tse
-                for field in header_meta["year_fields"]
-            ]
-            final_fields = [
-                field.nome_final
-                for field in header_meta["final_fields"]
-                if field.nome_final
-            ]
+            year_fields = [field.nome_final or field.nome_tse for field in header_meta["year_fields"]]
+            final_fields = [field.nome_final for field in header_meta["final_fields"] if field.nome_final]
             convert_function = self.convert_row(year_fields, final_fields)
             for index, row in enumerate(reader):
                 if index == 0 and "ANO_ELEICAO" in row:
@@ -337,13 +329,14 @@ class Extractor:
                     # trust it then our headers files, TSE may change the
                     # order)
                     field_map = {
-                        field.nome_tse: field.nome_final or field.nome_tse
-                        for field in header_meta["year_fields"]
+                        field.nome_tse: field.nome_final or field.nome_tse for field in header_meta["year_fields"]
                     }
                     not_found = set(row) - set(field_map.keys())
                     extra_fields = set(field_map.keys()) - set(row)
                     if not_found:
-                        raise ValueError(f"Colunas não encontradas em {filename}#{internal_filename}: {', '.join(sorted(not_found))} -- colunas extras: {', '.join(sorted(extra_fields))}")
+                        raise ValueError(
+                            f"Colunas não encontradas em {filename}#{internal_filename}: {', '.join(sorted(not_found))} -- colunas extras: {', '.join(sorted(extra_fields))}"
+                        )
                     if extra_fields:
                         print(f"Colunas extras: {', '.join(sorted(extra_fields))}")
                     year_fields = [field_map[field_name] for field_name in row]
@@ -365,11 +358,7 @@ class CandidaturaExtractor(Extractor):
 
     def valid_filename(self, filename):
         name = filename.lower()
-        return (
-            name.startswith("consulta_cand_")
-            and "_brasil.csv" not in name
-            and not name.endswith("todos.csv")
-        )
+        return name.startswith("consulta_cand_") and "_brasil.csv" not in name and not name.endswith("todos.csv")
 
     def fix_fobj(self, fobj):
         """Fix wrong-escaped lines from the TSE's CSVs
@@ -400,14 +389,12 @@ class CandidaturaExtractor(Extractor):
         elif year in (2018, 2020, 2022, 2024):
             header_year = "2024"
         else:
-            raise ValueError(f"Ano e UF não reconhecidos para arquivo de candidatura: {repr(year)}, {repr(uf)} ({filename}, {internal_filename})")
+            raise ValueError(
+                f"Ano e UF não reconhecidos para arquivo de candidatura: {repr(year)}, {repr(uf)} ({filename}, {internal_filename})"
+            )
         return {
-            "year_fields": read_header(
-                settings.HEADERS_PATH / f"candidatura_{header_year}.csv"
-            ),
-            "final_fields": read_header(
-                settings.HEADERS_PATH / "candidatura_final.csv"
-            ),
+            "year_fields": read_header(settings.HEADERS_PATH / f"candidatura_{header_year}.csv"),
+            "final_fields": read_header(settings.HEADERS_PATH / "candidatura_final.csv"),
         }
 
     def convert_row(self, row_field_names, final_field_names):
@@ -436,7 +423,9 @@ class CandidaturaExtractor(Extractor):
                 "nome": nome,
                 "cargo": cargo,
                 "sigla_unidade_federativa": fix_sigla_unidade_federativa(row["sigla_unidade_federativa"]),
-                "sigla_unidade_federativa_nascimento": fix_sigla_unidade_federativa(row["sigla_unidade_federativa_nascimento"]),
+                "sigla_unidade_federativa_nascimento": fix_sigla_unidade_federativa(
+                    row["sigla_unidade_federativa_nascimento"]
+                ),
                 "titulo_eleitoral": fix_titulo_eleitoral(row["titulo_eleitoral"]),
                 "pergunta": pergunta,
                 "candidatura_inserida_urna": SimNaoBooleanField.deserialize(row["candidatura_inserida_urna"]),
@@ -480,12 +469,7 @@ class CandidaturaExtractor(Extractor):
             value = 2
         elif "titulo" in name:
             value = 3
-        elif (
-            "coligacao" in name
-            or "legenda" in name
-            or "partido" in name
-            or "agremiacao" in name
-        ):
+        elif "coligacao" in name or "legenda" in name or "partido" in name or "agremiacao" in name:
             value = 4
         elif (
             "candidat" in name
@@ -514,11 +498,7 @@ class BemDeclaradoExtractor(Extractor):
 
     def valid_filename(self, filename):
         name = filename.lower()
-        return (
-            name.startswith("bem_candidato")
-            and "_brasil.csv" not in name
-            and not name.endswith("todos.csv")
-        )
+        return name.startswith("bem_candidato") and "_brasil.csv" not in name and not name.endswith("todos.csv")
 
     def get_headers(self, year, filename, internal_filename):
         if 2006 <= year <= 2012:
@@ -526,15 +506,13 @@ class BemDeclaradoExtractor(Extractor):
         elif 2014 <= year <= 2024:
             header_year = "2022"
         else:
-            raise ValueError(f"Ano não reconhecido para arquivo de bens declarados: {repr(year)} ({filename}, {internal_filename})")
+            raise ValueError(
+                f"Ano não reconhecido para arquivo de bens declarados: {repr(year)} ({filename}, {internal_filename})"
+            )
 
         return {
-            "year_fields": read_header(
-                settings.HEADERS_PATH / f"bem_declarado_{header_year}.csv"
-            ),
-            "final_fields": read_header(
-                settings.HEADERS_PATH / "bem_declarado_final.csv"
-            ),
+            "year_fields": read_header(settings.HEADERS_PATH / f"bem_declarado_{header_year}.csv"),
+            "final_fields": read_header(settings.HEADERS_PATH / "bem_declarado_final.csv"),
         }
 
     def convert_row(self, row_field_names, final_field_names):
@@ -598,7 +576,7 @@ class VotacaoZonaExtractor(Extractor):
                 row.situacao_candidatura,
             ): row.novo_codigo_situacao_candidatura
             for row in rows.import_from_csv(
-                settings.HEADERS_PATH / f"situacao_candidatura.csv",
+                settings.HEADERS_PATH / "situacao_candidatura.csv",
             )
         }
 
@@ -610,7 +588,7 @@ class VotacaoZonaExtractor(Extractor):
                 row.situacao_candidatura,
             ): row.nova_situacao_candidatura
             for row in rows.import_from_csv(
-                settings.HEADERS_PATH / f"situacao_candidatura.csv",
+                settings.HEADERS_PATH / "situacao_candidatura.csv",
             )
         }
 
@@ -626,14 +604,12 @@ class VotacaoZonaExtractor(Extractor):
         elif 2014 <= year <= 2018:
             header_year = "2014"
         else:
-            raise ValueError(f"Ano não reconhecido para arquivo de votação por zona eleitoral: {repr(year)} ({filename}, {internal_filename})")
+            raise ValueError(
+                f"Ano não reconhecido para arquivo de votação por zona eleitoral: {repr(year)} ({filename}, {internal_filename})"
+            )
         return {
-            "year_fields": read_header(
-                settings.HEADERS_PATH / f"votacao_zona_{header_year}.csv"
-            ),
-            "final_fields": read_header(
-                settings.HEADERS_PATH / "votacao_zona_final.csv"
-            ),
+            "year_fields": read_header(settings.HEADERS_PATH / f"votacao_zona_{header_year}.csv"),
+            "final_fields": read_header(settings.HEADERS_PATH / "votacao_zona_final.csv"),
         }
 
     def convert_row(self, row_field_names, final_field_names):
@@ -677,15 +653,9 @@ class VotacaoZonaExtractor(Extractor):
             value = 0
         elif name.endswith("_turno"):
             value = 1
-        elif (
-            name.endswith("_unidade_eleitoral") or name.endswith("_uf") or name.endswith("_municipio")
-        ):
+        elif name.endswith("_unidade_eleitoral") or name.endswith("_uf") or name.endswith("_municipio"):
             value = 2
-        elif (
-            name.endswith("_legenda")
-            or name.endswith("_coligacao")
-            or name.endswith("_partido")
-        ):
+        elif name.endswith("_legenda") or name.endswith("_coligacao") or name.endswith("_partido"):
             value = 3
         elif "zona" in name or "voto" in name:
             value = 5
@@ -781,12 +751,8 @@ class PrestacaoContasExtractor(Extractor):
         org = get_organization(internal_filename, year)
 
         return {
-            "year_fields": read_header(
-                settings.HEADERS_PATH / f"{self.type_mov}_{org}_{header_year}.csv"
-            ),
-            "final_fields": read_header(
-                settings.HEADERS_PATH / f"{self.type_mov}_final.csv"
-            ),
+            "year_fields": read_header(settings.HEADERS_PATH / f"{self.type_mov}_{org}_{header_year}.csv"),
+            "final_fields": read_header(settings.HEADERS_PATH / f"{self.type_mov}_final.csv"),
         }
 
     def valid_filename(self, filename, year):
@@ -800,11 +766,7 @@ class PrestacaoContasExtractor(Extractor):
         is_suplementar = "sup" not in filename
         is_year_suplementar = year.endswith("suplementar")
 
-        return (
-            is_type_mov
-            and extension
-            and (((not_brasil or is_2008) and is_suplementar) or is_year_suplementar)
-        )
+        return is_type_mov and extension and (((not_brasil or is_2008) and is_suplementar) or is_year_suplementar)
 
     def order_columns(self, name):
         """Order columns according to a (possible) normalization
@@ -841,15 +803,8 @@ class PrestacaoContasExtractor(Extractor):
             fobj.seek(0)
             reader = csv.reader(fobj, dialect=dialect)
             header_meta = self.get_headers(year, filename, internal_filename)
-            year_fields = [
-                field.nome_final or field.nome_tse
-                for field in header_meta["year_fields"]
-            ]
-            final_fields = [
-                field.nome_final
-                for field in header_meta["final_fields"]
-                if field.nome_final
-            ]
+            year_fields = [field.nome_final or field.nome_tse for field in header_meta["year_fields"]]
+            final_fields = [field.nome_final for field in header_meta["final_fields"] if field.nome_final]
 
             # Add year to final csv
             final_fields = ["ano"] + final_fields
@@ -867,12 +822,9 @@ class PrestacaoContasExtractor(Extractor):
                     # It's a header, we should skip it as a data row but use the information to get field ordering
                     # (better trust it then our headers files, TSE may change the order)
                     field_map = {
-                        field.nome_tse: field.nome_final or field.nome_tse
-                        for field in header_meta["year_fields"]
+                        field.nome_tse: field.nome_final or field.nome_tse for field in header_meta["year_fields"]
                     }
-                    year_fields = [
-                        field_map[clean_header(field_name)] for field_name in row
-                    ]
+                    year_fields = [field_map[clean_header(field_name)] for field_name in row]
                     convert_function = self.convert_row(year_fields, final_fields, year)
                     continue
 
@@ -887,7 +839,7 @@ class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
 
     def convert_row(self, row_field_names, final_field_names, year):
         def convert(row_data):
-            cleaned_year, *_unused_suffix = str(year).split('_')
+            cleaned_year, *_unused_suffix = str(year).split("_")
             row = dict(zip(row_field_names, row_data))
             for key in final_field_names:
                 value = row.get(key, "").strip()
@@ -923,7 +875,7 @@ class PrestacaoContasDespesasExtractor(PrestacaoContasExtractor):
 
     def convert_row(self, row_field_names, final_field_names, year):
         def convert(row_data):
-            cleaned_year, *_unused_suffix = str(year).split('_')
+            cleaned_year, *_unused_suffix = str(year).split("_")
             row = dict(zip(row_field_names, row_data))
             for key in final_field_names:
                 value = row.get(key, "").strip()

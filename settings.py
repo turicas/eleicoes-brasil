@@ -1,6 +1,5 @@
 from pathlib import Path
 
-
 BASE_PATH = Path(__file__).parent.absolute()
 MIRROR_FILENAME = BASE_PATH / "mirror.sh"
 SCHEMA_PATH = BASE_PATH / "schema"
