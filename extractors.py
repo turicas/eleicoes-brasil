@@ -267,10 +267,9 @@ class Extractor:
     encoding = "latin-1"
     schema_filename = ""
 
-    def __init__(self, base_url=None, censor=False, proxy_url=None):
+    def __init__(self, base_url=None, proxy_url=None):
         if base_url is not None:
             self.base_url = base_url
-        self.censor = censor
         self.proxy_url = proxy_url
 
     def filename(self, year):
@@ -412,7 +411,6 @@ class CandidaturaExtractor(Extractor):
         }
 
     def convert_row(self, row_field_names, final_field_names):
-        censor = self.censor
         def convert(row_data):
             if len(row_data) == 1 and "elapsed" in row_data[0].lower():
                 return None
@@ -458,9 +456,6 @@ class CandidaturaExtractor(Extractor):
             # TODO: idade_data_eleicao está em branco em muitos casos, porém
             # conseguimos preenchê-lo caso a data de nascimento esteja correta
 
-            if censor:
-                row["cpf"] = obfuscate_cpf(row["cpf"])
-                row["email"] = ""
             return new
 
         return convert

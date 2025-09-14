@@ -25,9 +25,9 @@ REGEXP_HEADER_YEAR = re.compile(r"([0-9]{4}.*)\.csv")
 
 
 def extract_data(ExtractorClass, year_range, output_filename, base_url,
-        force_redownload=False, download_only=False, censor=False, proxy_url=None):
+        force_redownload=False, download_only=False, proxy_url=None):
     extractor_name = ExtractorClass.__name__.replace("Extractor", "")
-    extractor = ExtractorClass(base_url, censor=censor, proxy_url=proxy_url)
+    extractor = ExtractorClass(base_url, proxy_url=proxy_url)
     output_fobj = open_compressed(output_filename, mode="w", encoding="utf-8")
     writer = csv.DictWriter(
         output_fobj,
@@ -150,7 +150,6 @@ if __name__ == "__main__":
     parser.add_argument("--proxy", "-p", help="URL para proxy (o tipo de proxy deve ser suportado pela biblioteca requests)")
     parser.add_argument("--use-mirror", "-m", action="store_true")
     parser.add_argument("--mirror-url", default="https://data.brasil.io/mirror/eleicoes-brasil/", help="Use the default data repository from TSE or a mirror")
-    parser.add_argument("--no-censorship", "-n", action="store_true")
     args = parser.parse_args()
 
     if args.type == "headers":
@@ -219,6 +218,5 @@ if __name__ == "__main__":
             base_url=args.mirror_url if args.use_mirror else None,
             force_redownload=args.force_redownload,
             download_only=args.download_only,
-            censor=not args.no_censorship,
             proxy_url=args.proxy,
         )
