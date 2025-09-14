@@ -331,14 +331,14 @@ class Extractor:
                     field_map = {
                         field.nome_tse: field.nome_final or field.nome_tse for field in header_meta["year_fields"]
                     }
-                    not_found = set(row) - set(field_map.keys())
-                    extra_fields = set(field_map.keys()) - set(row)
-                    if not_found:
+                    csv_fields = set(row)
+                    expected_fields = set(field_map.keys())
+                    not_found = expected_fields - csv_fields
+                    extra_fields = csv_fields - expected_fields
+                    if not_found or extra_fields:
                         raise ValueError(
-                            f"Colunas não encontradas em {filename}#{internal_filename}: {', '.join(sorted(not_found))} -- colunas extras: {', '.join(sorted(extra_fields))}"
+                                f"Colunas diferentes em {filename}#{internal_filename}: não encontradas: {', '.join(sorted(not_found))} -- extras: {', '.join(sorted(extra_fields))}"
                         )
-                    if extra_fields:
-                        print(f"Colunas extras: {', '.join(sorted(extra_fields))}")
                     year_fields = [field_map[field_name] for field_name in row]
                     convert_function = self.convert_row(year_fields, final_fields)
                     continue
