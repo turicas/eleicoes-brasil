@@ -1,17 +1,13 @@
-from urllib.parse import urljoin
 from pathlib import Path
+from urllib.parse import urljoin
 from zipfile import ZipFile
 
 from rows.utils import download_file, import_from_uri
 from tqdm import tqdm
 
-
 data_path = Path("fotos")
 download_path = data_path / "download"
 output_path = data_path / "output"
-for path in (data_path, download_path, output_path):
-    if not path.exists():
-        path.mkdir(parents=True)
 
 
 def download_photos(year):
@@ -54,5 +50,7 @@ def download_photos(year):
 
 
 if __name__ == "__main__":
+    for path in (data_path, download_path, output_path):
+        path.mkdir(parents=True, exist_ok=True)
     for year in range(2012, 2018 + 1, 2):
         download_photos(year)

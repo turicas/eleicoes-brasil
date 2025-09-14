@@ -7,9 +7,7 @@ import json
 import time
 from pathlib import Path
 
-import gspread
 import requests
-from oauth2client.service_account import ServiceAccountCredentials
 
 
 def perc(value, total):
@@ -107,7 +105,7 @@ def download_and_save(urls, data_path):
     session = requests.session()
     all_data = []
     for url in urls:
-        response = requests.get(url)
+        response = session.get(url)
         try:
             response_data = response.json()
         except json.decoder.JSONDecodeError:
@@ -150,6 +148,9 @@ if __name__ == "__main__":
         states = ("AL", "AM", "BA", "ES", "MS", "PB", "PE", "RO", "RS", "SC", "SE", "SP")
 
     if not args.print_only:
+        import gspread
+        from oauth2client.service_account import ServiceAccountCredentials
+
         credentials_filename = "credentials/eleicoes-2022-brasil-io-sheets.json"
         with open(credentials_filename) as fobj:
             credentials = json.load(fobj)
@@ -182,6 +183,8 @@ if __name__ == "__main__":
             workbook.update_title(data["title"])
 
     elif args.tipo == "governador":
+        import gspread
+
         urls = [make_url(codigo_eleicao_uf, state, 3) for state in states]
         all_data = download_and_save(urls, data_path)
         for state, data in zip(states, all_data):

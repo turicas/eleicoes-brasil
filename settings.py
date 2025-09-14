@@ -10,5 +10,4 @@ OUTPUT_PATH = DATA_PATH / "output"
 HEADERS_PATH = BASE_PATH / "headers"
 
 for path in (DATA_PATH, DOWNLOAD_PATH, OUTPUT_PATH):
-    if not path.exists():
-        path.mkdir(parents=True)
+    path.mkdir(parents=True, exist_ok=True)
