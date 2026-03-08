@@ -322,6 +322,7 @@ if __name__ == "__main__":
             MultiCSVItemPipeline: 300,
         },
         "LOG_LEVEL": "INFO",
+        "USER_AGENT": "Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0",
     }
     process = CrawlerProcess(settings)
     process.crawl(FiliacaoSpider)
