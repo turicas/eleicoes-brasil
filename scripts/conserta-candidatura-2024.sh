@@ -14,14 +14,9 @@
 #     python scripts/simplifica_filiacao.py data/2024-09-22-Filiacao.csv.gz data/output/filiacao_partidaria_2.csv.gz
 #     python scripts/simplifica_filiacao.py data/2024-09-29-Filiacao.csv.gz data/output/filiacao_partidaria_3.csv.gz
 #     python scripts/simplifica_filiacao.py data/2024-12-10-Filiacao.csv.gz data/output/filiacao_partidaria_4.csv.gz
-#     echo 'DROP TABLE IF EXISTS filiacao_1' | psql --no-psqlrc "$DATABASE_URL"
-#     echo 'DROP TABLE IF EXISTS filiacao_2' | psql --no-psqlrc "$DATABASE_URL"
-#     echo 'DROP TABLE IF EXISTS filiacao_3' | psql --no-psqlrc "$DATABASE_URL"
-#     echo 'DROP TABLE IF EXISTS filiacao_4' | psql --no-psqlrc "$DATABASE_URL"
-#     rows pgimport -s :text: -e utf-8 -d excel data/output/filiacao_partidaria_1.csv.gz "$DATABASE_URL" filiacao_1
-#     rows pgimport -s :text: -e utf-8 -d excel data/output/filiacao_partidaria_2.csv.gz "$DATABASE_URL" filiacao_2
-#     rows pgimport -s :text: -e utf-8 -d excel data/output/filiacao_partidaria_3.csv.gz "$DATABASE_URL" filiacao_3
-#     rows pgimport -s :text: -e utf-8 -d excel data/output/filiacao_partidaria_4.csv.gz "$DATABASE_URL" filiacao_4
+#     python scripts/simplifica_filiacao.py data/2026-03-08-Filiacao.csv.gz data/output/filiacao_partidaria_5.csv.gz
+#     for i in 1 2 3 4 5; do echo "DROP TABLE IF EXISTS filiacao_${i}" | psql --no-psqlrc "$DATABASE_URL"; done
+#     for i in 1 2 3 4 5; do rows pgimport -s :text: -e utf-8 -d excel data/output/filiacao_partidaria_${i}.csv.gz "$DATABASE_URL" filiacao_${i}; done
 #     cat > /tmp/filiacao.sql <<'EOL'
 #     SELECT DISTINCT * FROM (
 #       SELECT titulo_eleitor, cpf, situacao_eleitor, data_filiacao, nome FROM filiacao_1
@@ -31,10 +26,14 @@
 #       SELECT titulo_eleitor, cpf, situacao_eleitor, data_filiacao, nome FROM filiacao_3
 #       UNION
 #       SELECT titulo_eleitor, cpf, situacao_eleitor, data_filiacao, nome FROM filiacao_4
+#       UNION
+#       SELECT titulo_eleitor, cpf, situacao_eleitor, data_filiacao, nome FROM filiacao_5
 #     ) AS t
 #     EOL
-#     time rows pgexport --is-query $DATABASE_URL "$(cat /tmp/filiacao.sql)" data/output/filiacao_partidaria.csv.gz
+#     time rows pgexport $DATABASE_URL "$(cat /tmp/filiacao.sql)" data/output/filiacao_partidaria.csv.gz
 #     rm /tmp/filiacao.sql
+
+set -e
 
 function log() {
 	echo "[$(date --iso=seconds)] $@";
@@ -101,21 +100,24 @@ CREATE TABLE titulo_cpf AS
       AND COALESCE(c.cpf, '') <> ''
       AND c.cpf <> '00000000004'
   )
-  SELECT DISTINCT ON (titulo_eleitoral)
+  SELECT
     titulo_eleitoral,
-    cpf
+    STRING_AGG(DISTINCT cpf, '') AS cpf
   FROM temp
-  ORDER BY titulo_eleitoral, data DESC
+  GROUP BY titulo_eleitoral
+    HAVING COUNT(DISTINCT cpf) = 1 -- Descarta títulos que possuam mais de um CPF
 "
 execsql "$query"
 
 log "Criando tabela final de candidatura"
 execsql "DROP TABLE IF EXISTS candidatura_final"
-# TODO: o que fazer com o UUID nos casos em que o CPF fica em branco?
 query="
 CREATE TABLE candidatura_final AS
   SELECT
-    person_uuid(cpf, nome) AS pessoa_uuid,
+    CASE
+      WHEN cpf IS NOT NULL THEN person_uuid(cpf, nome)
+      ELSE NULL
+    END AS pessoa_uuid,
     *
   FROM (
     SELECT
