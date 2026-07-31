@@ -1,0 +1,16 @@
+services:
+
+  main:
+    user: "${UID:-1000}:${GID:-1000}"
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        ENV_TYPE: development
+        UID: "${UID:-1000}"
+        GID: "${GID:-1000}"
+    pull_policy: build
+    image: turicas/eleicoes-brasil:latest
+    working_dir: /app
+    volumes:
+      - ./:/app

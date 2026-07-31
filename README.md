@@ -53,6 +53,50 @@ pip install -r requirements.txt
 ```
 
 
+## Rodando com containers
+
+Para rodar o projeto sem instalar Python e suas dependências na máquina, são necessários Docker, Docker Compose v2 e
+`make`. O `compose.yml` monta o diretório do projeto em `/app`; portanto, os arquivos baixados e gerados pelo container
+permanecem no diretório local `data/`.
+
+Construa a imagem de desenvolvimento antes do primeiro uso:
+
+```bash
+make build
+```
+
+Execute uma extração passando os argumentos de `tse.py` em `ARGS`:
+
+```bash
+make tse ARGS='candidatura --years=2014,2018'
+make tse ARGS='candidatura --use-mirror'
+```
+
+Para executar todas as extrações previstas em `run.sh`:
+
+```bash
+make run
+```
+
+Também é possível executar um comando diretamente pelo Compose:
+
+```bash
+docker compose run --rm main python tse.py candidatura --years=2014,2018
+```
+
+Os comandos de desenvolvimento são executados no mesmo container:
+
+```bash
+make test
+make lint-check
+make lint
+make bash
+```
+
+Use `make help` para listar todos os atalhos. Para reconstruir a imagem sem reutilizar camadas, execute
+`make build-no-cache`.
+
+
 ## Rodando
 
 O script `tse.py` baixa, trata e extrai os dados. Basta rodá-lo, passando que
