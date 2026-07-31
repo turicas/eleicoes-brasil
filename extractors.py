@@ -337,7 +337,7 @@ class Extractor:
                     extra_fields = csv_fields - expected_fields
                     if not_found or extra_fields:
                         raise ValueError(
-                                f"Colunas diferentes em {filename}#{internal_filename}: não encontradas: {', '.join(sorted(not_found))} -- extras: {', '.join(sorted(extra_fields))}"
+                            f"Colunas diferentes em {filename}#{internal_filename}: não encontradas: {', '.join(sorted(not_found))} -- extras: {', '.join(sorted(extra_fields))}"
                         )
                     year_fields = [field_map[field_name] for field_name in row]
                     convert_function = self.convert_row(year_fields, final_fields)
