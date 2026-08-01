@@ -10,6 +10,7 @@ import settings
 from divulgacandcontas import url_candidatura
 from extractors import BemDeclaradoExtractor, CandidaturaExtractor, get_tipo_prestador, get_tipo_registro
 from filiacao import FiliacaoSpider, retry_delay
+from socio import Entity
 
 
 class DivulgaCandContasTestCase(unittest.TestCase):
@@ -207,6 +208,25 @@ class CandidaturaExtractorTestCase(unittest.TestCase):
         )
         self.assertEqual(get_tipo_registro("despesas_contratadas_candidatos_2018.csv", "despesa"), "despesa_contratada")
         self.assertEqual(get_tipo_registro("despesas_pagas_partidos_2018.csv", "despesa"), "despesa_paga")
+
+    def test_rejeita_classificacoes_de_contas_desconhecidas(self):
+        with self.assertRaisesRegex(ValueError, "[Oo]rganização"):
+            get_tipo_prestador("despesas_desconhecidas_2018.csv", "2018_orgaos")
+        with self.assertRaisesRegex(ValueError, "movimentação"):
+            get_tipo_registro("arquivo.csv", "transferencia")
+        with self.assertRaisesRegex(ValueError, "[Oo]rganização"):
+            get_tipo_prestador("despesas_desconhecidas_2018.csv", "2018_candidatos")
+        with self.assertRaisesRegex(ValueError, "[Aa]rquivo"):
+            get_tipo_registro("despesas_pagas_candidatos_2018.csv", "receita")
+        with self.assertRaisesRegex(ValueError, "[Aa]rquivo"):
+            get_tipo_registro("receitas_originarias_candidatos_2018.csv", "despesa")
+
+    def test_rejeita_tipos_internos_desconhecidos(self):
+        with self.assertRaisesRegex(ValueError, "Tipo de arquivo"):
+            next(Entity("arquivo.csv", file_type="desconhecido").get_data())
+        response = SimpleNamespace(request=SimpleNamespace(meta={"tipo": "desconhecido"}))
+        with self.assertRaisesRegex(ValueError, "Tipo de resposta"):
+            next(FiliacaoSpider().parse(response))
 
     def test_calcula_espera_exponencial_para_retries(self):
         self.assertEqual(retry_delay(1, base=2, maximum=30), 2)

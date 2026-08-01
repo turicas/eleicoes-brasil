@@ -243,51 +243,72 @@ def clean_header(header):
 
 
 def get_tipo_prestador(internal_filename, year):
-    organization = get_organization(internal_filename, year)
+    organization = get_organization(internal_filename, year).lower()
     if "candidatos" in organization:
         return "candidatura"
     if "comites" in organization:
         return "comite_financeiro"
-    return "orgao_partidario"
+    if "partidos" in organization:
+        return "orgao_partidario"
+    raise ValueError(f"organização desconhecida: {organization!r} ({internal_filename!r}, ano {year!r})")
 
 
 def get_tipo_registro(internal_filename, type_mov):
     filename = internal_filename.lower()
-    if type_mov == "receita" and "originari" in filename:
-        return "receita_doador_originario"
-    if type_mov == "despesa" and "contratada" in filename:
-        return "despesa_contratada"
-    if type_mov == "despesa" and "paga" in filename:
-        return "despesa_paga"
-    return type_mov
+    if type_mov == "receita":
+        if "originari" in filename:
+            return "receita_doador_originario"
+        if "receita" in filename:
+            return "receita"
+    elif type_mov == "despesa":
+        if "contratada" in filename:
+            return "despesa_contratada"
+        if "paga" in filename:
+            return "despesa_paga"
+        if "despesa" in filename:
+            return "despesa"
+    else:
+        raise ValueError(f"tipo de movimentação desconhecido: {type_mov!r}")
+    raise ValueError(f"Arquivo incompatível com movimentação {type_mov!r}: {internal_filename!r}")
 
 
 def get_organization(internal_filename, year):
+    filename = internal_filename.lower()
     if year == 2010:
-        if "Receitas" in internal_filename:
-            return internal_filename.split("Receitas")[1].replace(".txt", "").lower()
-        else:
-            return internal_filename.split("Despesas")[1].replace(".txt", "").lower()
-    elif year in (2014, 2016):
-        return internal_filename.split("_")[1]
-    elif year in (2002, 2004, 2006, 2008):
-        return "comites" if "comit" in internal_filename.lower() else "candidatos"
-    elif year == 2012:
-        return internal_filename.split("_")[1]
-    elif isinstance(year, str) and year.split("_")[0] in (
+        if "receitas" in filename:
+            return filename.split("receitas")[1].replace(".txt", "")
+        if "despesas" in filename:
+            return filename.split("despesas")[1].replace(".txt", "")
+        raise ValueError(f"Arquivo sem tipo de movimentação reconhecido: {internal_filename!r}")
+    if year in (2014, 2016, 2012):
+        try:
+            return internal_filename.split("_")[1]
+        except IndexError as exc:
+            raise ValueError(f"Não foi possível identificar a organização em {internal_filename!r}") from exc
+    if year in (2002, 2004, 2006, 2008):
+        if "comit" in filename:
+            return "comites"
+        if "candidat" in filename:
+            return "candidatos"
+        raise ValueError(f"Organização desconhecida no arquivo {internal_filename!r}")
+    if isinstance(year, str) and year.split("_")[0] in (
         "2018",
         "2020",
         "2022",
     ):  # TODO: reuse the logic in PrestacaoContasExtractor.get_headers()
-        cand_or_party = "candidatos" if "candidatos" in internal_filename else "partidos"
-        if "pagas" in internal_filename:
+        if "candidatos" in filename:
+            cand_or_party = "candidatos"
+        elif "partidos" in filename:
+            cand_or_party = "partidos"
+        else:
+            raise ValueError(f"Organização desconhecida no arquivo {internal_filename!r}")
+        if "pagas" in filename:
             cand_or_party = "pagas-" + cand_or_party
-        elif "contratadas" in internal_filename:
+        elif "contratadas" in filename:
             cand_or_party = "contratadas-" + cand_or_party
-        origin = "originarios-" if "originario" in internal_filename else ""
+        origin = "originarios-" if "originario" in filename else ""
         return origin + cand_or_party
-    else:
-        raise ValueError(f"Cannot get organization for year {year} and filename {internal_filename}")
+    raise ValueError(f"Cannot get organization for year {year} and filename {internal_filename}")
 
 
 class Extractor:

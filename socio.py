@@ -84,8 +84,10 @@ class Entity:
     def get_data(self):
         if self.file_type == "full":
             yield from self.filtered_data()
-        else:
+        elif self.file_type == "filtered":
             yield from self.data()
+        else:
+            raise ValueError(f"Tipo de arquivo desconhecido: {self.file_type!r}")
 
     def convert_to(self, output_filename):
         writer = rows.utils.CsvLazyDictWriter(output_filename)

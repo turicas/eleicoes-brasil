@@ -342,6 +342,8 @@ class FiliacaoSpider(scrapy.Spider):
             for item in data["entitys"]:
                 obj = Filiacao.from_dict(item, zona_obj=zona)
                 yield obj
+        else:
+            raise ValueError(f"Tipo de resposta desconhecido: {tipo!r}")
 
 
 # Links:

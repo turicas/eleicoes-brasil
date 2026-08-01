@@ -49,6 +49,7 @@
 - Siga o estilo local antes de introduzir abstrações. Prefira `pathlib.Path`, `csv` e dependências já adotadas; não introduza `pandas` para processar CSV.
 - Mantenha o extractor genérico separado das particularidades de ano, tipo de arquivo e mapeamento de headers. Não esconda diferenças históricas em condicionais sem teste e documentação.
 - Lógica de transformação deve ser pequena, determinística e exercitável sem download. Trate erros de dados com contexto suficiente para localizar arquivo, ano e coluna.
+- Classificações categóricas de fonte, arquivo ou dado publicado devem ser exaustivas: use condições explícitas para cada valor conhecido e lance exceção com contexto no caso desconhecido. Nunca aceite um valor novo do TSE por um retorno padrão silencioso.
 - Para comportamento novo ou corrigido, use TDD red/green: escreva primeiro o teste da API/comportamento esperado, execute-o para observar a falha, implemente o mínimo e execute novamente. Teste comportamento e regressões de dados, não detalhes internos.
 - `pytest` executa testes e doctests. Preserve os testes existentes e acrescente casos para formatos históricos, sentinelas, conversões e incompatibilidades de header relevantes.
 - Fixtures para testes devem ser sintéticas e mínimas, reproduzindo formato e sentinelas necessárias sem incluir certidões ou imagens reais de cidadãos no repositório.
