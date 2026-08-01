@@ -242,6 +242,26 @@ def clean_header(header):
     return re.sub('"', "", header.strip())
 
 
+def get_tipo_prestador(internal_filename, year):
+    organization = get_organization(internal_filename, year)
+    if "candidatos" in organization:
+        return "candidatura"
+    if "comites" in organization:
+        return "comite_financeiro"
+    return "orgao_partidario"
+
+
+def get_tipo_registro(internal_filename, type_mov):
+    filename = internal_filename.lower()
+    if type_mov == "receita" and "originari" in filename:
+        return "receita_doador_originario"
+    if type_mov == "despesa" and "contratada" in filename:
+        return "despesa_contratada"
+    if type_mov == "despesa" and "paga" in filename:
+        return "despesa_paga"
+    return type_mov
+
+
 def get_organization(internal_filename, year):
     if year == 2010:
         if "Receitas" in internal_filename:
@@ -361,7 +381,7 @@ class Extractor:
 
 
 class CandidaturaExtractor(Extractor):
-    year_range = tuple(range(1996, last_elections_year() + 1, 2))
+    year_range = tuple(range(1996, max(last_elections_year(), 2026) + 1, 2))
     schema_filename = settings.SCHEMA_PATH / "candidatura.csv"
 
     def filename(self, year):
@@ -397,7 +417,7 @@ class CandidaturaExtractor(Extractor):
             header_year = "1996"
         elif year in (2012, 2014, 2016):
             header_year = str(year)
-        elif year in (2018, 2020, 2022, 2024):
+        elif year in (2018, 2020, 2022, 2024, 2026):
             header_year = "2024"
         else:
             raise ValueError(
@@ -500,7 +520,7 @@ class CandidaturaExtractor(Extractor):
 
 
 class BemDeclaradoExtractor(Extractor):
-    year_range = tuple(range(2006, last_elections_year() + 1, 2))
+    year_range = tuple(range(2006, max(last_elections_year(), 2026) + 1, 2))
     schema_filename = settings.SCHEMA_PATH / "bem_declarado.csv"
 
     def filename(self, year):
@@ -515,7 +535,7 @@ class BemDeclaradoExtractor(Extractor):
             header_year = "2006"
         elif year == 2016:
             header_year = "2016"
-        elif 2014 == year or 2018 <= year <= 2024:
+        elif 2014 == year or 2018 <= year <= 2026:
             header_year = "2022"
         else:
             raise ValueError(
@@ -818,7 +838,7 @@ class PrestacaoContasExtractor(Extractor):
 
             # Add year to final csv
             final_fields = ["ano"] + final_fields
-            convert_function = self.convert_row(year_fields, final_fields, year)
+            convert_function = self.convert_row(year_fields, final_fields, year, internal_filename)
             for index, row in enumerate(reader):
                 if index == 0 and (
                     "UF" in row
@@ -835,7 +855,7 @@ class PrestacaoContasExtractor(Extractor):
                         field.nome_tse: field.nome_final or field.nome_tse for field in header_meta["year_fields"]
                     }
                     year_fields = [field_map[clean_header(field_name)] for field_name in row]
-                    convert_function = self.convert_row(year_fields, final_fields, year)
+                    convert_function = self.convert_row(year_fields, final_fields, year, internal_filename)
                     continue
 
                 yield convert_function(row)
@@ -846,9 +866,10 @@ class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
     type_mov = "receita"
     schema_filename = settings.SCHEMA_PATH / "receita.csv"
 
-    def convert_row(self, row_field_names, final_field_names, year):
+    def convert_row(self, row_field_names, final_field_names, year, internal_filename):
         def convert(row_data):
             cleaned_year, *_unused_suffix = str(year).split("_")
+            tipo_prestador = get_tipo_prestador(internal_filename, year)
             row = dict(zip(row_field_names, row_data))
             for key in final_field_names:
                 value = row.get(key, "").strip()
@@ -858,8 +879,16 @@ class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
             # TODO: não preencher `candidatura_uuid` quando o registro não é referente a uma candidatura
             # TODO: talvez adicionar outros campos `*_uuid`
             new = {
-                "candidatura_uuid": gerar_candidatura_uuid(cleaned_year, row["numero_sequencial"]),
+                "candidatura_uuid": (
+                    gerar_candidatura_uuid(cleaned_year, row["numero_sequencial"])
+                    if tipo_prestador == "candidatura"
+                    else None
+                ),
                 "ano": int(cleaned_year),
+                "ano_exercicio": "",
+                "tipo_conta": "eleitoral",
+                "tipo_prestador": tipo_prestador,
+                "tipo_registro": get_tipo_registro(internal_filename, self.type_mov),
                 "valor": fix_valor(row["valor"]),
                 "data": fix_data(row["data"]),
                 "data_prestacao_contas": fix_data(row["data_prestacao_contas"]),
@@ -881,9 +910,10 @@ class PrestacaoContasDespesasExtractor(PrestacaoContasExtractor):
     type_mov = "despesa"
     schema_filename = settings.SCHEMA_PATH / "despesa.csv"
 
-    def convert_row(self, row_field_names, final_field_names, year):
+    def convert_row(self, row_field_names, final_field_names, year, internal_filename):
         def convert(row_data):
             cleaned_year, *_unused_suffix = str(year).split("_")
+            tipo_prestador = get_tipo_prestador(internal_filename, year)
             row = dict(zip(row_field_names, row_data))
             for key in final_field_names:
                 value = row.get(key, "").strip()
@@ -894,8 +924,16 @@ class PrestacaoContasDespesasExtractor(PrestacaoContasExtractor):
             # TODO: não preencher `candidatura_uuid` quando o registro não é referente a uma candidatura
             # TODO: talvez adicionar outros campos `*_uuid`
             new = {
-                "candidatura_uuid": gerar_candidatura_uuid(cleaned_year, row["numero_sequencial"]),
+                "candidatura_uuid": (
+                    gerar_candidatura_uuid(cleaned_year, row["numero_sequencial"])
+                    if tipo_prestador == "candidatura"
+                    else None
+                ),
                 "ano": int(cleaned_year),
+                "ano_exercicio": "",
+                "tipo_conta": "eleitoral",
+                "tipo_prestador": tipo_prestador,
+                "tipo_registro": get_tipo_registro(internal_filename, self.type_mov),
                 "data_prestacao_contas": fix_data(row["data_prestacao_contas"]),
                 "data_eleicao": fix_data(row["data_eleicao"]),
                 "valor": fix_valor(row["valor"]),

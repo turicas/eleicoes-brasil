@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 import settings
 from divulgacandcontas import url_candidatura
-from extractors import CandidaturaExtractor
+from extractors import BemDeclaradoExtractor, CandidaturaExtractor, get_tipo_prestador, get_tipo_registro
 from filiacao import FiliacaoSpider, retry_delay
 
 
@@ -185,6 +185,28 @@ class CandidaturaExtractorTestCase(unittest.TestCase):
                 self.assertIn("_=", chamadas[0])
             finally:
                 settings.DOWNLOAD_PATH = orig_path
+
+    def test_uses_2024_headers_for_2026(self):
+        headers = CandidaturaExtractor().get_headers(2026, None, "consulta_cand_2026_AC.csv")
+
+        self.assertEqual(headers["year_fields"][0].nome_tse, "DT_GERACAO")
+        self.assertEqual(headers["year_fields"][-1].nome_tse, "DS_SIT_TOT_TURNO")
+
+    def test_bens_uses_2022_headers_for_2026(self):
+        headers = BemDeclaradoExtractor().get_headers(2026, None, "bem_candidato_2026_AC.csv")
+
+        self.assertEqual(headers["year_fields"][0].nome_tse, "DT_GERACAO")
+        self.assertEqual(headers["year_fields"][-1].nome_tse, "HH_ULT_ATUAL_BEM_CANDIDATO")
+
+    def test_classifies_prestador_and_registro_de_contas(self):
+        self.assertEqual(get_tipo_prestador("despesas_candidatos_2018.csv", "2018_candidatos"), "candidatura")
+        self.assertEqual(get_tipo_prestador("despesas_partidos_2018.csv", "2018_orgaos"), "orgao_partidario")
+        self.assertEqual(get_tipo_prestador("despesas_comites.txt", 2016), "comite_financeiro")
+        self.assertEqual(
+            get_tipo_registro("receitas_originarias_candidatos_2018.csv", "receita"), "receita_doador_originario"
+        )
+        self.assertEqual(get_tipo_registro("despesas_contratadas_candidatos_2018.csv", "despesa"), "despesa_contratada")
+        self.assertEqual(get_tipo_registro("despesas_pagas_partidos_2018.csv", "despesa"), "despesa_paga")
 
     def test_calcula_espera_exponencial_para_retries(self):
         self.assertEqual(retry_delay(1, base=2, maximum=30), 2)
