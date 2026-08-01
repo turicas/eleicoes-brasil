@@ -4,7 +4,40 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import scrapy
+from scrapy.downloadermiddlewares.retry import RetryMiddleware
 from scrapy.exporters import CsvItemExporter
+from twisted.internet.task import deferLater
+
+
+def retry_delay(retry_times, base, maximum):
+    """Calcula a espera exponencial, limitada, antes de uma nova tentativa."""
+    return min(base * 2 ** (retry_times - 1), maximum)
+
+
+class ExponentialBackoffRetryMiddleware(RetryMiddleware):
+    """Adia retries para reduzir pressão sobre a API em períodos de instabilidade."""
+
+    def __init__(self, settings):
+        super().__init__(settings)
+        self.backoff_base = settings.getfloat("RETRY_BACKOFF_BASE")
+        self.backoff_max = settings.getfloat("RETRY_BACKOFF_MAX")
+
+    def _retry(self, request, reason):
+        retry = super()._retry(request, reason)
+        if retry is None:
+            return None
+
+        delay = retry_delay(retry.meta["retry_times"], self.backoff_base, self.backoff_max)
+        self.crawler.spider.logger.info(
+            "Aguardando %.1f segundos antes da tentativa %s de %s",
+            delay,
+            retry.meta["retry_times"],
+            request.url,
+        )
+        # Importação tardia preserva o reactor configurado pelo Scrapy.
+        from twisted.internet import reactor
+
+        return deferLater(reactor, delay, lambda: retry)
 
 
 def parse_date(value):
@@ -328,6 +361,19 @@ if __name__ == "__main__":
         },
         "LOG_LEVEL": "INFO",
         "USER_AGENT": "Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0",
+        # Menos pressão sobre a API e ritmo adaptado à latência observada.
+        "AUTOTHROTTLE_ENABLED": True,
+        "AUTOTHROTTLE_START_DELAY": 1.0,
+        "AUTOTHROTTLE_MAX_DELAY": 60.0,
+        "AUTOTHROTTLE_TARGET_CONCURRENCY": 1.0,
+        # Cinco novas tentativas, aguardando 2, 4, 8, 16 e 32 segundos.
+        "RETRY_TIMES": 5,
+        "RETRY_BACKOFF_BASE": 2.0,
+        "RETRY_BACKOFF_MAX": 60.0,
+        "DOWNLOADER_MIDDLEWARES": {
+            "scrapy.downloadermiddlewares.retry.RetryMiddleware": None,
+            ExponentialBackoffRetryMiddleware: 550,
+        },
     }
     process = CrawlerProcess(settings)
     process.crawl(FiliacaoSpider)
