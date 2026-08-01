@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# LEGADO: este pipeline dependia dos ZIPs em agencia.tse.jus.br, que não são mais publicados nesse endereço. Não o use
+# para obter filiações atuais. O scraper vigente é `filiacao.py`, que consulta a API filia2-consulta do TSE.
+
 set -e
 
 DATA_PATH=./data

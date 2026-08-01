@@ -1,3 +1,9 @@
+"""LEGADO: baixa ZIPs de filiação do antigo endereço agencia.tse.jus.br.
+
+A fonte não é mais publicada nesse endereço. Para dados atuais, use `filiacao.py`, que consulta a API filia2-consulta
+do TSE.
+"""
+
 import os
 import random
 import string

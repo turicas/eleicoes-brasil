@@ -1,3 +1,9 @@
+"""LEGADO: processa os ZIPs obtidos por `filiacao_download.py`.
+
+A fonte de ZIPs não é mais publicada pelo TSE nesse endereço. Para dados atuais, use `filiacao.py`, que consulta a API
+filia2-consulta do TSE.
+"""
+
 import csv
 from io import BytesIO, TextIOWrapper
 from pathlib import Path

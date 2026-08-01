@@ -244,6 +244,11 @@ class FiliacaoSpider(scrapy.Spider):
             meta={"tipo": "partido"},
         )
 
+    async def start(self):
+        """Compatibiliza o ponto de entrada assíncrono do Scrapy >= 2.13."""
+        for request in self.start_requests():
+            yield request
+
     def parse(self, response):
         tipo = response.request.meta["tipo"]
 
