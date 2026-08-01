@@ -19,15 +19,15 @@
 #     for i in 1 2 3 4 5; do rows pgimport -s :text: -e utf-8 -d excel data/output/filiacao_partidaria_${i}.csv.gz "$DATABASE_URL" filiacao_${i}; done
 #     cat > /tmp/filiacao.sql <<'EOL'
 #     SELECT DISTINCT * FROM (
-#       SELECT titulo_eleitor, cpf, situacao_eleitor, data_filiacao, nome FROM filiacao_1
+#       SELECT titulo_eleitor, cpf, situacao_eleitor, nome FROM filiacao_1
 #       UNION
-#       SELECT titulo_eleitor, cpf, situacao_eleitor, data_filiacao, nome FROM filiacao_2
+#       SELECT titulo_eleitor, cpf, situacao_eleitor, nome FROM filiacao_2
 #       UNION
-#       SELECT titulo_eleitor, cpf, situacao_eleitor, data_filiacao, nome FROM filiacao_3
+#       SELECT titulo_eleitor, cpf, situacao_eleitor, nome FROM filiacao_3
 #       UNION
-#       SELECT titulo_eleitor, cpf, situacao_eleitor, data_filiacao, nome FROM filiacao_4
+#       SELECT titulo_eleitor, cpf, situacao_eleitor, nome FROM filiacao_4
 #       UNION
-#       SELECT titulo_eleitor, cpf, situacao_eleitor, data_filiacao, nome FROM filiacao_5
+#       SELECT titulo_eleitor, cpf, situacao_eleitor, nome FROM filiacao_5
 #     ) AS t
 #     EOL
 #     time rows pgexport $DATABASE_URL "$(cat /tmp/filiacao.sql)" data/output/filiacao_partidaria.csv.gz
@@ -56,6 +56,9 @@ elif [[ ! -e $candidatura_csv ]]; then
 	exit 3
 fi
 
+log "Instalando funções URLid"
+psql --no-psqlrc "$DATABASE_URL" -f sql/urlid.sql
+
 echo "DROP TABLE IF EXISTS filiacao_orig" | psql --no-psqlrc "$DATABASE_URL"
 rows pgimport \
 	--input-encoding=utf-8 \
@@ -81,19 +84,18 @@ CREATE TABLE titulo_cpf AS
   WITH temp AS (
     SELECT DISTINCT
       c.titulo_eleitoral,
-      RIGHT('00000000000' || f.cpf, 11) AS cpf,
-      f.data_filiacao::date AS data
+      RIGHT('00000000000' || f.cpf, 11) AS cpf
     FROM candidatura_orig AS c
     INNER JOIN filiacao_orig AS f
-      ON c.titulo_eleitoral::bigint = f.titulo_eleitor::bigint
+      ON NULLIF(REGEXP_REPLACE(c.titulo_eleitoral, '[^0-9]', '', 'g'), '')::bigint
+       = NULLIF(REGEXP_REPLACE(f.titulo_eleitor, '[^0-9]', '', 'g'), '')::bigint
     WHERE
       COALESCE(f.titulo_eleitor, '') <> ''
       AND COALESCE(f.cpf, '') <> ''
     UNION
     SELECT DISTINCT
       c.titulo_eleitoral,
-      RIGHT('00000000000' || c.cpf, 11) AS cpf,
-      (c.ano || '-08-01')::date AS data
+      RIGHT('00000000000' || c.cpf, 11) AS cpf
     FROM candidatura_orig AS c
     WHERE
       COALESCE(c.titulo_eleitoral, '') <> ''
@@ -115,7 +117,7 @@ query="
 CREATE TABLE candidatura_final AS
   SELECT
     CASE
-      WHEN cpf IS NOT NULL THEN person_uuid(cpf, nome)
+      WHEN NULLIF(cpf, '') IS NOT NULL AND cpf NOT IN ('4', '00000000004') THEN person_uuid(cpf, nome)
       ELSE NULL
     END AS pessoa_uuid,
     *
@@ -203,7 +205,8 @@ CREATE TABLE candidatura_final AS
       c.status_substituido
     FROM candidatura_orig AS c
     LEFT JOIN titulo_cpf AS t
-      ON c.titulo_eleitoral::bigint = t.titulo_eleitoral::bigint
+      ON NULLIF(REGEXP_REPLACE(c.titulo_eleitoral, '[^0-9]', '', 'g'), '')::bigint
+       = NULLIF(REGEXP_REPLACE(t.titulo_eleitoral, '[^0-9]', '', 'g'), '')::bigint
   ) AS t
 "
 execsql "$query"
