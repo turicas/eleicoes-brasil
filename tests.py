@@ -1,4 +1,5 @@
 import asyncio
+import csv
 import tempfile
 import unittest
 from io import StringIO
@@ -8,9 +9,17 @@ from unittest.mock import patch
 
 import settings
 from divulgacandcontas import url_candidatura
-from extractors import BemDeclaradoExtractor, CandidaturaExtractor, get_tipo_prestador, get_tipo_registro
+from extractors import (
+    BemDeclaradoExtractor,
+    CandidaturaExtractor,
+    PrestacaoContasDespesasExtractor,
+    PrestacaoContasReceitasExtractor,
+    get_tipo_prestador,
+    get_tipo_registro,
+)
 from filiacao import FiliacaoSpider, retry_delay
 from socio import Entity
+from tse import create_final_headers
 
 
 class DivulgaCandContasTestCase(unittest.TestCase):
@@ -221,13 +230,6 @@ class CandidaturaExtractorTestCase(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "[Aa]rquivo"):
             get_tipo_registro("receitas_originarias_candidatos_2018.csv", "despesa")
 
-    def test_rejeita_tipos_internos_desconhecidos(self):
-        with self.assertRaisesRegex(ValueError, "Tipo de arquivo"):
-            next(Entity("arquivo.csv", file_type="desconhecido").get_data())
-        response = SimpleNamespace(request=SimpleNamespace(meta={"tipo": "desconhecido"}))
-        with self.assertRaisesRegex(ValueError, "Tipo de resposta"):
-            next(FiliacaoSpider().parse(response))
-
     def test_calcula_espera_exponencial_para_retries(self):
         self.assertEqual(retry_delay(1, base=2, maximum=30), 2)
         self.assertEqual(retry_delay(2, base=2, maximum=30), 4)
@@ -240,3 +242,26 @@ class CandidaturaExtractorTestCase(unittest.TestCase):
         requests = asyncio.run(collect_start_requests())
         self.assertEqual(len(requests), 1)
         self.assertEqual(requests[0].url, "https://filia2-consulta.tse.jus.br/filia-consulta/rest/v1/partidos")
+
+    def test_rejeita_tipos_internos_desconhecidos(self):
+        with self.assertRaisesRegex(ValueError, "Tipo de arquivo"):
+            next(Entity("arquivo.csv", file_type="desconhecido").get_data())
+        response = SimpleNamespace(request=SimpleNamespace(meta={"tipo": "desconhecido"}))
+        with self.assertRaisesRegex(ValueError, "Tipo de resposta"):
+            next(FiliacaoSpider().parse(response))
+
+    def test_gera_campos_internos_de_receita_e_despesa(self):
+        for header_type, extractor in (
+            ("receita", PrestacaoContasReceitasExtractor()),
+            ("despesa", PrestacaoContasDespesasExtractor()),
+        ):
+            with tempfile.TemporaryDirectory() as tmpdir:
+                filename = Path(tmpdir) / f"{header_type}_final.csv"
+                create_final_headers(header_type, extractor.order_columns, filename)
+                with filename.open(newline="") as fobj:
+                    headers = {row["nome_final"]: row["descricao"] for row in csv.DictReader(fobj)}
+                self.assertNotIn(b"\r\n", filename.read_bytes())
+            self.assertEqual(headers["ano_exercicio"], "Ano do exercício financeiro para prestação anual partidária.")
+            self.assertIn("eleitoral ou anual_partidaria", headers["tipo_conta"])
+            self.assertIn("candidatura, orgao_partidario ou comite_financeiro", headers["tipo_prestador"])
+            self.assertIn("despesa_contratada ou despesa_paga", headers["tipo_registro"])

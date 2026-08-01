@@ -1,6 +1,6 @@
 nome_final,descricao
 ano_exercicio,Ano do exercício financeiro para prestação anual partidária.
-tipo_conta,"Origem contábil do registro: eleitoral ou anual_partidaria."
+tipo_conta,Origem contábil do registro: eleitoral ou anual_partidaria.
 tipo_prestador,"Tipo de entidade que presta a conta: candidatura, orgao_partidario ou comite_financeiro."
 tipo_registro,"Recorte publicado pelo TSE, como receita, receita_doador_originario, despesa_contratada ou despesa_paga."
 codigo_unidade_eleitoral,"Código do município. Aparece no TSE como: SG_UE (2004), Número UE (2012), Sigla da UE (2014_suplementar), CD_MUNICIPIO (2018). Coluna adicionada em 2004."

@@ -6,6 +6,7 @@ import stat
 import sys
 from collections import OrderedDict
 from glob import glob
+from pathlib import Path
 
 import rows
 from rows.utils import open_compressed
@@ -22,6 +23,27 @@ from extractors import (
 )
 
 REGEXP_HEADER_YEAR = re.compile(r"([0-9]{4}.*)\.csv")
+
+INTERNAL_FINAL_HEADERS = {
+    "receita": (
+        ("ano_exercicio", "Ano do exercício financeiro para prestação anual partidária."),
+        ("tipo_conta", "Origem contábil do registro: eleitoral ou anual_partidaria."),
+        ("tipo_prestador", "Tipo de entidade que presta a conta: candidatura, orgao_partidario ou comite_financeiro."),
+        (
+            "tipo_registro",
+            "Recorte publicado pelo TSE, como receita, receita_doador_originario, despesa_contratada ou despesa_paga.",
+        ),
+    ),
+    "despesa": (
+        ("ano_exercicio", "Ano do exercício financeiro para prestação anual partidária."),
+        ("tipo_conta", "Origem contábil do registro: eleitoral ou anual_partidaria."),
+        ("tipo_prestador", "Tipo de entidade que presta a conta: candidatura, orgao_partidario ou comite_financeiro."),
+        (
+            "tipo_registro",
+            "Recorte publicado pelo TSE, como receita, receita_doador_originario, despesa_contratada ou despesa_paga.",
+        ),
+    ),
+}
 
 
 def extract_data(
@@ -53,6 +75,8 @@ def extract_data(
 
 
 def create_final_headers(header_type, order_columns, final_filename):
+    final_filename = Path(final_filename)
+    line_ending = b"\n" if header_type in INTERNAL_FINAL_HEADERS else b"\r\n"
     final_headers = {}
     filenames = sorted(
         [
@@ -85,6 +109,9 @@ def create_final_headers(header_type, order_columns, final_filename):
                 if should_add:
                     original_names.append(original_name)
 
+    for nome_final, descricao in INTERNAL_FINAL_HEADERS.get(header_type, ()):
+        final_headers[nome_final] = {"nome_final": nome_final, "descricao": descricao, "original_names": []}
+
     table = rows.Table(
         fields=OrderedDict(
             [
@@ -94,7 +121,13 @@ def create_final_headers(header_type, order_columns, final_filename):
         )
     )
 
-    header_list = sorted(final_headers.values(), key=lambda row: order_columns(row["nome_final"]))
+    internal_field_names = {nome_final for nome_final, _ in INTERNAL_FINAL_HEADERS.get(header_type, ())}
+    header_list = sorted(
+        final_headers.values(),
+        key=lambda row: (
+            (-1, row["nome_final"]) if row["nome_final"] in internal_field_names else order_columns(row["nome_final"])
+        ),
+    )
     for row in header_list:
         descricao = []
         if row["descricao"]:
@@ -102,7 +135,8 @@ def create_final_headers(header_type, order_columns, final_filename):
         row_data = {"nome_final": row["nome_final"]}
         introduced_on = row.get("introduced_on", None)
         original_names = ", ".join(f"{item[1]} ({item[0]})" for item in row.get("original_names"))
-        descricao.append(f"Aparece no TSE como: {original_names}")
+        if original_names:
+            descricao.append(f"Aparece no TSE como: {original_names}")
         if introduced_on:
             descricao.append(f"Coluna adicionada em {introduced_on}")
         descricao = ". ".join(descricao)
@@ -111,6 +145,8 @@ def create_final_headers(header_type, order_columns, final_filename):
         row_data["descricao"] = descricao
         table.append(row_data)
     rows.export_to_csv(table, final_filename)
+    content = final_filename.read_bytes().replace(b"\r\n", b"\n")
+    final_filename.write_bytes(content.replace(b"\n", line_ending))
 
 
 if __name__ == "__main__":
