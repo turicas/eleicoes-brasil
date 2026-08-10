@@ -173,6 +173,21 @@ desses arquivos você precisa instalar em seu sistema o bsdtar ou unrar (em sist
 `apt install libarchive-tools` ou `apt install unrar` - o último não é software livre).
 
 
+## Links do DivulgaCandContas
+
+Use `url_candidatura` para montar a página pública de uma linha de `candidatura.csv.gz`:
+
+```python
+from divulgacandcontas import url_candidatura
+
+url = url_candidatura(linha)
+```
+
+A função usa `ano`, `numero_sequencial`, `sigla_unidade_federativa` e `sigla_unidade_eleitoral`.
+Nota: o `codigo_eleicao` do CSV não é o identificador usado pelo DivulgaCandContas: nas eleições ordinárias o
+identificador é mapeado pelo ano. Para uma `ELEICAO SUPLEMENTAR`, consulte o ID no endpoint
+`/divulga/rest/v1/eleicao/suplementares/{ano}/{uf}` do TSE e informe-o como `codigo_eleicao_divulgacand`.
+
 ## Desenvolvendo/contribuindo
 
 Instale as dependências de desenvolvimento:
