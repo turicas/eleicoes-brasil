@@ -15,8 +15,9 @@
 #     python scripts/simplifica_filiacao.py data/2024-09-29-Filiacao.csv.gz data/output/filiacao_partidaria_3.csv.gz
 #     python scripts/simplifica_filiacao.py data/2024-12-10-Filiacao.csv.gz data/output/filiacao_partidaria_4.csv.gz
 #     python scripts/simplifica_filiacao.py data/2026-03-08-Filiacao.csv.gz data/output/filiacao_partidaria_5.csv.gz
-#     for i in 1 2 3 4 5; do echo "DROP TABLE IF EXISTS filiacao_${i}" | psql --no-psqlrc "$DATABASE_URL"; done
-#     for i in 1 2 3 4 5; do rows pgimport -s :text: -e utf-8 -d excel data/output/filiacao_partidaria_${i}.csv.gz "$DATABASE_URL" filiacao_${i}; done
+#     python scripts/simplifica_filiacao.py data/2026-08-01-Filiacao.csv.gz data/output/filiacao_partidaria_6.csv.gz
+#     for i in 1 2 3 4 5 6; do echo "DROP TABLE IF EXISTS filiacao_${i}" | psql --no-psqlrc "$DATABASE_URL"; done
+#     for i in 1 2 3 4 5 6; do rows pgimport -s :text: -e utf-8 -d excel data/output/filiacao_partidaria_${i}.csv.gz "$DATABASE_URL" filiacao_${i}; done
 #     cat > /tmp/filiacao.sql <<'EOL'
 #     SELECT DISTINCT * FROM (
 #       SELECT titulo_eleitor, cpf, situacao_eleitor, nome FROM filiacao_1
@@ -28,6 +29,8 @@
 #       SELECT titulo_eleitor, cpf, situacao_eleitor, nome FROM filiacao_4
 #       UNION
 #       SELECT titulo_eleitor, cpf, situacao_eleitor, nome FROM filiacao_5
+#       UNION
+#       SELECT titulo_eleitor, cpf, situacao_eleitor, nome FROM filiacao_6
 #     ) AS t
 #     EOL
 #     time rows pgexport $DATABASE_URL "$(cat /tmp/filiacao.sql)" data/output/filiacao_partidaria.csv.gz
