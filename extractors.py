@@ -261,7 +261,6 @@ def get_organization(internal_filename, year):
 
 
 class Extractor:
-
     base_url = "http://cdn.tse.jus.br/estatistica/sead/odsele/"
     encoding = "latin-1"
     schema_filename = ""
@@ -349,7 +348,6 @@ class Extractor:
 
 
 class CandidaturaExtractor(Extractor):
-
     year_range = tuple(range(1996, last_elections_year() + 1, 2))
     schema_filename = settings.SCHEMA_PATH / "candidatura.csv"
 
@@ -489,7 +487,6 @@ class CandidaturaExtractor(Extractor):
 
 
 class BemDeclaradoExtractor(Extractor):
-
     year_range = tuple(range(2006, last_elections_year() + 1, 2))
     schema_filename = settings.SCHEMA_PATH / "bem_declarado.csv"
 
@@ -559,7 +556,6 @@ class BemDeclaradoExtractor(Extractor):
 
 
 class VotacaoZonaExtractor(Extractor):
-
     # TODO: corrigir headers para novos anos:
     # ValueError: Fields not found: CD_CARGO, CD_DETALHE_SITUACAO_CAND, CD_ELEICAO, CD_MUNICIPIO,
     # CD_SITUACAO_CANDIDATURA, CD_SIT_TOT_TURNO, CD_TIPO_ELEICAO, DS_CARGO, DS_COMPOSICAO_COLIGACAO,
@@ -667,7 +663,6 @@ class VotacaoZonaExtractor(Extractor):
 
 
 class PrestacaoContasExtractor(Extractor):
-
     year_range = (
         2002,
         2004,
@@ -834,7 +829,6 @@ class PrestacaoContasExtractor(Extractor):
 
 
 class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
-
     # TODO: corrigir para: 2018_orgaos, 2018_candidatos, 2020_orgaos, 2020_candidatos, 2022_orgaos, 2022_candidatos
     type_mov = "receita"
     schema_filename = settings.SCHEMA_PATH / "receita.csv"
@@ -870,7 +864,6 @@ class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
 
 
 class PrestacaoContasDespesasExtractor(PrestacaoContasExtractor):
-
     # TODO: corrigir para: 2018_orgaos, 2018_candidatos, 2020_orgaos, 2020_candidatos, 2022_orgaos, 2022_candidatos
     type_mov = "despesa"
     schema_filename = settings.SCHEMA_PATH / "despesa.csv"

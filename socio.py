@@ -66,7 +66,6 @@ class Person:
 
 
 class Entity:
-
     def __init__(self, input_filename, file_type="full"):
         self.input_filename = input_filename
         self.file_type = file_type
@@ -96,7 +95,6 @@ class Entity:
 
 
 class Partner(Entity):
-
     def data(self):
         for row in tqdm(self.read(), desc="Reading partner file"):
             if "partner_uuid" not in row:
@@ -121,7 +119,6 @@ class Partner(Entity):
 
 
 class Candidate(Entity):
-
     def data(self):
         for row in tqdm(self.read(), desc="Reading candidate file"):
             if "person_uuid" not in row:
@@ -141,7 +138,6 @@ class Candidate(Entity):
 
 
 class Company(Entity):
-
     def __init__(self, input_filename, company_type_filename, file_type="full"):
         super().__init__(input_filename=input_filename, file_type=file_type)
         self.company_type_filename = company_type_filename

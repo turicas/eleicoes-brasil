@@ -336,9 +336,9 @@ class FiliacaoSpider(scrapy.Spider):
         elif tipo == "filiacao":
             zona = response.request.meta["zona"]
             data = json.loads(response.text)
-            assert (
-                len(data["entitys"]) == data["totalElements"]
-            ), f"Quantidade de elementos difere: {data['totalElements']}"
+            assert len(data["entitys"]) == data["totalElements"], (
+                f"Quantidade de elementos difere: {data['totalElements']}"
+            )
             for item in data["entitys"]:
                 obj = Filiacao.from_dict(item, zona_obj=zona)
                 yield obj
