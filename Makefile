@@ -10,11 +10,18 @@ else
 	COMPOSE_RUN_FLAGS := --rm -it
 endif
 COMPOSE_RUN := $(COMPOSE) run $(COMPOSE_RUN_FLAGS)
+ENV_TYPE ?= production
+
+ifeq ($(shell echo "$(ENV_TYPE)" | tr A-Z a-z),development)
+	COMMAND_RUN :=
+else
+	COMMAND_RUN := $(COMPOSE_RUN) $(SERVICE)
+endif
 
 .PHONY: bash bash-root build build-no-cache clean container-clean help kill lint lint-check logs restart run start stop tags test tse
 
-bash:					# Open a Bash shell in a new application container
-	$(COMPOSE_RUN) $(SERVICE) bash
+bash:					# Open a Bash shell in the application container
+	$(COMMAND_RUN) bash
 
 bash-root:				# Open a Bash shell as root in a new application container
 	$(COMPOSE_RUN) --user root $(SERVICE) bash
@@ -42,11 +49,11 @@ kill:					# Force-stop and remove Compose containers
 	$(COMPOSE) kill
 	$(COMPOSE) rm --force
 
-lint:					# Format and lint the code in the container
-	$(COMPOSE_RUN) $(SERVICE) ./lint.sh
+lint:					# Format and lint the code in the application container
+	$(COMMAND_RUN) ./lint.sh
 
 lint-check:				# Check formatting and lint without modifying files
-	$(COMPOSE_RUN) $(SERVICE) ./lint.sh --check
+	$(COMMAND_RUN) ./lint.sh --check
 
 logs:					# Follow logs from all Compose services
 	$(COMPOSE) logs --tail=100 --follow
@@ -54,7 +61,7 @@ logs:					# Follow logs from all Compose services
 restart: stop start		# Restart application containers in the background
 
 run:					# Run the complete extraction script (use ARGS='--use-mirror')
-	$(COMPOSE_RUN) $(SERVICE) ./run.sh $(ARGS)
+	$(COMMAND_RUN) ./run.sh $(ARGS)
 
 start:					# Start application containers in the background
 	$(COMPOSE) up -d
@@ -66,7 +73,7 @@ tags:					# Generate a tags file (requires universal-ctags)
 	@git ls-files | ctags -L - --tag-relative=yes --quiet --append -f "$(TAGS_FILE)"
 
 test:					# Run pytest and show the coverage report (use TEST_ARGS='...')
-	$(COMPOSE_RUN) $(SERVICE) bash -c 'coverage run -m pytest $(TEST_ARGS) && coverage report'
+	$(COMMAND_RUN) bash -c 'coverage run -m pytest $(TEST_ARGS) && coverage report'
 
 tse:					# Run tse.py (use ARGS='candidatura --years=2024')
-	$(COMPOSE_RUN) $(SERVICE) python tse.py $(ARGS)
+	$(COMMAND_RUN) python tse.py $(ARGS)

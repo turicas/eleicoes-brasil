@@ -9,6 +9,12 @@
 - Extração: `make tse ARGS='candidatura --years=2024'`
 - Pipeline completo: `make run`; com _mirror_: `make run ARGS='--use-mirror'`
 - Ambiente em container: `make build`, `make bash`
+- Dentro do shell do container, `make test`, `make lint`, `make lint-check`, `make tse` e `make run` executam diretamente, sem iniciar outro container. Alvos que administram o Compose (`build`, `start`, `stop` etc.) não estão disponíveis para execução de dentro do container, apenas na máquina que possui Docker.
+
+## PDFs
+
+- A imagem de desenvolvimento inclui `poppler-utils`. Extraia texto com `pdftotext -layout -nopgbrk -enc UTF-8 -- "$pdf" "$txt"` e renderize páginas com `pdftocairo -png -r 300 -- "$pdf" "$output_dir/pagina"` para inspeção visual.
+- Não conclua a análise apenas pelo texto extraído quando o PDF puder conter tabelas, imagens ou gráficos relevantes.
 
 ## Dados e normalização
 

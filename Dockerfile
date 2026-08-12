@@ -21,11 +21,12 @@ RUN --mount=type=cache,target=/var/cache/pip \
   pip install --cache-dir /var/cache/pip -Ur /app/requirements.txt
 
 ARG ENV_TYPE=production
+ENV ENV_TYPE=${ENV_TYPE}
 COPY requirements-development.txt /app/
 RUN --mount=type=cache,target=/car/cache/pip \
   if [ "$(echo $ENV_TYPE | tr A-Z a-z)" != "production" ]; then \
     pip install --cache-dir /var/cache/pip -Ur /app/requirements-development.txt; \
-    apt update && apt install -y git && apt clean && rm -rf /var/lib/apt/lists/*; \
+    apt update && apt install -y git make poppler-utils ripgrep && apt clean && rm -rf /var/lib/apt/lists/*; \
   else \
     rm /app/requirements-development.txt ; \
   fi
