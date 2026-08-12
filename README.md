@@ -25,7 +25,10 @@ Algumas etapas de normalização são necessárias para facilitar análises e co
 
 - Retirar todos os acentos: alguns nomes aparecem com acentos em um ano e sem em outros, dificultando muito os
   agrupamentos;
-- Retirar strings inúteis: valores como `#NULO#`, `#NULO`, `#NE` e `#NE#` são retirados, deixando as células em branco;
+- Representar valores indisponíveis como células em branco: `#NULO` e `#NULO#` indicam informação em branco na base do
+  TSE; `#NE` e `#NE#`, informação que não era registrada naquele ano; e, nos dados de candidatura, `NÃO DIVULGÁVEL` (ou
+  `Não divulgável`) e `-4`, informação retida pelo TSE. Embora tenham origens distintas, todos ficam como nulas/vazias
+  no CSV final, facilitando análises e reduzindo o tamanho do arquivo;
 - Normalização dos códigos de cargo: os códigos de cargo variam para alguns anos, tornando difícil o agrupamento entre
   anos e, para facilitar as análises, normalizamos todos os anos;
 - Renomear colunas: nem todas as colunas possuem nomes intuitivos e foram nomeadas (exemplo: `COD_SIT_TOT_TURNO` foi

@@ -22,6 +22,15 @@ from utils import FixQuotes, TSEDialect, unaccent
 REGEXP_CPF_NUMBERS = re.compile("[0-9*]+")  # Inclui '*', diferente de outros documentos
 REGEXP_NUMBERS = re.compile("([0-9]+)")
 REGEXP_WRONGQUOTE = re.compile(r';"([^;\r\n]+"[^;\r\n]*)";')
+TSE_CANDIDATURA_UNAVAILABLE_VALUES = (
+    "#NULO",
+    "#NULO#",
+    "#NE",
+    "#NE#",
+    "NÃO DIVULGÁVEL",
+    "Não divulgável",
+    "-4",
+)
 MAP_CODIGO_CARGO = {
     "PRESIDENTE": "1",
     "VICE-PRESIDENTE": "2",
@@ -403,7 +412,7 @@ class CandidaturaExtractor(Extractor):
             row = dict(zip(row_field_names, row_data))
             for key in final_field_names:
                 value = row.get(key, "").strip()
-                if value in ("#NULO", "#NULO#", "#NE#", "#NE"):
+                if value in TSE_CANDIDATURA_UNAVAILABLE_VALUES:
                     value = ""
                 row[key] = unaccent(value).upper()  # TODO: e nomes com acento?
 
@@ -412,7 +421,7 @@ class CandidaturaExtractor(Extractor):
             nome = fix_nome(row["nome"])
             new = {
                 "candidatura_uuid": gerar_candidatura_uuid(row["ano"], row["numero_sequencial"]),
-                "pessoa_uuid": gerar_pessoa_uuid(cpf, nome),
+                "pessoa_uuid": gerar_pessoa_uuid(cpf, nome) if cpf else None,
                 "data_eleicao": fix_data(row["data_eleicao"]),
                 "data_aceite": fix_data(row["data_aceite"]),
                 "data_nascimento": fix_data(row["data_nascimento"]),

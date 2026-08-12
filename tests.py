@@ -109,6 +109,54 @@ class CandidaturaExtractorTestCase(unittest.TestCase):
         expected_data = '''"61937410978";"""DAVID XIXICO""";"2";"DEFERIDO"'''
         self.assert_fix_fobj(input_data, expected_data)
 
+    def test_converte_dados_nao_divulgaveis_em_campos_vazios(self):
+        fields = [
+            "ano",
+            "numero_sequencial",
+            "codigo_cargo",
+            "cargo",
+            "cpf",
+            "nome",
+            "data_eleicao",
+            "data_aceite",
+            "data_nascimento",
+            "sigla_unidade_federativa",
+            "sigla_unidade_federativa_nascimento",
+            "titulo_eleitoral",
+            "candidatura_inserida_urna",
+            "email",
+            "nome_social",
+            "codigo_genero",
+        ]
+        row = [
+            "2024",
+            "123",
+            "1",
+            "PRESIDENTE",
+            "-4",
+            "CANDIDATO NAO DIVULGAVEL",
+            "",
+            "",
+            "",
+            "BR",
+            "Não divulgável",
+            "-4",
+            "SIM",
+            "NÃO DIVULGÁVEL",
+            "Não divulgável",
+            "-4",
+        ]
+
+        result = CandidaturaExtractor().convert_row(fields, fields)(row)
+
+        self.assertEqual(result["cpf"], "")
+        self.assertIsNone(result["pessoa_uuid"])
+        self.assertEqual(result["titulo_eleitoral"], "")
+        self.assertEqual(result["email"], "")
+        self.assertEqual(result["nome_social"], "")
+        self.assertEqual(result["codigo_genero"], "")
+        self.assertEqual(result["sigla_unidade_federativa_nascimento"], "")
+
     def test_calcula_espera_exponencial_para_retries(self):
         self.assertEqual(retry_delay(1, base=2, maximum=30), 2)
         self.assertEqual(retry_delay(2, base=2, maximum=30), 4)
