@@ -28,6 +28,9 @@
 - Preserve compatibilidade histórica. A normalização atual de maiúsculas/acentos existe em dados já publicados; não a amplie nem a altere globalmente sem decisão explícita e plano de migração. Dados novos destinados à apresentação não devem perder acentos/capitalização sem necessidade comprovada.
 - Valores sentinela do TSE (`#NULO`, `#NE` etc.), datas, documentos e valores financeiros exigem normalização explícita e testes de casos de borda.
 - `data/` contém downloads e saídas locais, ignorados pelo Git. Versione código, headers, schemas, testes e documentação - não os CSVs/ZIPs gerados.
+- Brutos em `data/download/` (`settings.DOWNLOAD_PATH`); normalizados em `data/output/`. O caminho relativo do ZIP espelha o path em `odsele/` e vem de `Extractor.filename()` em `extractors.py` - não adivinhe pelo nome amigável do produto (candidatura não se chama `candidatura` no TSE). Exemplos estáveis: candidatura -> `consulta_cand/consulta_cand_{ano}.zip`; bem declarado -> `bem_candidato/bem_candidato_{ano}.zip`; votação por zona -> `votacao_candidato_munzona/votacao_candidato_munzona_{ano}.zip`. Prestação de contas muda o path por ano no próprio extractor.
+- O nome canônico (sem data extra) é o que o pipeline consome. Para guardar um snapshot sem sobrescrever o canônico, use sufixo de data no filename, ex.: `consulta_cand_2026_2026-08-13.zip`.
+- Proveniência temporal do bruto: nos CSVs originais, em geral `DT_GERACAO` e `HH_GERACAO` (encoding `latin-1`, delimitador `;`). No HTTP, `Last-Modified`/`ETag`/`Content-Length` falam da publicação no CDN; mtime das entries do ZIP, do empacotamento; mtime local do arquivo, só de quando baixamos - não confunda os três.
 
 ## Entidades e UUIDs
 
