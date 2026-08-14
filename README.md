@@ -27,14 +27,19 @@ Algumas etapas de normalização são necessárias para facilitar análises e co
   agrupamentos;
 - Representar valores indisponíveis como células em branco: `#NULO` e `#NULO#` indicam informação em branco na base do
   TSE; `#NE` e `#NE#`, informação que não era registrada naquele ano; e, nos dados de candidatura, `NÃO DIVULGÁVEL` (ou
-  `Não divulgável`) e `-4`, informação retida pelo TSE. Embora tenham origens distintas, todos ficam como nulas/vazias
-  no CSV final, facilitando análises e reduzindo o tamanho do arquivo;
+  `Não divulgável`), `-4`, `-1` e `-3` (sentinelas numéricas do TSE para nulo e não aplicável). Embora tenham origens
+  distintas, todos ficam como nulas/vazias no CSV final, facilitando análises e reduzindo o tamanho do arquivo;
 - Normalização dos códigos de cargo: os códigos de cargo variam para alguns anos, tornando difícil o agrupamento entre
   anos e, para facilitar as análises, normalizamos todos os anos;
-- Renomear colunas: nem todas as colunas possuem nomes intuitivos e foram nomeadas (exemplo: `COD_SIT_TOT_TURNO` foi
+- Renomear colunas: nem todas as colunas possuem nomes intuitivos e foram renomeadas (exemplo: `COD_SIT_TOT_TURNO` foi
   renomeado para `codigo_totalizacao_turno`). Para saber mais detalhes sobre as colunas que foram renomeadas, olhe os
   arquivos no diretório `headers/` (caso você altere algum desses arquivos, gere novamente os cabeçalhos finais com
-  `python tse.py headers`).
+  `python tse.py headers`). Em tabelas e saídas novas:
+  - Campos do próprio registro: não repetem o nome da tabela (ex.: `nome_urna`).
+  - Campos de entidades externas: são prefixados com o nome da entidade (ex.: `partido_sigla`, `partido_numero`,
+    `eleicao_codigo`, `fornecedor_cpf_cnpj`, `fornecedor_nome`) para garantir que colunas da mesma entidade fiquem
+    agrupadas em ordem alfabética.
+  - A tabela histórica `candidatura` preserva seus nomes originais por compatibilidade com sistemas legados.
 
 > Nota: nem todos os códigos/descrição foram normalizados (alguns apresentam inconsistências ainda não resolvidas e
 > serão feitos em breve).
