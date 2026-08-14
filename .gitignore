@@ -1,5 +1,7 @@
 # Custom ignores
 *.csv
+!headers/*.csv
+!schema/*.csv
 *.db
 *.json
 *.sqlite
