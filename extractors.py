@@ -16,7 +16,7 @@ from cached_property import cached_property
 from rows.utils import download_file, load_schema
 
 import settings
-from utils import FixQuotes, TSEDialect, unaccent
+from utils import FixQuotes, TSEDialect, nome_bonito, unaccent
 
 # TODO: may add validators to convert_row methods
 
@@ -161,7 +161,7 @@ def fix_nome(value):
     value = value.replace("`", "'").replace("' ", "'")
     if value[0] in "',.]":
         value = value[1:]
-    return value
+    return nome_bonito(value)
 
 
 def fix_sigla_unidade_federativa(value):

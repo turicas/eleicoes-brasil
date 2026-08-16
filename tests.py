@@ -162,6 +162,45 @@ class CandidaturaExtractorTestCase(unittest.TestCase):
         self.assertEqual(result["codigo_genero"], "")
         self.assertEqual(result["sigla_unidade_federativa_nascimento"], "")
 
+    def test_conversao_nome_aplica_nome_bonito_e_preserva_nome_urna(self):
+        fields = [
+            "ano",
+            "numero_sequencial",
+            "codigo_cargo",
+            "cargo",
+            "cpf",
+            "nome",
+            "nome_urna",
+            "data_eleicao",
+            "data_aceite",
+            "data_nascimento",
+            "sigla_unidade_federativa",
+            "sigla_unidade_federativa_nascimento",
+            "titulo_eleitoral",
+            "candidatura_inserida_urna",
+        ]
+        row = [
+            "2024",
+            "123456789",
+            "6",
+            "DEPUTADO FEDERAL",
+            "12345678901",
+            "LUIZ INACIO LULA DA SILVA",
+            "CB PM LULA",
+            "06/10/2024",
+            "15/08/2024",
+            "27/10/1945",
+            "SP",
+            "PE",
+            "123456789012",
+            "SIM",
+        ]
+
+        result = CandidaturaExtractor().convert_row(fields, fields)(row)
+
+        self.assertEqual(result["nome"], "Luiz Inacio Lula da Silva")
+        self.assertEqual(result["nome_urna"], "CB PM LULA")  # Preserva nome_urna como publicado
+
     def test_download_adiciona_cache_busting_em_urls_do_tse(self):
         extractor = CandidaturaExtractor()
         with tempfile.TemporaryDirectory() as tmpdir:
