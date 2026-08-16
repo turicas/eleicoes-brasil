@@ -39,7 +39,7 @@ field_map = {
 def convert_row(row):
     new = {}
     for new_name, old_name in field_map.items():
-        value = utils.unaccent(row[old_name]).upper()
+        value = row[old_name].strip()
         if new_name.startswith("data_"):
             value = str(utils.PtBrDateField.deserialize(value) or "")
         new[new_name] = value
