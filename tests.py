@@ -1,7 +1,12 @@
 import asyncio
+import tempfile
 import unittest
 from io import StringIO
+from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
 
+import settings
 from divulgacandcontas import url_candidatura
 from extractors import CandidaturaExtractor
 from filiacao import FiliacaoSpider, retry_delay
@@ -156,6 +161,30 @@ class CandidaturaExtractorTestCase(unittest.TestCase):
         self.assertEqual(result["nome_social"], "")
         self.assertEqual(result["codigo_genero"], "")
         self.assertEqual(result["sigla_unidade_federativa_nascimento"], "")
+
+    def test_download_adiciona_cache_busting_em_urls_do_tse(self):
+        extractor = CandidaturaExtractor()
+        with tempfile.TemporaryDirectory() as tmpdir:
+            orig_path = settings.DOWNLOAD_PATH
+            try:
+                settings.DOWNLOAD_PATH = Path(tmpdir)
+                chamadas = []
+
+                def fake_download_file(url, **kwargs):
+                    chamadas.append(url)
+                    temp_fobj = tempfile.NamedTemporaryFile(delete=False)
+                    temp_fobj.write(b"conteudo")
+                    temp_fobj.close()
+                    return SimpleNamespace(uri=temp_fobj.name)
+
+                with patch("extractors.download_file", side_effect=fake_download_file):
+                    extractor.download(2026, force=True)
+
+                self.assertEqual(len(chamadas), 1)
+                self.assertIn("cdn.tse.jus.br", chamadas[0])
+                self.assertIn("_=", chamadas[0])
+            finally:
+                settings.DOWNLOAD_PATH = orig_path
 
     def test_calcula_espera_exponencial_para_retries(self):
         self.assertEqual(retry_delay(1, base=2, maximum=30), 2)

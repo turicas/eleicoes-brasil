@@ -1,6 +1,7 @@
 import csv
 import datetime
 import re
+import time
 import uuid
 from functools import lru_cache
 from io import StringIO, TextIOWrapper
@@ -301,6 +302,9 @@ class Extractor:
             return {"downloaded": False, "filename": filename}
 
         url = self.url(year)
+        if "cdn.tse.jus.br" in url or "tse.jus.br" in url:
+            delimiter = "&" if "?" in url else "?"
+            url = f"{url}{delimiter}_={int(time.time())}"
         proxies = None
         if self.proxy_url:
             proxies = {"http": self.proxy_url, "https": self.proxy_url}
