@@ -1056,9 +1056,11 @@ class PrestacaoContasExtractor(Extractor):
                     # It's a header, we should skip it as a data row but use the information to get field ordering
                     # (better trust it then our headers files, TSE may change the order)
                     field_map = {
-                        field.nome_tse: field.nome_final or field.nome_tse for field in header_meta["year_fields"]
+                        clean_header(field.nome_tse): field.nome_final or field.nome_tse
+                        for field in header_meta["year_fields"]
                     }
-                    year_fields = [field_map[clean_header(field_name)] for field_name in row]
+                    header_names = [clean_header(field_name) for field_name in row]
+                    year_fields = self.header_field_names(filename, internal_filename, field_map, header_names)
                     convert_function = self.convert_row(year_fields, final_fields, year)
                     continue
 
