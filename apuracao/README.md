@@ -49,3 +49,8 @@ python votacao_municipio.py
 ## Leitura estruturada de 2022
 
 `Apuracao2022` interpreta os resultados em objetos de domínio; a interface histórica continua disponível em `apuracao.py`. Totais zerados não geram percentuais e arquivos de histórico inválidos interrompem a leitura.
+
+
+## Leitura estruturada de 2026
+
+`Apuracao2026` valida o contexto e interpreta o formato unificado do TSE. A configuração das eleições permite descobrir os códigos e as abrangências disponíveis por cargo e turno.
