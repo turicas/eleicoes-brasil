@@ -51,10 +51,15 @@ _CINZA = {"red": 239 / 255, "green": 239 / 255, "blue": 239 / 255}
 _BRANCO = {"red": 1, "green": 1, "blue": 1}
 
 
+def nome_canonico(nome: str) -> str:
+    return nome[:-1] if nome.endswith("*") and nome[:-1] in UFS else nome
+
+
 def pedidos_formatacao(
     identificador: int, nome: str, linhas: list[list], total_linhas: int, total_colunas: int
 ) -> list[dict]:
     """Altera apenas atributos visuais administrados, removendo resíduos quando o resumo muda de posição."""
+    nome = nome_canonico(nome)
     pedidos = []
 
     def formato(inicio: int, fim: int, coluna: int, limite: int, atributos: dict, campos: str):

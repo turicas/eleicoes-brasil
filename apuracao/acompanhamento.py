@@ -13,9 +13,9 @@ import time
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from contextlib import contextmanager
-from pathlib import Path
 from dataclasses import replace
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 from .adaptador2022 import Apuracao2022
 from .adaptador2026 import Apuracao2026
@@ -23,6 +23,7 @@ from .agregacao import somar_presidente
 from .apresentacao import tabela_historico, tabela_resultado, titulo_resultado
 from .coleta import Coletor
 from .configuracao import codigo_eleicao, contextos_eleicao, url_municipios, url_resultado
+from .cor_aba import cor_resultado
 from .formatacao import UFS
 from .modelo import Contexto
 from .planilha import Planilha
@@ -190,6 +191,9 @@ class RotinaApuracao:
         self._publicados = {}
         self._historico = None
         self._vistos = set()
+        self._cor_publicada = None
+        self._definicao_presidente = None
+        self._definicao_publicada = None
         self._limite = LimiteConsultas()
 
     def _novo_coletor(self):
@@ -309,11 +313,19 @@ class RotinaApuracao:
                 raise ValueError(f"Histórico agregado inválido: {arquivo}: {erro}") from erro
         return sorted(resultados, key=lambda resultado: resultado.gerada_em)
 
+    def _consultar_cor_presidente(self, resultado):
+        contexto = resultado.contexto
+        dados = self.coletor.buscar_json(url_resultado(contexto, self._diretorios))
+        self._definicao_presidente = Apuracao2026(contexto).ler(dados)
+        return cor_resultado(self._definicao_presidente)
+
     def run(self) -> None:
         inicio = time.perf_counter()
         print(f"{self.tipo}: início", file=sys.stderr, flush=True)
         alterados = []
         concluidos = 0
+        cor_presidente = None
+        definicao_chave = None
         try:
             self.configurar()
             if self.tipo == "presidente":
@@ -336,11 +348,21 @@ class RotinaApuracao:
                         capturada_em=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=-3))),
                     )
                     self._salvar_fontes_soma(fontes, resultado)
+                    try:
+                        cor_presidente = self._consultar_cor_presidente(resultado)
+                    except Exception as erro:  # noqa: BLE001 - falha de cor não interrompe votos; preserva cor anterior
+                        print(f"Cor presidencial não atualizada: {erro}", file=sys.stderr, flush=True)
                 else:
                     resultado = self._coletar(self._contextos[0])
                 concluidos = 1
                 self._registrar_historico(resultado)
-                if self._publicados.get(resultado.contexto) != self._chave(resultado):
+                if self._definicao_presidente is not None:
+                    nacional = self._definicao_presidente
+                    definicao_chave = (nacional.geracao, nacional.matematicamente_definida, nacional.finalizada)
+                if (
+                    self._publicados.get(resultado.contexto) != self._chave(resultado)
+                    or definicao_chave != self._definicao_publicada
+                ) or (cor_presidente is not None and cor_presidente != self._cor_publicada):
                     alterados.append(resultado)
             else:
                 futuros = {
@@ -377,15 +399,22 @@ class RotinaApuracao:
             if alterados:
                 tabelas = [
                     tabela_resultado(
-                        resultado, "Presidente" if self.tipo == "presidente" else resultado.contexto.abrangencia.upper()
+                        resultado,
+                        "Presidente" if self.tipo == "presidente" else resultado.contexto.abrangencia.upper(),
+                        definicao_oficial=self._definicao_presidente if self.presidente_por_uf else None,
                     )
                     for resultado in alterados
                 ]
+                if self.presidente_por_uf:
+                    tabelas[0].cor_aba = cor_presidente
                 titulo = None
                 if self.tipo == "presidente":
                     tabelas.append(tabela_historico(self._historico))
                     titulo = titulo_resultado(alterados[0])
                 self.planilha.publicar(tabelas, titulo=titulo)
+                self._definicao_publicada = definicao_chave
+                if cor_presidente is not None:
+                    self._cor_publicada = cor_presidente
                 for resultado in alterados:
                     self._publicados[resultado.contexto] = self._chave(resultado)
             if self.tipo == "presidente" and concluidos:

@@ -59,6 +59,9 @@ class PlanilhaSimulada:
             atualizacao = pedido["updateSheetProperties"]
             propriedades = self.abas[atualizacao["properties"]["sheetId"]]["properties"]
             for campo in atualizacao["fields"].split(","):
+                if campo in ("tabColorStyle", "title"):
+                    propriedades[campo] = deepcopy(atualizacao["properties"][campo])
+                    continue
                 prefixo, chave = campo.split(".")
                 assert prefixo == "gridProperties"
                 assert chave in ("rowCount", "columnCount", "frozenRowCount")

@@ -7,7 +7,8 @@ from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import dataclass
 
-from .formatacao import pedidos_formatacao
+from .cor_aba import CORES, pedido_cor
+from .formatacao import nome_canonico, pedidos_formatacao
 from .grafico import pedidos_expansao, pedidos_remapeamento
 
 
@@ -18,6 +19,7 @@ class TabelaPlanilha:
     nome: str
     linhas: list[list]
     colunas_percentuais: tuple[int, ...] = ()
+    cor_aba: str | None = None
 
 
 class Planilha:
@@ -28,7 +30,7 @@ class Planilha:
     """
 
     CHAVE_CONTEXTO = "apuracao.contexto"
-    CAMPOS_METADADOS = "sheets(properties(sheetId,title,gridProperties),charts),developerMetadata"
+    CAMPOS_METADADOS = "sheets(properties(sheetId,title,gridProperties,tabColorStyle),charts),developerMetadata"
 
     def __init__(
         self,
@@ -126,6 +128,8 @@ class Planilha:
             if not tabela.nome or tabela.nome in nomes:
                 raise ValueError("Os nomes das abas devem ser únicos e não vazios.")
             nomes.add(tabela.nome)
+            if tabela.cor_aba is not None and tabela.cor_aba not in CORES:
+                raise ValueError("Cor de aba inválida")
             largura = max((len(linha) for linha in tabela.linhas), default=0)
             for coluna in tabela.colunas_percentuais:
                 if not isinstance(coluna, int) or isinstance(coluna, bool) or not 0 <= coluna < largura:
@@ -166,13 +170,18 @@ class Planilha:
             )
         detalhes = {aba["properties"]["title"]: aba for aba in metadados.get("sheets", [])}
         propriedades = [aba["properties"] for aba in metadados.get("sheets", [])]
-        abas = {aba["title"]: aba for aba in propriedades}
+        abas = {}
+        for aba in propriedades:
+            canonico = nome_canonico(aba["title"])
+            if canonico in abas:
+                raise ValueError(f"Abas ambíguas para {canonico}: com e sem asterisco")
+            abas[canonico] = aba
         colunas_por_aba = {aba["sheetId"]: aba["gridProperties"]["columnCount"] for aba in propriedades}
         proximo_identificador = max((aba["sheetId"] for aba in propriedades), default=-1) + 1
         for tabela in tabelas:
             linhas = max(1, len(tabela.linhas))
             colunas = max(1, max((len(linha) for linha in tabela.linhas), default=0))
-            existente = abas.get(tabela.nome)
+            existente = abas.get(nome_canonico(tabela.nome))
             if existente is None:
                 identificador = proximo_identificador
                 proximo_identificador += 1
@@ -189,6 +198,15 @@ class Planilha:
                 )
             else:
                 identificador = existente["sheetId"]
+                if existente["title"] != tabela.nome:
+                    pedidos.append(
+                        {
+                            "updateSheetProperties": {
+                                "properties": {"sheetId": identificador, "title": tabela.nome},
+                                "fields": "title",
+                            }
+                        }
+                    )
                 grade = existente["gridProperties"]
                 linhas = max(linhas, grade["rowCount"])
                 colunas = max(colunas, grade["columnCount"])
@@ -206,6 +224,15 @@ class Planilha:
                             }
                         }
                     )
+            if tabela.cor_aba is not None:
+                atual = existente.get("tabColorStyle") if existente else None
+                normalizado = (
+                    {campo: atual.get("rgbColor", {}).get(campo, 0) for campo in ("red", "green", "blue")}
+                    if atual
+                    else None
+                )
+                if normalizado != CORES[tabela.cor_aba]:
+                    pedidos.append(pedido_cor(identificador, tabela.cor_aba))
             colunas_por_aba[identificador] = colunas
             pedidos.append(
                 {
@@ -287,6 +314,10 @@ class Planilha:
                     aba for aba in self._metadados["sheets"] if aba["properties"]["sheetId"] == atualizacao["sheetId"]
                 )
                 aba["properties"]["gridProperties"].update(atualizacao.get("gridProperties", {}))
+                if "title" in atualizacao:
+                    aba["properties"]["title"] = atualizacao["title"]
+                if "tabColorStyle" in atualizacao:
+                    aba["properties"]["tabColorStyle"] = deepcopy(atualizacao["tabColorStyle"])
             elif "updateChartSpec" in pedido:
                 atualizacao = pedido["updateChartSpec"]
                 for aba in self._metadados["sheets"]:

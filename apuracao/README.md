@@ -74,7 +74,9 @@ cinza.
 linhas têm 21 pixels e cabeçalho congelado. A fonte é Source Code Pro, tamanho 10,
 e todas as colunas são ajustadas automaticamente ao conteúdo, incluindo a linha
 do tempo. A formatação é aplicada apenas ao criar abas ou executar o ajuste visual,
-nunca na atualização frequente. Outros formatos são preservados. Se o número de
+nunca na atualização frequente. A cada dez publicações bem-sucedidas, cada rotina
+refaz apenas o ajuste automático das colunas de todas as abas, no mesmo lote;
+falhas e ciclos sem geração nova não contam. Outros formatos são preservados. Se o número de
 candidatos mudar, execute o ajuste visual para reposicionar os estilos do resumo.
 Estrutura, formato e valores são enviados em um lote atômico. Execute um único escritor
 por planilha; não há coordenação entre processos concorrentes.
@@ -119,6 +121,9 @@ histórico é a geração da fonte, não o horário de cada consulta.
 As abas das UFs mostram o percentual de seções totalizadas e o indicador de
 apuradas dividido pelo total, com nomes distintos. LinhaDoTempo guarda data/hora
 numericamente e exibe apenas `HH:mm:ss`, preservando o dia no valor subjacente.
+Suas colunas são data/hora, percentual de seções totalizadas, Lula, Flávio e os
+demais candidatos. Ao mudar a ordem, o gráfico administrado é remapeado no mesmo
+lote dos valores, sem alterar seus ajustes visuais.
 
 ```sh
 python -m apuracao.acompanhamento 2026 1 --intervalo-presidente 20 --intervalo-ufs 30
@@ -132,14 +137,25 @@ python -m apuracao.acompanhamento 2026 1 --presidente-por-uf
 ```
 
 Esse modo exige as 28 fontes completas e compatíveis a cada coleta; se uma falhar,
-não publica uma soma parcial. A data/hora principal é a maior geração entre as
-fontes, indicando a contribuição mais recente, não sincronização dos recortes.
-A aba também mostra a menor geração e identifica a origem como soma própria,
+não publica uma soma parcial. A data/hora da linha do tempo e do título é a hora real da coleta do agregado.
+A maior e a menor geração das fontes ficam separadas no resumo: estados podem
+mudar sem ultrapassar o maior horário anterior, portanto ele não identifica a
+captura. Arquivos agregados antigos usam o horário de gravação local como
+aproximação, pois não registravam a captura explicitamente.
+A aba também identifica a origem como soma própria,
 não consolidado nacional do TSE. Percentuais são recalculados com a soma dos votos
 a concorrentes, não com a soma de percentuais. O título mantém essa identificação.
-O histórico desse modo é separado, persistido em `ANO/turno-N/soma-presidente/` e
-retomado ao reiniciar; o histórico nacional antigo não é removido. A aba de linha
-do tempo passa a mostrar o histórico do modo selecionado.
+
+As abas de resultados ficam verdes quando há eleito definido, azuis quando há
+segundo turno definido e pretas enquanto não há definição. Usa-se `md` oficial;
+após totalização final, a situação dos candidatos mantém a definição. Na soma
+presidencial, consulta-se o JSON nacional só para a cor, sem inferir vitória a
+partir das UFs. Se essa consulta falhar, a cor anterior é preservada e os votos
+continuam atualizando. A cor muda no mesmo lote dos dados, sem reformatar células.
+A aba LinhaDoTempo não é colorida por essa regra.
+Os brutos desse modo são separados, persistidos em `ANO/turno-N/soma-presidente/`
+e retomados ao reiniciar. A linha do tempo reúne os registros nacionais e os
+agregados, sem apagar as linhas anteriores ao trocar de modo.
 
 O arquivo de lock impede dois gerenciadores para a mesma planilha/diretório; não
 bloqueia o loop bash antigo nem programas externos. Ctrl+C encerra os processos;
@@ -244,4 +260,4 @@ python votacao_municipio.py
 ```
 
 
-A linha do tempo da soma usa o horário da captura, separado dos horários de geração das fontes. O histórico preserva os resultados nacionais e agregados ao alternar entre as origens.
+Abas com totalização final recebem um asterisco no nome; a referência interna continua sendo a sigla da UF. O verde das abas com definição oficial é verde bandeira.

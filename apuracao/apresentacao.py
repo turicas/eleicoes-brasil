@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from .cor_aba import cor_resultado
+from .formatacao import UFS, nome_canonico
 from .modelo import Candidato, Resultado
 from .planilha import TabelaPlanilha
 
@@ -70,7 +72,8 @@ def linhas_resultado(resultado: Resultado) -> list[list]:
     return lines
 
 
-def tabela_resultado(resultado: Resultado, nome: str) -> TabelaPlanilha:
+def tabela_resultado(resultado: Resultado, nome: str, *, definicao_oficial: Resultado | None = None) -> TabelaPlanilha:
+    definicao = definicao_oficial or resultado
     candidatos = sorted(resultado.candidatos, key=lambda candidato: (-candidato.votos, candidato.numero))
     linhas = [["candidato", "vice", "numero", "votos_apurados", "perc", "dif. próx."]]
     for indice, candidato in enumerate(candidatos):
@@ -127,10 +130,17 @@ def tabela_resultado(resultado: Resultado, nome: str) -> TabelaPlanilha:
                 resultado.secoes.apuradas / resultado.secoes.total if resultado.secoes.total else None,
             ],
             ["Andamento da totalização", resultado.andamento],
-            ["Totalização final", resultado.finalizada],
-            ["Matematicamente definida", resultado.matematicamente_definida],
+            ["Totalização final", definicao.finalizada],
+            ["Matematicamente definida", definicao.matematicamente_definida],
         ]
     )
+    if definicao_oficial is not None:
+        linhas.extend(
+            [
+                ["Fonte da definição", "JSON nacional do TSE"],
+                ["Atualização da definição", str(definicao_oficial.gerada_em)],
+            ]
+        )
     if resultado.origem == "soma-ufs":
         linhas.extend(
             [
@@ -152,7 +162,10 @@ def tabela_resultado(resultado: Resultado, nome: str) -> TabelaPlanilha:
                 ["Total de votos", resultado.votos.total],
             ]
         )
-    return TabelaPlanilha(nome, linhas, (4,))
+    canonico = nome_canonico(nome)
+    if canonico in UFS:
+        nome = canonico + ("*" if resultado.finalizada is True else "")
+    return TabelaPlanilha(nome, linhas, (4,), cor_resultado(definicao))
 
 
 def _identidade(candidato: Candidato) -> str:
