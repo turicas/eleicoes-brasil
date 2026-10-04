@@ -64,3 +64,8 @@ python votacao_municipio.py
 ## Publicação em planilha
 
 `Planilha` prepara as abas e publica tabelas tipadas em lote idempotente, sem encolher dimensões nem alterar abas não indicadas. A atualização do título é opcional. As dependências estão em `apuracao/requirements.txt`.
+
+
+## Resultados e linha do tempo
+
+A apresentação produz tabelas tipadas, calcula o título presidencial e mantém colunas estáveis para os candidatos do histórico. Em 2022, o progresso representa seções apuradas; em 2026, seções totalizadas. Percentuais sem base de cálculo permanecem vazios.

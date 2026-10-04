@@ -1,4 +1,5 @@
-from .modelo import Resultado
+from .modelo import Candidato, Resultado
+from .planilha import TabelaPlanilha
 
 
 def percentual(valor: int, total: int) -> str:
@@ -65,3 +66,104 @@ def linhas_resultado(resultado: Resultado) -> list[list]:
         ]
     )
     return lines
+
+
+def tabela_resultado(resultado: Resultado, nome: str) -> TabelaPlanilha:
+    candidatos = sorted(resultado.candidatos, key=lambda candidato: (-candidato.votos, candidato.numero))
+    linhas = [["candidato", "vice", "numero", "votos_apurados", "perc", "dif. próx."]]
+    for indice, candidato in enumerate(candidatos):
+        diferenca = candidato.votos - candidatos[indice + 1].votos if indice + 1 < len(candidatos) else None
+        linhas.append(
+            [
+                candidato.nome_urna,
+                candidato.vice,
+                candidato.numero,
+                candidato.votos if resultado.divulgacao_liberada else None,
+                float(candidato.percentual) if resultado.divulgacao_liberada else None,
+                diferenca if resultado.divulgacao_liberada else None,
+            ]
+        )
+    linhas.extend(
+        [
+            [],
+            ["Atualização do TSE", str(resultado.gerada_em)],
+            ["Identificador da geração", resultado.geracao],
+            ["Eleição", resultado.contexto.eleicao, "Turno", resultado.contexto.turno],
+            ["Divulgação", "Liberada" if resultado.divulgacao_liberada else "Aguardando liberação pelo TSE"],
+            [
+                "Eleitorado de seções apuradas",
+                resultado.eleitorado.apurado,
+                "Eleitorado total",
+                resultado.eleitorado.total,
+            ],
+            ["Seções totalizadas", resultado.secoes.totalizadas, "Seções totais", resultado.secoes.total],
+            ["Seções apuradas", resultado.secoes.apuradas],
+            ["Andamento da totalização", resultado.andamento],
+            ["Totalização final", resultado.finalizada],
+            ["Matematicamente definida", resultado.matematicamente_definida],
+        ]
+    )
+    if resultado.divulgacao_liberada:
+        linhas.extend(
+            [
+                ["Votos válidos", resultado.votos.validos],
+                ["Votos nulos", resultado.votos.nulos],
+                ["Votos brancos", resultado.votos.brancos],
+                ["Votos anulados", resultado.votos.anulados],
+                ["Votos anulados sub judice", resultado.votos.anulados_sub_judice],
+                ["Votos a concorrentes", resultado.votos.concorrentes],
+                ["Total de votos", resultado.votos.total],
+            ]
+        )
+    return TabelaPlanilha(nome, linhas, (4,))
+
+
+def _identidade(candidato: Candidato) -> str:
+    return candidato.sequencial or candidato.numero
+
+
+def tabela_historico(resultados: list[Resultado]) -> TabelaPlanilha:
+    if len({resultado.contexto for resultado in resultados}) > 1:
+        raise ValueError("O histórico não pode misturar contextos eleitorais")
+    ordenados = sorted(resultados, key=lambda resultado: resultado.gerada_em)
+    candidatos = {}
+    for resultado in ordenados:
+        for candidato in resultado.candidatos:
+            candidatos.setdefault(_identidade(candidato), candidato)
+    identidades = sorted(candidatos, key=lambda identidade: (candidatos[identidade].numero, identidade))
+    historico_2022 = bool(ordenados) and ordenados[0].contexto.ano == 2022
+    rotulo = "% Seções apuradas" if historico_2022 else "% Seções totalizadas"
+    linhas = [
+        ["Data/Hora", rotulo]
+        + [f"% {candidatos[identidade].nome_urna} ({candidatos[identidade].numero})" for identidade in identidades]
+    ]
+    vistos = set()
+    for resultado in ordenados:
+        chave = resultado.geracao or resultado.gerada_em
+        if chave in vistos:
+            continue
+        vistos.add(chave)
+        percentuais = {_identidade(candidato): float(candidato.percentual) for candidato in resultado.candidatos}
+        totalizadas = resultado.secoes.percentual_totalizadas
+        if historico_2022 and resultado.secoes.total:
+            totalizadas = resultado.secoes.apuradas / resultado.secoes.total
+        linhas.append(
+            [
+                str(resultado.gerada_em),
+                float(totalizadas) if totalizadas is not None else None,
+            ]
+            + [percentuais.get(identidade) if resultado.divulgacao_liberada else None for identidade in identidades]
+        )
+    return TabelaPlanilha("LinhaDoTempo", linhas, tuple(range(1, len(linhas[0]))))
+
+
+def titulo_resultado(resultado: Resultado) -> str:
+    """Usa o progresso disponível na fonte, sem confundir apuradas e totalizadas."""
+    if resultado.contexto.ano == 2022:
+        progresso = resultado.secoes.apuradas / resultado.secoes.total if resultado.secoes.total else None
+    else:
+        progresso = resultado.secoes.percentual_totalizadas
+        if progresso is None and resultado.secoes.totalizadas is not None and resultado.secoes.total:
+            progresso = resultado.secoes.totalizadas / resultado.secoes.total
+    prefixo = f"[{progresso * 100:.2f}%] " if progresso is not None else ""
+    return f"{prefixo}Apuração Eleições {resultado.contexto.ano} (atualizado: {resultado.gerada_em})"
