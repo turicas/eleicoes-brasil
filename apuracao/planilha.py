@@ -8,6 +8,7 @@ from copy import deepcopy
 from dataclasses import dataclass
 
 from .formatacao import pedidos_formatacao
+from .grafico import pedidos_expansao, pedidos_remapeamento
 
 
 @dataclass
@@ -221,6 +222,14 @@ class Planilha:
                     }
                 }
             )
+            if tabela.nome == "LinhaDoTempo" and tabela.nome in detalhes:
+                remapeados = pedidos_remapeamento(detalhes[tabela.nome], tabela.linhas[0])
+                for remapeado in remapeados:
+                    for grafico in detalhes[tabela.nome].get("charts", []):
+                        if grafico["chartId"] == remapeado["updateChartSpec"]["chartId"]:
+                            grafico["spec"] = remapeado["updateChartSpec"]["spec"]
+                pedidos.extend(remapeados)
+                pedidos.extend(pedidos_expansao(detalhes[tabela.nome], linhas))
             formato = []
             if existente is None:
                 formato = pedidos_formatacao(identificador, tabela.nome, tabela.linhas, linhas, colunas)
@@ -278,3 +287,9 @@ class Planilha:
                     aba for aba in self._metadados["sheets"] if aba["properties"]["sheetId"] == atualizacao["sheetId"]
                 )
                 aba["properties"]["gridProperties"].update(atualizacao.get("gridProperties", {}))
+            elif "updateChartSpec" in pedido:
+                atualizacao = pedido["updateChartSpec"]
+                for aba in self._metadados["sheets"]:
+                    for grafico in aba.get("charts", []):
+                        if grafico["chartId"] == atualizacao["chartId"]:
+                            grafico["spec"] = deepcopy(atualizacao["spec"])

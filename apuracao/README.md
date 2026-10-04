@@ -67,8 +67,16 @@ a publicação de governador não altera o título. Ano e turno ficam registrado
 em metadados: tentar reutilizar a planilha em outro contexto gera erro.
 
 Os valores das abas administradas são substituídos, incluindo limpeza de sobras;
-não coloque conteúdo manual nelas. Formatos não solicitados são preservados.
-Estrutura e valores são enviados em um lote atômico. Execute um único escritor
+não coloque conteúdo manual nelas. Nas abas de resultados, cabeçalho e rótulos
+ficam em negrito, quantidades usam `#,##0`, percentuais usam `0.00%`, valores do
+resumo ficam à direita e as linhas de eleitorado e seções totalizadas têm fundo
+cinza.
+linhas têm 21 pixels e cabeçalho congelado. A fonte é Source Code Pro, tamanho 10,
+e todas as colunas são ajustadas automaticamente ao conteúdo, incluindo a linha
+do tempo. A formatação é aplicada apenas ao criar abas ou executar o ajuste visual,
+nunca na atualização frequente. Outros formatos são preservados. Se o número de
+candidatos mudar, execute o ajuste visual para reposicionar os estilos do resumo.
+Estrutura, formato e valores são enviados em um lote atômico. Execute um único escritor
 por planilha; não há coordenação entre processos concorrentes.
 
 Para uma UF ou para coletar sem Google:
@@ -117,6 +125,29 @@ Fontes: [manuais do TSE](https://www.tse.jus.br/eleicoes/eleicoes-2026-content/a
 [autenticação gspread](https://docs.gspread.org/en/latest/oauth2.html) e
 [cotas Google Sheets](https://developers.google.com/workspace/sheets/api/limits).
 
+### Ajuste visual pontual e gráfico
+
+O script usa as mesmas regras de formato do publicador, sem alterar valores.
+Sem `--aplicar`, apenas lê a planilha e grava os pedidos planejados em
+`data/analise-apuracao-2026/`. A API autoriza o lote, mas o script não altera
+permissões nem a configuração regional.
+
+```sh
+export GOOGLE_APPLICATION_CREDENTIALS="$PWD/apuracao/credentials/eleicoes-2026-brasil-io-sheets.json"
+python -m apuracao.ajuste_visual 1RGi20p_QECrdRo_KJgxhSDo7zO2wnIFuxRqKs2XrWa0 --aplicar
+python -m apuracao.ajuste_visual 1RGi20p_QECrdRo_KJgxhSDo7zO2wnIFuxRqKs2XrWa0 --grafico --aplicar
+```
+
+O segundo comando prepara somente o gráfico de linhas Lula/Flávio em
+`LinhaDoTempo`, identificando as colunas pelo nome e número, não por letras
+fixas. Flávio fica azul e Lula vermelho, com legenda superior e data/hora no eixo
+X. Reaproveita o gráfico correspondente ou o gráfico vazio, sem apagar outros.
+A criação desse gráfico é específica da disputa de 2026, não automática para
+outros anos. O publicador expande suas fontes se o histórico ultrapassar a grade
+atual, sem criar outro gráfico. Não é necessário alterar o intervalo a cada coleta.
+
+Fonte da estrutura dos pedidos: [Google Sheets - gráficos](https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets/charts).
+
 ### Testes
 
 ```sh
@@ -154,6 +185,4 @@ python votacao_municipio.py
 ```
 
 
-## Ajuste visual
-
-`python -m apuracao.ajuste_visual ID` inspeciona a formatação sem alterar valores; `--aplicar` envia o lote. A publicação aplica formato apenas na criação das abas, reutiliza metadados e ajusta as colunas a cada dez publicações bem-sucedidas.
+A publicação frequente preserva os formatos existentes e reutiliza os metadados da planilha. O ajuste de colunas ocorre a cada dez publicações; `ajuste_visual` permite aplicar novamente o padrão sem republicar valores. O gráfico acompanha a expansão e o remapeamento das colunas do histórico.

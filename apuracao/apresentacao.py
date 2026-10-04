@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from .modelo import Candidato, Resultado
 from .planilha import TabelaPlanilha
 
@@ -96,8 +98,30 @@ def tabela_resultado(resultado: Resultado, nome: str) -> TabelaPlanilha:
                 "Eleitorado total",
                 resultado.eleitorado.total,
             ],
-            ["Seções totalizadas", resultado.secoes.totalizadas, "Seções totais", resultado.secoes.total],
-            ["Seções apuradas", resultado.secoes.apuradas],
+            [
+                "Seções totalizadas",
+                resultado.secoes.totalizadas,
+                "Seções totais",
+                resultado.secoes.total,
+                "% Seções totalizadas",
+                (
+                    float(resultado.secoes.percentual_totalizadas)
+                    if resultado.secoes.percentual_totalizadas is not None
+                    else (
+                        resultado.secoes.totalizadas / resultado.secoes.total
+                        if resultado.secoes.totalizadas is not None and resultado.secoes.total
+                        else None
+                    )
+                ),
+            ],
+            [
+                "Seções apuradas",
+                resultado.secoes.apuradas,
+                None,
+                None,
+                "% Seções apuradas / total",
+                resultado.secoes.apuradas / resultado.secoes.total if resultado.secoes.total else None,
+            ],
             ["Andamento da totalização", resultado.andamento],
             ["Totalização final", resultado.finalizada],
             ["Matematicamente definida", resultado.matematicamente_definida],
@@ -130,7 +154,14 @@ def tabela_historico(resultados: list[Resultado]) -> TabelaPlanilha:
     for resultado in ordenados:
         for candidato in resultado.candidatos:
             candidatos.setdefault(_identidade(candidato), candidato)
-    identidades = sorted(candidatos, key=lambda identidade: (candidatos[identidade].numero, identidade))
+    identidades = sorted(
+        candidatos,
+        key=lambda identidade: (
+            {"13": 0, "22": 1}.get(candidatos[identidade].numero, 2),
+            candidatos[identidade].numero,
+            identidade,
+        ),
+    )
     historico_2022 = bool(ordenados) and ordenados[0].contexto.ano == 2022
     rotulo = "% Seções apuradas" if historico_2022 else "% Seções totalizadas"
     linhas = [
@@ -149,7 +180,7 @@ def tabela_historico(resultados: list[Resultado]) -> TabelaPlanilha:
             totalizadas = resultado.secoes.apuradas / resultado.secoes.total
         linhas.append(
             [
-                str(resultado.gerada_em),
+                data_planilha(resultado.gerada_em),
                 float(totalizadas) if totalizadas is not None else None,
             ]
             + [percentuais.get(identidade) if resultado.divulgacao_liberada else None for identidade in identidades]
@@ -167,3 +198,9 @@ def titulo_resultado(resultado: Resultado) -> str:
             progresso = resultado.secoes.totalizadas / resultado.secoes.total
     prefixo = f"[{progresso * 100:.2f}%] " if progresso is not None else ""
     return f"{prefixo}Apuração Eleições {resultado.contexto.ano} (atualizado: {resultado.gerada_em})"
+
+
+def data_planilha(data: datetime) -> float:
+    """Serial local do Sheets: conserva o dia, mas permite mostrar apenas HH:mm:ss."""
+    local = data.replace(tzinfo=None)
+    return (local - datetime(1899, 12, 30)).total_seconds() / 86400  # noqa: DTZ001

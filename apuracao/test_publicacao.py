@@ -35,8 +35,8 @@ def test_historico_dinamico_identidade_ordem_percentual(dados_2022):
     tabela = tabela_historico([segundo, primeiro, primeiro])
     assert len(tabela.linhas) == 3
     assert tabela.linhas[0] == ["Data/Hora", "% Seções apuradas", "% LULA (13)", "% JAIR BOLSONARO (22)"]
-    assert tabela.linhas[1][0] == "2022-10-02 18:30:00-03:00"
-    assert tabela.linhas[2][0] == "2022-10-03 18:30:00-03:00"
+    assert tabela.linhas[1][0] == 44836 + 18.5 / 24
+    assert tabela.linhas[2][0] == 44837 + 18.5 / 24
     assert tabela.linhas[1][2:] == [0.415, 0.4]
     assert tabela.linhas[1][1] == 0.5
     assert tabela.colunas_percentuais == (1, 2, 3)
@@ -65,8 +65,8 @@ def test_resumo_distingue_totalizadas_apuradas_e_anulados(dados_2022):
         andamento="p",
     )
     linhas = tabela_resultado(resultado, "Presidente").linhas
-    assert ["Seções totalizadas", 90, "Seções totais", 100] in linhas
-    assert ["Seções apuradas", 80] in linhas
+    assert ["Seções totalizadas", 90, "Seções totais", 100, "% Seções totalizadas", 0.9] in linhas
+    assert ["Seções apuradas", 80, None, None, "% Seções apuradas / total", 0.8] in linhas
     assert ["Votos anulados", 10] in linhas
     assert ["Votos anulados sub judice", 10] in linhas
 
