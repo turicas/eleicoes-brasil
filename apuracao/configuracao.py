@@ -164,7 +164,11 @@ def _diretorio(ano: int, eleicao: int, tipo: str, uf: str, diretorios: list[dict
 
 def url_resultado(contexto: Contexto, diretorios: list[dict] | None = None) -> str:
     uf = contexto.abrangencia
-    if contexto.cargo not in (1, 3) or (contexto.cargo == 3 and uf not in _UFS) or (contexto.cargo == 1 and uf != "br"):
+    if (
+        contexto.cargo not in (1, 3)
+        or (contexto.cargo == 3 and uf not in _UFS)
+        or (contexto.cargo == 1 and uf not in (*_UFS, "br", "zz"))
+    ):
         raise ValueError(f"cargo/abrangencia: contexto inválido, eleicao={contexto.eleicao}, abrangencia={uf}")
     diretorio = _diretorio(contexto.ano, contexto.eleicao, "u", uf, diretorios)
     sufixo = "r" if contexto.ano == 2022 else "u"

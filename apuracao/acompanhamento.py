@@ -2,6 +2,7 @@
 
 import argparse  # noqa: I001 - preserva largura do isort local
 import fcntl
+import json
 import math
 import multiprocessing
 import os
@@ -13,12 +14,17 @@ from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from contextlib import contextmanager
 from pathlib import Path
+from dataclasses import replace
+from datetime import datetime, timedelta, timezone
 
 from .adaptador2022 import Apuracao2022
 from .adaptador2026 import Apuracao2026
+from .agregacao import somar_presidente
 from .apresentacao import tabela_historico, tabela_resultado, titulo_resultado
 from .coleta import Coletor
 from .configuracao import codigo_eleicao, contextos_eleicao, url_municipios, url_resultado
+from .formatacao import UFS
+from .modelo import Contexto
 from .planilha import Planilha
 
 URL_CONFIGURACAO = "https://resultados.tse.jus.br/oficial/comum/config/ele-c.json"
@@ -66,6 +72,9 @@ def cria_parser() -> argparse.ArgumentParser:
     parser.add_argument("turno", type=int, choices=(1, 2))
     parser.add_argument("--intervalo-presidente", type=_intervalo_presidente, default=25)
     parser.add_argument("--intervalo-ufs", type=_intervalo, default=60)
+    parser.add_argument(
+        "--presidente-por-uf", action="store_true", help="Soma 27 UFs + exterior em vez do JSON nacional (2026)"
+    )
     parser.add_argument("--data-path", type=Path, default=Path(__file__).parent / "data")
     return parser
 
@@ -158,9 +167,13 @@ class RotinaApuracao:
         coletor=None,
         planilha=None,
         coletor_factory=None,
+        presidente_por_uf=False,
     ):
         if tipo not in ("presidente", "governador"):
             raise ValueError("Tipo deve ser presidente ou governador")
+        if presidente_por_uf and ano != 2026:
+            raise ValueError("--presidente-por-uf exige 2026")
+        self.presidente_por_uf = presidente_por_uf and tipo == "presidente"
         self.ano = ano
         self.turno = turno
         self.tipo = tipo
@@ -195,6 +208,12 @@ class RotinaApuracao:
                 codigo = codigo_eleicao(configuracao, self.ano, self.turno, cargo)
                 municipios = self.coletor.buscar_json(url_municipios(self.ano, codigo, diretorios))
             contextos = contextos_eleicao(configuracao, self.ano, self.turno, cargo, municipios)
+            if self.presidente_por_uf:
+                codigo = codigo_eleicao(configuracao, self.ano, self.turno, 1)
+                contextos = [
+                    Contexto(self.ano, self.turno, codigo, 1, area)
+                    for area in sorted([uf.lower() for uf in UFS] + ["zz"])
+                ]
             self._contextos = contextos
             self._diretorios = diretorios
         if self.planilha is None:
@@ -204,7 +223,7 @@ class RotinaApuracao:
                 filename=str(credenciais(self.ano)), scopes=["https://www.googleapis.com/auth/spreadsheets"]
             )
             self.planilha = Planilha(client, self.sheet, self.ano, self.turno, timeout=8, max_tentativas=1)
-        if self.tipo == "governador" and self._executor is None:
+        if (self.tipo == "governador" or self.presidente_por_uf) and self._executor is None:
             self._executor = ThreadPoolExecutor(max_workers=6, thread_name_prefix="apuracao-uf")
 
     @staticmethod
@@ -227,6 +246,8 @@ class RotinaApuracao:
         if self._historico is None:
             classe = Apuracao2022 if self.ano == 2022 else Apuracao2026
             anteriores = self.coletor.historico(resultado.contexto, classe(resultado.contexto))
+            anteriores.extend(self._ler_historico_somas())
+            anteriores.sort(key=lambda item: item.gerada_em)
             self._historico = []
             for anterior in anteriores:
                 chave = self._chave(anterior)
@@ -238,6 +259,56 @@ class RotinaApuracao:
             self._historico.append(resultado)
             self._vistos.add(chave)
 
+    def _pasta_somas(self):
+        return self.data_path / str(self.ano) / f"turno-{self.turno}" / "soma-presidente"
+
+    def _salvar_fontes_soma(self, fontes, resultado):
+        import tempfile
+        from dataclasses import asdict
+
+        pasta = self._pasta_somas()
+        pasta.mkdir(parents=True, exist_ok=True)
+        destino = pasta / f"{resultado.geracao}.json"
+        if destino.exists():
+            return
+        temporario = None
+        try:
+            with tempfile.NamedTemporaryFile(
+                mode="w", encoding="utf-8", dir=pasta, delete=False, suffix=".tmp"
+            ) as arquivo:
+                temporario = Path(arquivo.name)
+                json.dump(
+                    {"capturada_em": resultado.capturada_em, "fontes": [asdict(fonte) for fonte in fontes]},
+                    arquivo,
+                    default=str,
+                    ensure_ascii=False,
+                    indent=2,
+                )
+            temporario.replace(destino)
+        finally:
+            if temporario:
+                temporario.unlink(missing_ok=True)
+
+    def _ler_historico_somas(self):
+        from .agregacao import fontes_salvas
+
+        resultados = []
+        for arquivo in self._pasta_somas().glob("*.json"):
+            try:
+                dados = json.loads(arquivo.read_text())
+                if isinstance(dados, dict):
+                    capturada = datetime.fromisoformat(dados["capturada_em"])
+                    fontes = dados["fontes"]
+                else:
+                    capturada = datetime.fromtimestamp(arquivo.stat().st_mtime, timezone.utc).astimezone(
+                        timezone(timedelta(hours=-3))
+                    )
+                    fontes = dados
+                resultados.append(replace(somar_presidente(fontes_salvas(fontes)), capturada_em=capturada))
+            except (ValueError, KeyError, TypeError) as erro:
+                raise ValueError(f"Histórico agregado inválido: {arquivo}: {erro}") from erro
+        return sorted(resultados, key=lambda resultado: resultado.gerada_em)
+
     def run(self) -> None:
         inicio = time.perf_counter()
         print(f"{self.tipo}: início", file=sys.stderr, flush=True)
@@ -246,7 +317,27 @@ class RotinaApuracao:
         try:
             self.configurar()
             if self.tipo == "presidente":
-                resultado = self._coletar(self._contextos[0])
+                if self.presidente_por_uf:
+                    futuros = {
+                        self._executor.submit(self._coletar, contexto, paralelo=True): contexto
+                        for contexto in self._contextos
+                    }
+                    fontes = []
+                    falhas = []
+                    for futuro in as_completed(futuros):
+                        try:
+                            fontes.append(futuro.result())
+                        except Exception as erro:  # noqa: BLE001 - não publica soma parcial
+                            falhas.append(f"{futuros[futuro].abrangencia}: {erro}")
+                    if falhas:
+                        raise ValueError("Fontes indisponíveis; soma não publicada: " + "; ".join(falhas))
+                    resultado = replace(
+                        somar_presidente(fontes),
+                        capturada_em=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=-3))),
+                    )
+                    self._salvar_fontes_soma(fontes, resultado)
+                else:
+                    resultado = self._coletar(self._contextos[0])
                 concluidos = 1
                 self._registrar_historico(resultado)
                 if self._publicados.get(resultado.contexto) != self._chave(resultado):
@@ -320,14 +411,14 @@ class RotinaApuracao:
             session.close()
 
 
-def _trabalhar(ano, turno, tipo, sheet, data_path, intervalo, encerramento, pid_pai=None):
+def _trabalhar(ano, turno, tipo, sheet, data_path, intervalo, encerramento, presidente_por_uf=False, pid_pai=None):
     if pid_pai is not None:
         from .protecao_processo import proteger_filho
 
         proteger_filho(pid_pai)
     signal.signal(signal.SIGINT, signal.SIG_IGN)
     signal.signal(signal.SIGTERM, lambda *_: sys.exit(130))
-    rotina = RotinaApuracao(ano, turno, tipo, sheet, data_path)
+    rotina = RotinaApuracao(ano, turno, tipo, sheet, data_path, presidente_por_uf=presidente_por_uf)
     try:
         executar_periodicamente(rotina.run, intervalo, espera=encerramento.wait, parar=encerramento.is_set)
     except KeyboardInterrupt:
@@ -368,7 +459,17 @@ def gerenciar(args, sheet: str, *, contexto=None) -> int:
             for tipo, intervalo in (("presidente", args.intervalo_presidente), ("governador", args.intervalo_ufs)):
                 processo = contexto.Process(
                     target=_trabalhar,
-                    args=(args.ano, args.turno, tipo, sheet, args.data_path, intervalo, encerramento, os.getpid()),
+                    args=(
+                        args.ano,
+                        args.turno,
+                        tipo,
+                        sheet,
+                        args.data_path,
+                        intervalo,
+                        encerramento,
+                        args.presidente_por_uf,
+                        os.getpid(),
+                    ),
                     name=f"apuracao-{tipo}",
                 )
                 processo.start()
@@ -401,6 +502,8 @@ def gerenciar(args, sheet: str, *, contexto=None) -> int:
 def main(argv: list[str] | None = None) -> int:
     args = cria_parser().parse_args(argv)
     try:
+        if args.presidente_por_uf and args.ano != 2026:
+            raise ValueError("--presidente-por-uf exige 2026")
         sheet = identificador_planilha(args.ano, args.turno)
         return gerenciar(args, sheet)
     except KeyboardInterrupt:

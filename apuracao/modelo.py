@@ -19,7 +19,7 @@ class Candidato:
     nome_urna: str
     vice: str | None
     votos: int
-    percentual: Decimal
+    percentual: Decimal | None
     sequencial: str | None = None
     partido: str | None = None
     destinacao: str | None = None
@@ -66,3 +66,7 @@ class Resultado:
     andamento: str | None = None
     finalizada: bool | None = None
     matematicamente_definida: str | None = None
+    origem: str = "tse"
+    fontes_desde: datetime | None = None
+    fontes_ate: datetime | None = None
+    capturada_em: datetime | None = None

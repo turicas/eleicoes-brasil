@@ -81,7 +81,11 @@ def tabela_resultado(resultado: Resultado, nome: str) -> TabelaPlanilha:
                 candidato.vice,
                 candidato.numero,
                 candidato.votos if resultado.divulgacao_liberada else None,
-                float(candidato.percentual) if resultado.divulgacao_liberada else None,
+                (
+                    float(candidato.percentual)
+                    if resultado.divulgacao_liberada and candidato.percentual is not None
+                    else None
+                ),
                 diferenca if resultado.divulgacao_liberada else None,
             ]
         )
@@ -127,6 +131,15 @@ def tabela_resultado(resultado: Resultado, nome: str) -> TabelaPlanilha:
             ["Matematicamente definida", resultado.matematicamente_definida],
         ]
     )
+    if resultado.origem == "soma-ufs":
+        linhas.extend(
+            [
+                ["Origem", "Soma de 27 UFs + exterior, não consolidado nacional do TSE"],
+                ["Horário da coleta", str(resultado.capturada_em) if resultado.capturada_em else None],
+                ["Fonte mais antiga", str(resultado.fontes_desde)],
+                ["Fonte mais recente", str(resultado.fontes_ate)],
+            ]
+        )
     if resultado.divulgacao_liberada:
         linhas.extend(
             [
@@ -149,7 +162,7 @@ def _identidade(candidato: Candidato) -> str:
 def tabela_historico(resultados: list[Resultado]) -> TabelaPlanilha:
     if len({resultado.contexto for resultado in resultados}) > 1:
         raise ValueError("O histórico não pode misturar contextos eleitorais")
-    ordenados = sorted(resultados, key=lambda resultado: resultado.gerada_em)
+    ordenados = sorted(resultados, key=hora_historico)
     candidatos = {}
     for resultado in ordenados:
         for candidato in resultado.candidatos:
@@ -174,13 +187,16 @@ def tabela_historico(resultados: list[Resultado]) -> TabelaPlanilha:
         if chave in vistos:
             continue
         vistos.add(chave)
-        percentuais = {_identidade(candidato): float(candidato.percentual) for candidato in resultado.candidatos}
+        percentuais = {
+            _identidade(candidato): float(candidato.percentual) if candidato.percentual is not None else None
+            for candidato in resultado.candidatos
+        }
         totalizadas = resultado.secoes.percentual_totalizadas
         if historico_2022 and resultado.secoes.total:
             totalizadas = resultado.secoes.apuradas / resultado.secoes.total
         linhas.append(
             [
-                data_planilha(resultado.gerada_em),
+                data_planilha(hora_historico(resultado)),
                 float(totalizadas) if totalizadas is not None else None,
             ]
             + [percentuais.get(identidade) if resultado.divulgacao_liberada else None for identidade in identidades]
@@ -197,10 +213,17 @@ def titulo_resultado(resultado: Resultado) -> str:
         if progresso is None and resultado.secoes.totalizadas is not None and resultado.secoes.total:
             progresso = resultado.secoes.totalizadas / resultado.secoes.total
     prefixo = f"[{progresso * 100:.2f}%] " if progresso is not None else ""
-    return f"{prefixo}Apuração Eleições {resultado.contexto.ano} (atualizado: {resultado.gerada_em})"
+    horario = hora_historico(resultado)
+    rotulo = "coletado" if resultado.origem == "soma-ufs" else "atualizado"
+    origem = " - soma UFs + exterior" if resultado.origem == "soma-ufs" else ""
+    return f"{prefixo}Apuração Eleições {resultado.contexto.ano}{origem} ({rotulo}: {horario})"
 
 
 def data_planilha(data: datetime) -> float:
     """Serial local do Sheets: conserva o dia, mas permite mostrar apenas HH:mm:ss."""
     local = data.replace(tzinfo=None)
     return (local - datetime(1899, 12, 30)).total_seconds() / 86400  # noqa: DTZ001
+
+
+def hora_historico(resultado: Resultado) -> datetime:
+    return resultado.capturada_em if resultado.origem == "soma-ufs" and resultado.capturada_em else resultado.gerada_em

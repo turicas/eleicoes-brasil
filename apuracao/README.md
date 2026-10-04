@@ -124,8 +124,27 @@ numericamente e exibe apenas `HH:mm:ss`, preservando o dia no valor subjacente.
 python -m apuracao.acompanhamento 2026 1 --intervalo-presidente 20 --intervalo-ufs 30
 ```
 
+Para substituir o JSON nacional pela soma das fontes presidenciais de cada UF e
+do exterior:
+
+```sh
+python -m apuracao.acompanhamento 2026 1 --presidente-por-uf
+```
+
+Esse modo exige as 28 fontes completas e compatíveis a cada coleta; se uma falhar,
+não publica uma soma parcial. A data/hora principal é a maior geração entre as
+fontes, indicando a contribuição mais recente, não sincronização dos recortes.
+A aba também mostra a menor geração e identifica a origem como soma própria,
+não consolidado nacional do TSE. Percentuais são recalculados com a soma dos votos
+a concorrentes, não com a soma de percentuais. O título mantém essa identificação.
+O histórico desse modo é separado, persistido em `ANO/turno-N/soma-presidente/` e
+retomado ao reiniciar; o histórico nacional antigo não é removido. A aba de linha
+do tempo passa a mostrar o histórico do modo selecionado.
+
 O arquivo de lock impede dois gerenciadores para a mesma planilha/diretório; não
-bloqueia o loop bash antigo nem programas externos. Ctrl+C encerra os processos.
+bloqueia o loop bash antigo nem programas externos. Ctrl+C encerra os processos;
+um segundo sinal força o encerramento dos filhos. O tratador não usa Event.set(),
+pois pode causar deadlock se interromper a espera no mesmo evento.
 O segundo turno de 2026 exige cadastrar seu ID antes de usar este comando.
 
 O comando `python -m apuracao` continua fazendo uma coleta e terminando.
@@ -223,3 +242,6 @@ os votos por município para Lula e Bolsonaro, salvo em
 ```sh
 python votacao_municipio.py
 ```
+
+
+A linha do tempo da soma usa o horário da captura, separado dos horários de geração das fontes. O histórico preserva os resultados nacionais e agregados ao alternar entre as origens.
