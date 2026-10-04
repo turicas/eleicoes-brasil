@@ -32,7 +32,7 @@ def test_titulo_sem_denominador_nao_inventa_percentual(dados_2022):
 def test_titulo_e_valores_no_mesmo_lote():
     planilha = PlanilhaSimulada()
     publicador = Planilha(ClienteSimulado(planilha), "ID", 2026, 1, sleep=lambda espera: None)
-    publicador.publicar([TabelaPlanilha("Presidente", [["Cabeçalho"], [1]])], titulo="Novo título")
+    publicador.publicar([TabelaPlanilha("Apuração", [["Cabeçalho"], [1]])], titulo="Novo título")
     assert len(planilha.lotes) == 1
     assert planilha.titulo == "Novo título"
     assert "updateCells" in str(planilha.lotes[0])

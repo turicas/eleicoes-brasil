@@ -152,3 +152,8 @@ os votos por município para Lula e Bolsonaro, salvo em
 ```sh
 python votacao_municipio.py
 ```
+
+
+## Ajuste visual
+
+`python -m apuracao.ajuste_visual ID` inspeciona a formatação sem alterar valores; `--aplicar` envia o lote. A publicação aplica formato apenas na criação das abas, reutiliza metadados e ajusta as colunas a cada dez publicações bem-sucedidas.

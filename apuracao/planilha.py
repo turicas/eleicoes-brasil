@@ -4,7 +4,10 @@ import json
 import math
 import time
 from collections.abc import Callable
+from copy import deepcopy
 from dataclasses import dataclass
+
+from .formatacao import pedidos_formatacao
 
 
 @dataclass
@@ -24,7 +27,7 @@ class Planilha:
     """
 
     CHAVE_CONTEXTO = "apuracao.contexto"
-    CAMPOS_METADADOS = "sheets(properties(sheetId,title,gridProperties)),developerMetadata"
+    CAMPOS_METADADOS = "sheets(properties(sheetId,title,gridProperties),charts),developerMetadata"
 
     def __init__(
         self,
@@ -35,12 +38,19 @@ class Planilha:
         *,
         timeout: float = 30,
         max_tentativas: int = 3,
+        ajuste_colunas_a_cada: int = 10,
         sleep: Callable[[float], None] = time.sleep,
     ):
         if not isinstance(ano, int) or isinstance(ano, bool) or ano <= 0 or turno not in (1, 2):
             raise ValueError("Ano e turno inválidos.")
         if not isinstance(max_tentativas, int) or isinstance(max_tentativas, bool) or max_tentativas < 1:
             raise ValueError("O número máximo de tentativas deve ser positivo.")
+        if (
+            not isinstance(ajuste_colunas_a_cada, int)
+            or isinstance(ajuste_colunas_a_cada, bool)
+            or ajuste_colunas_a_cada <= 0
+        ):
+            raise ValueError("O intervalo de ajuste de colunas deve ser um inteiro positivo.")
         if not math.isfinite(timeout) or timeout <= 0:
             raise ValueError("O timeout HTTP deve ser finito e positivo.")
         client.set_timeout(timeout)
@@ -49,33 +59,43 @@ class Planilha:
         self.ano = ano
         self.turno = turno
         self.max_tentativas = max_tentativas
+        self.ajuste_colunas_a_cada = ajuste_colunas_a_cada
+        self._publicacoes = 0
         self.sleep = sleep
         self._planilha = None
+        self._metadados = None
 
     def publicar(self, tabelas: list[TabelaPlanilha], *, titulo: str | None = None) -> None:
         """Substitui valores e limpa sobras em um lote, preservando formatos não solicitados.
 
         As dimensões existentes nunca encolhem. A aba inteira indicada pertence ao publicador quanto
-        aos valores; abas não indicadas e seus formatos permanecem intactos. Sem tabelas, não faz I/O.
+        aos valores; formatos existentes permanecem intactos. A cada intervalo de publicações bem-sucedidas,
+        ajusta as colunas de todas as abas com metadados relidos. Sem tabelas, não faz I/O nem conta publicação.
         """
         self._validar_tabelas(tabelas)
         if not tabelas:
             return
+        ajustar_colunas = (self._publicacoes + 1) % self.ajuste_colunas_a_cada == 0
         for tentativa in range(self.max_tentativas):
             try:
                 if self._planilha is None:
                     self._planilha = self.client.open_by_key(self.identificador)
-                metadados = self._planilha.fetch_sheet_metadata(params={"fields": self.CAMPOS_METADADOS})
-                pedidos = self._montar_pedidos(metadados, tabelas)
+                if self._metadados is None or ajustar_colunas:
+                    self._metadados = self._planilha.fetch_sheet_metadata(params={"fields": self.CAMPOS_METADADOS})
+                metadados = self._metadados
+                pedidos = self._montar_pedidos(metadados, tabelas, ajustar_colunas=ajustar_colunas)
                 if titulo is not None:
                     pedidos.append(
                         {"updateSpreadsheetProperties": {"properties": {"title": titulo}, "fields": "title"}}
                     )
                 self._planilha.batch_update({"requests": pedidos})
+                self._atualizar_cache(pedidos)
+                self._publicacoes += 1
                 return
             except KeyboardInterrupt:
                 raise
             except Exception as erro:
+                self._metadados = None
                 status = getattr(getattr(erro, "response", None), "status_code", None)
                 transitorio = status == 429 or (isinstance(status, int) and 500 <= status <= 599)
                 if not transitorio or tentativa + 1 == self.max_tentativas:
@@ -113,7 +133,9 @@ class Planilha:
                 for valor in linha:
                     cls._valor(valor)
 
-    def _montar_pedidos(self, metadados: dict, tabelas: list[TabelaPlanilha]) -> list[dict]:
+    def _montar_pedidos(
+        self, metadados: dict, tabelas: list[TabelaPlanilha], *, ajustar_colunas: bool = False
+    ) -> list[dict]:
         pedidos = []
         contexto = {"ano": self.ano, "turno": self.turno}
         registrados = [
@@ -141,8 +163,10 @@ class Planilha:
                     }
                 }
             )
+        detalhes = {aba["properties"]["title"]: aba for aba in metadados.get("sheets", [])}
         propriedades = [aba["properties"] for aba in metadados.get("sheets", [])]
         abas = {aba["title"]: aba for aba in propriedades}
+        colunas_por_aba = {aba["sheetId"]: aba["gridProperties"]["columnCount"] for aba in propriedades}
         proximo_identificador = max((aba["sheetId"] for aba in propriedades), default=-1) + 1
         for tabela in tabelas:
             linhas = max(1, len(tabela.linhas))
@@ -181,6 +205,7 @@ class Planilha:
                             }
                         }
                     )
+            colunas_por_aba[identificador] = colunas
             pedidos.append(
                 {
                     "updateCells": {
@@ -196,7 +221,13 @@ class Planilha:
                     }
                 }
             )
-            if len(tabela.linhas) > 1:
+            formato = []
+            if existente is None:
+                formato = pedidos_formatacao(identificador, tabela.nome, tabela.linhas, linhas, colunas)
+                pedidos.extend(
+                    pedido for pedido in formato if not ajustar_colunas or "autoResizeDimensions" not in pedido
+                )
+            if existente is None and not formato and len(tabela.linhas) > 1:
                 for coluna in sorted(set(tabela.colunas_percentuais)):
                     pedidos.append(
                         {
@@ -215,4 +246,35 @@ class Planilha:
                             }
                         }
                     )
+        if ajustar_colunas:
+            pedidos.extend(
+                {
+                    "autoResizeDimensions": {
+                        "dimensions": {
+                            "sheetId": identificador,
+                            "dimension": "COLUMNS",
+                            "startIndex": 0,
+                            "endIndex": colunas,
+                        }
+                    }
+                }
+                for identificador, colunas in colunas_por_aba.items()
+            )
         return pedidos
+
+    def _atualizar_cache(self, pedidos: list[dict]) -> None:
+        for pedido in pedidos:
+            if "addSheet" in pedido:
+                self._metadados.setdefault("sheets", []).append(
+                    {"properties": deepcopy(pedido["addSheet"]["properties"])}
+                )
+            elif "createDeveloperMetadata" in pedido:
+                self._metadados.setdefault("developerMetadata", []).append(
+                    deepcopy(pedido["createDeveloperMetadata"]["developerMetadata"])
+                )
+            elif "updateSheetProperties" in pedido:
+                atualizacao = pedido["updateSheetProperties"]["properties"]
+                aba = next(
+                    aba for aba in self._metadados["sheets"] if aba["properties"]["sheetId"] == atualizacao["sheetId"]
+                )
+                aba["properties"]["gridProperties"].update(atualizacao.get("gridProperties", {}))

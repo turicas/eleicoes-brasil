@@ -26,7 +26,10 @@ class PlanilhaSimulada:
         if self.falhas_leitura:
             raise ErroHTTP(self.falhas_leitura.pop(0))
         return {
-            "sheets": [{"properties": deepcopy(aba["properties"])} for aba in self.abas.values()],
+            "sheets": [
+                {"properties": deepcopy(aba["properties"]), "charts": deepcopy(aba.get("charts", []))}
+                for aba in self.abas.values()
+            ],
             "developerMetadata": deepcopy(self.metadados),
         }
 
@@ -58,7 +61,7 @@ class PlanilhaSimulada:
             for campo in atualizacao["fields"].split(","):
                 prefixo, chave = campo.split(".")
                 assert prefixo == "gridProperties"
-                assert chave in ("rowCount", "columnCount")
+                assert chave in ("rowCount", "columnCount", "frozenRowCount")
                 propriedades[prefixo][chave] = atualizacao["properties"][prefixo][chave]
         elif "updateCells" in pedido:
             atualizacao = pedido["updateCells"]
@@ -76,13 +79,33 @@ class PlanilhaSimulada:
                         aba["valores"][linha, coluna] = deepcopy(celula["userEnteredValue"])
         elif "repeatCell" in pedido:
             atualizacao = pedido["repeatCell"]
-            assert atualizacao["fields"] == "userEnteredFormat.numberFormat"
             intervalo = atualizacao["range"]
             aba = self.abas[intervalo["sheetId"]]
             for linha in range(intervalo["startRowIndex"], intervalo["endRowIndex"]):
                 for coluna in range(intervalo["startColumnIndex"], intervalo["endColumnIndex"]):
                     formato = aba["formatos"].setdefault((linha, coluna), {})
-                    formato["numberFormat"] = deepcopy(atualizacao["cell"]["userEnteredFormat"]["numberFormat"])
+                    for atributo, valor in atualizacao["cell"]["userEnteredFormat"].items():
+                        if atributo == "textFormat":
+                            formato.setdefault(atributo, {}).update(deepcopy(valor))
+                        else:
+                            formato[atributo] = deepcopy(valor)
+        elif "updateChartSpec" in pedido:
+            atualizacao = pedido["updateChartSpec"]
+            for aba in self.abas.values():
+                for grafico in aba.get("charts", []):
+                    if grafico["chartId"] == atualizacao["chartId"]:
+                        grafico["spec"] = deepcopy(atualizacao["spec"])
+        elif "autoResizeDimensions" in pedido:
+            intervalo = pedido["autoResizeDimensions"]["dimensions"]
+            self.abas[intervalo["sheetId"]]["auto_resize"] = deepcopy(intervalo)
+        elif "updateDimensionProperties" in pedido:
+            atualizacao = pedido["updateDimensionProperties"]
+            intervalo = atualizacao["range"]
+            aba = self.abas[intervalo["sheetId"]]
+            chave = "larguras" if intervalo["dimension"] == "COLUMNS" else "alturas"
+            dimensoes = aba.setdefault(chave, {})
+            for indice in range(intervalo["startIndex"], intervalo["endIndex"]):
+                dimensoes[indice] = atualizacao["properties"]["pixelSize"]
         else:
             pytest.fail(f"Pedido inesperado: {pedido}")
 
@@ -174,18 +197,16 @@ def test_republicacao_e_idempotente_sem_duplicar_abas_ou_metadados():
     )
 
 
-def test_percentuais_so_nas_colunas_explicitas_sem_formatar_cabecalho():
+def test_atualizacao_preserva_formatos_percentuais_manuais():
     remota = PlanilhaSimulada({0: aba("Apuração")})
-    remota.abas[0]["formatos"][1, 1] = {"backgroundColor": {"blue": 1}}
+    remota.abas[0]["formatos"][1, 1] = {
+        "backgroundColor": {"blue": 1},
+        "numberFormat": {"type": "PERCENT", "pattern": "0.0%"},
+    }
+    anterior = deepcopy(remota.abas[0]["formatos"])
     publicador, _ = escritor(remota)
     publicador.publicar([TabelaPlanilha("Apuração", [["Votos", "%", "Taxa"], [25, 0.25, 0.75]], (1, 2))])
-    assert remota.abas[0]["formatos"][1, 1] == {
-        "backgroundColor": {"blue": 1},
-        "numberFormat": {"type": "PERCENT", "pattern": "0.00%"},
-    }
-    assert remota.abas[0]["formatos"][1, 2]["numberFormat"]["type"] == "PERCENT"
-    assert (1, 0) not in remota.abas[0]["formatos"]
-    assert (0, 1) not in remota.abas[0]["formatos"]
+    assert remota.abas[0]["formatos"] == anterior
 
 
 def test_dimensoes_crescem_conforme_dados_sem_limite_fixo():
