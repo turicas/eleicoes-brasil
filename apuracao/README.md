@@ -59,3 +59,8 @@ python votacao_municipio.py
 ## Coleta e histórico
 
 `Coletor` persiste os resultados com substituição atômica e recupera seu histórico por contexto eleitoral. Consultas ao TSE incluem parâmetros e cabeçalhos para evitar a reutilização de respostas em cache.
+
+
+## Publicação em planilha
+
+`Planilha` prepara as abas e publica tabelas tipadas em lote idempotente, sem encolher dimensões nem alterar abas não indicadas. A atualização do título é opcional. As dependências estão em `apuracao/requirements.txt`.
