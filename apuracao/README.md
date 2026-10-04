@@ -92,8 +92,44 @@ publicação; códigos de saída: `0` sucesso, `1` falha (inclusive parcial por 
 `2` argumentos inválidos, `130` interrupção. Uma UF com falha não apaga sua aba
 anterior nem impede a atualização das demais UFs válidas.
 
-A execução faz uma coleta e termina: agende novas execuções sem sobreposição,
-por exemplo a cada minuto. Não existem os IDs antigos como destino implícito.
+### Acompanhamento rápido
+
+Pare o loop bash antigo antes de iniciar:
+
+```sh
+python -m apuracao.acompanhamento 2026 1
+```
+
+O gerenciador usa o ID cadastrado para ano/turno e procura as credenciais em
+`apuracao/credentials/eleicoes-2026-brasil-io-sheets.json`, com preferência por
+`GOOGLE_APPLICATION_CREDENTIALS` se definida. Presidente inicia consultas a cada
+25 segundos em processo próprio; as UFs são consultadas a cada 60 segundos, com
+seis conexões paralelas e até 20 inícios de consulta por segundo. Uma rotina não
+espera pela outra. Os intervalos são início-a-início, sem somar o tempo de execução;
+slots perdidos por falha/lentidão não se acumulam. Redes e API indisponíveis podem
+impedir a conclusão no prazo, mas UFs lentas não atrasam presidente.
+
+Clientes, contexto, conexões e metadados são reutilizados. A publicação normal
+altera valores e título, não formato. Só gerações novas são enviadas ao Sheets;
+uma falha de publicação não marca a geração como concluída. Cache busting das
+consultas ao TSE usa `?_=time.time_ns()` (ou `&_=...`) com `Cache-Control: no-cache`
+e `Pragma: no-cache`. Isso não faz o TSE produzir uma geração nova. A data/hora do
+histórico é a geração da fonte, não o horário de cada consulta.
+
+As abas das UFs mostram o percentual de seções totalizadas e o indicador de
+apuradas dividido pelo total, com nomes distintos. LinhaDoTempo guarda data/hora
+numericamente e exibe apenas `HH:mm:ss`, preservando o dia no valor subjacente.
+
+```sh
+python -m apuracao.acompanhamento 2026 1 --intervalo-presidente 20 --intervalo-ufs 30
+```
+
+O arquivo de lock impede dois gerenciadores para a mesma planilha/diretório; não
+bloqueia o loop bash antigo nem programas externos. Ctrl+C encerra os processos.
+O segundo turno de 2026 exige cadastrar seu ID antes de usar este comando.
+
+O comando `python -m apuracao` continua fazendo uma coleta e terminando.
+Não existem IDs antigos como destino implícito nesse comando avulso.
 O comando direto também funciona: `python apuracao/apuracao.py 2026 1 presidente ID`.
 A CLI antiga mudou: ano e ID agora são entradas explícitas.
 
@@ -142,6 +178,10 @@ O segundo comando prepara somente o gráfico de linhas Lula/Flávio em
 `LinhaDoTempo`, identificando as colunas pelo nome e número, não por letras
 fixas. Flávio fica azul e Lula vermelho, com legenda superior e data/hora no eixo
 X. Reaproveita o gráfico correspondente ou o gráfico vazio, sem apagar outros.
+O mínimo do eixo Y fica em 0,40. A coluna de domínio mostra só a hora; strings
+ISO antigas são convertidas para seriais locais sem perder a data. A rotação dos
+rótulos X não é exposta pela API v4: no editor, use Personalizar > Eixo horizontal
+> Inclinar rótulos e ajuste o ângulo para 90°, se essa opção estiver disponível.
 A criação desse gráfico é específica da disputa de 2026, não automática para
 outros anos. O publicador expande suas fontes se o histórico ultrapassar a grade
 atual, sem criar outro gráfico. Não é necessário alterar o intervalo a cada coleta.
@@ -183,6 +223,3 @@ os votos por município para Lula e Bolsonaro, salvo em
 ```sh
 python votacao_municipio.py
 ```
-
-
-A publicação frequente preserva os formatos existentes e reutiliza os metadados da planilha. O ajuste de colunas ocorre a cada dez publicações; `ajuste_visual` permite aplicar novamente o padrão sem republicar valores. O gráfico acompanha a expansão e o remapeamento das colunas do histórico.
