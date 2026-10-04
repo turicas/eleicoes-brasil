@@ -54,3 +54,8 @@ python votacao_municipio.py
 ## Leitura estruturada de 2026
 
 `Apuracao2026` valida o contexto e interpreta o formato unificado do TSE. A configuração das eleições permite descobrir os códigos e as abrangências disponíveis por cargo e turno.
+
+
+## Coleta e histórico
+
+`Coletor` persiste os resultados com substituição atômica e recupera seu histórico por contexto eleitoral. Consultas ao TSE incluem parâmetros e cabeçalhos para evitar a reutilização de respostas em cache.
