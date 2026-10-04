@@ -44,3 +44,8 @@ os votos por município para Lula e Bolsonaro, salvo em
 ```sh
 python votacao_municipio.py
 ```
+
+
+## Leitura estruturada de 2022
+
+`Apuracao2022` interpreta os resultados em objetos de domínio; a interface histórica continua disponível em `apuracao.py`. Totais zerados não geram percentuais e arquivos de histórico inválidos interrompem a leitura.

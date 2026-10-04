@@ -2,8 +2,8 @@
 import argparse
 import datetime
 import decimal
-import html
 import json
+import sys
 import time
 from pathlib import Path
 
@@ -11,65 +11,47 @@ import requests
 
 
 def perc(value, total):
-    return f"{100 * (value / total):02.02f}%"
+    return f"{100 * (value / total):02.02f}%" if total else ""
 
 
 def read_data(data):
-    updated_at = datetime.datetime.strptime(f"{data['dg']}T{data['hg']}-03:00", "%d/%m/%YT%H:%M:%S%z")
-    secoes_apuradas = int(data["sa"])
-    secoes = int(data["s"])
-    apuracao = [
-        {
-            "candidato": row["nm"],
-            "vice": row["nv"],
-            "numero": row["n"],
-            "votos_apurados": int(row["vap"]),
-            "perc": f"{decimal.Decimal(row['pvap'].replace(',', '.')):02.02f}%",
-        }
-        for row in [{key: html.unescape(value) for key, value in item.items()} for item in data["cand"]]
-    ]
-    for index, row in enumerate(apuracao):
-        if index + 1 < len(apuracao):
-            row["dif. próx."] = row["votos_apurados"] - apuracao[index + 1]["votos_apurados"]
-        else:
-            row["dif. próx."] = None
+    from apuracao.adaptador2022 import Apuracao2022
+    from apuracao.apresentacao import dados_legados
+    from apuracao.modelo import Contexto
 
-    return {
-        "updated_at": str(updated_at),
-        "eleitorado": int(data["e"]),
-        "eleitorado_apurado": int(data["ea"]),
-        "secoes": secoes,
-        "secoes_apuradas": secoes_apuradas,
-        "total_nulos": int(data["tvn"]),
-        "total_brancos": int(data["vb"]),
-        "total_validos": int(data["vv"]),
-        "total_votos": int(data["tv"]),
-        "apuracao": apuracao,
-        "title": f"[{perc(secoes_apuradas, secoes)}] Apuração Eleições 2022 (atualizado: {updated_at})",
-    }
+    return dados_legados(Apuracao2022(Contexto(2022, 1, 544, 1, "br")).ler(data))
 
 
 def first_sheet_rows(data):
-    header = list(data["apuracao"][0].keys())
-    lines = [header] + [[row[field] for field in header] for row in data["apuracao"]]
-    lines.extend([[], [], [], [], []])
-    lines.append(["Eleitorado apurado", "Eleitorado total", "Percentual"])
-    lines.append([data["eleitorado_apurado"], data["eleitorado"], perc(data["eleitorado_apurado"], data["eleitorado"])])
-    lines.append(["Seções apuradas", "Seções totais", "Percentual"])
-    lines.append([data["secoes_apuradas"], data["secoes"], perc(data["secoes_apuradas"], data["secoes"])])
-    lines.append(["Votos válidos", "(%)", "Nulos", "(%)", "Brancos", "(%)", "Totais"])
-    lines.append(
-        [
-            data["total_validos"],
-            perc(data["total_validos"], data["total_votos"]),
-            data["total_nulos"],
-            perc(data["total_nulos"], data["total_votos"]),
-            data["total_brancos"],
-            perc(data["total_brancos"], data["total_votos"]),
-            data["total_votos"],
-        ]
+    from apuracao.apresentacao import linhas_resultado
+    from apuracao.modelo import (
+        Candidato,
+        Contexto,
+        Eleitorado,
+        Resultado,
+        Secoes,
+        Votos,
     )
-    return lines
+
+    resultado = Resultado(
+        Contexto(2022, 1, 544, 1, "br"),
+        datetime.datetime.fromisoformat(data["updated_at"]),
+        Secoes(data["secoes"], data["secoes_apuradas"]),
+        Eleitorado(data["eleitorado"], data["eleitorado_apurado"]),
+        Votos(data["total_votos"], data["total_validos"], data["total_nulos"], data["total_brancos"]),
+        tuple(
+            Candidato(
+                row["numero"],
+                row["candidato"],
+                row["candidato"],
+                row["vice"],
+                row["votos_apurados"],
+                decimal.Decimal(row["perc"].rstrip("%")) / 100,
+            )
+            for row in data["apuracao"]
+        ),
+    )
+    return linhas_resultado(resultado)
 
 
 def second_sheet_rows(filenames):
@@ -80,8 +62,8 @@ def second_sheet_rows(filenames):
         with filename.open() as fobj:
             try:
                 json_data = json.load(fobj)
-            except json.decoder.JSONDecodeError:
-                pass
+            except json.decoder.JSONDecodeError as erro:
+                raise ValueError(f"JSON inválido: {filename}") from erro
             old_data = read_data(json_data)
         dt = datetime.datetime.fromisoformat(filename.name.split("-r-")[1].replace(".json", ""))
         bolsonaro = [item for item in old_data["apuracao"] if item["candidato"] == "JAIR BOLSONARO"][0]
@@ -122,6 +104,7 @@ def make_url(codigo_eleicao, unidade_eleitoral, codigo_cargo):
 
 
 if __name__ == "__main__":
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
     parser = argparse.ArgumentParser()
     parser.add_argument("--print-only", action="store_true", help="Do not update spreadsheets")
     parser.add_argument("turno", type=int, choices=[1, 2])
@@ -167,6 +150,7 @@ if __name__ == "__main__":
         )
     elif args.turno == 2:
         sheet_id = "1r9UmthUo9IPSLqNN89r_fhrsXo-igSjzCMv2sViwNZo"
+        credentials_filename = "credentials/eleicoes-2022-brasil-io-sheets.json"
         codigo_eleicao_main = 545
         codigo_eleicao_uf = 547
         states = ("AL", "AM", "BA", "ES", "MS", "PB", "PE", "RO", "RS", "SC", "SE", "SP")
@@ -175,7 +159,6 @@ if __name__ == "__main__":
         import gspread
         from oauth2client.service_account import ServiceAccountCredentials
 
-        credentials_filename = "credentials/eleicoes-2022-brasil-io-sheets.json"
         with open(credentials_filename) as fobj:
             credentials = json.load(fobj)
             account = ServiceAccountCredentials.from_json_keyfile_dict(credentials)
