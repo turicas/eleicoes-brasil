@@ -3,8 +3,10 @@ from decimal import Decimal
 
 from apuracao.adaptador2022 import Apuracao2022
 from apuracao.apresentacao import titulo_resultado
+from apuracao.cli import cria_parser, executar
 from apuracao.modelo import Contexto, Secoes
 from apuracao.planilha import Planilha, TabelaPlanilha
+from apuracao.test_cli import ColetaSimulada
 from apuracao.test_planilha import ClienteSimulado, PlanilhaSimulada
 
 
@@ -34,3 +36,16 @@ def test_titulo_e_valores_no_mesmo_lote():
     assert len(planilha.lotes) == 1
     assert planilha.titulo == "Novo título"
     assert "updateCells" in str(planilha.lotes[0])
+
+
+def test_cli_presidente_atualiza_titulo_governador_preserva(dados_2022):
+    planilha = PlanilhaSimulada()
+    client = ClienteSimulado(planilha)
+    args = cria_parser().parse_args(["2022", "1", "presidente", "ID"])
+    assert executar(args, coletor=ColetaSimulada(dados_2022), client=client) == 0
+    esperado = "[50.00%] Apuração Eleições 2022 (atualizado: 2022-10-02 18:30:00-03:00)"
+    assert planilha.titulo == esperado
+    args = cria_parser().parse_args(["2022", "1", "governador", "ID", "--uf", "SP"])
+    assert executar(args, coletor=ColetaSimulada(dados_2022), client=client) == 0
+    assert planilha.titulo == esperado
+    assert all("updateSpreadsheetProperties" not in pedido for pedido in planilha.lotes[-1]["requests"])
