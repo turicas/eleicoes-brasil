@@ -172,7 +172,7 @@ def _identidade(candidato: Candidato) -> str:
     return candidato.sequencial or candidato.numero
 
 
-def tabela_historico(resultados: list[Resultado]) -> TabelaPlanilha:
+def tabela_historico(resultados: list[Resultado], *, incluir_origem: bool = False) -> TabelaPlanilha:
     if len({resultado.contexto for resultado in resultados}) > 1:
         raise ValueError("O histórico não pode misturar contextos eleitorais")
     ordenados = sorted(resultados, key=hora_historico)
@@ -194,6 +194,8 @@ def tabela_historico(resultados: list[Resultado]) -> TabelaPlanilha:
         ["Data/Hora", rotulo]
         + [f"% {candidatos[identidade].nome_urna} ({candidatos[identidade].numero})" for identidade in identidades]
     ]
+    if incluir_origem:
+        linhas[0].append("Origem")
     vistos = set()
     for resultado in ordenados:
         chave = resultado.geracao or resultado.gerada_em
@@ -214,7 +216,10 @@ def tabela_historico(resultados: list[Resultado]) -> TabelaPlanilha:
             ]
             + [percentuais.get(identidade) if resultado.divulgacao_liberada else None for identidade in identidades]
         )
-    return TabelaPlanilha("LinhaDoTempo", linhas, tuple(range(1, len(linhas[0]))))
+        if incluir_origem:
+            linhas[-1].append("Soma UFs + exterior" if resultado.origem == "soma-ufs" else "Nacional TSE")
+    limite_percentuais = len(linhas[0]) - int(incluir_origem)
+    return TabelaPlanilha("LinhaDoTempo", linhas, tuple(range(1, limite_percentuais)))
 
 
 def titulo_resultado(resultado: Resultado) -> str:

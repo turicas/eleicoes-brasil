@@ -152,10 +152,39 @@ após totalização final, a situação dos candidatos mantém a definição. Na
 presidencial, consulta-se o JSON nacional só para a cor, sem inferir vitória a
 partir das UFs. Se essa consulta falhar, a cor anterior é preservada e os votos
 continuam atualizando. A cor muda no mesmo lote dos dados, sem reformatar células.
-A aba LinhaDoTempo não é colorida por essa regra.
+A aba LinhaDoTempo não é colorida por essa regra. UFs com `tf=s` recebem
+asterisco no nome (ex.: `AC*`), independentemente da cor de MD. O publicador
+reconhece nomes com/sem asterisco e renomeia o mesmo sheetId, sem criar duplicatas.
+Se TF reverter, remove o asterisco. Reinicie processos antigos antes de renomear
+abas: seus caches de nomes não conhecem essa convenção.
 Os brutos desse modo são separados, persistidos em `ANO/turno-N/soma-presidente/`
 e retomados ao reiniciar. A linha do tempo reúne os registros nacionais e os
 agregados, sem apagar as linhas anteriores ao trocar de modo.
+
+### Seleção automática pela cobertura
+
+```sh
+python -m apuracao.acompanhamento 2026 1 --presidente-automatico --intervalo-presidente 10 --intervalo-ufs 30
+```
+
+Consulta nacional e 27 UFs + exterior. Escolhe o resultado completo com mais
+seções totalizadas, exigindo o mesmo total geral; nacional vence em empate.
+Não mistura votos de um conjunto com totais do outro. Uma UF indisponível impede
+a soma, mas não a publicação nacional. O lote paralelo das UFs tem no máximo dois
+segundos de espera por ciclo; quando ainda pendente, não se inicia outro lote e o
+nacional pode ser publicado. A comparação não presume que maior horário significa
+maior cobertura, nem impede correções oficiais que reduzam totais.
+
+A consulta nacional também alimenta MD/TF e cor, sem requisição duplicada.
+O histórico anterior é preservado, a coluna Origem fica depois dos candidatos e
+as escolhas novas são persistidas em `historico-presidente-selecionado.jsonl`.
+Ao reiniciar, esse registro evita inserir no histórico somas que não foram escolhidas.
+As opções `--presidente-automatico` e `--presidente-por-uf` são mutuamente exclusivas.
+
+No Linux, cada trabalhador recebe SIGKILL do kernel se o pai morrer, com verificação
+da corrida de inicialização. Ctrl+C usa o encerramento limitado já implementado;
+segundo sinal força os filhos. A proteção não cobre processos antigos iniciados
+antes desta versão.
 
 O arquivo de lock impede dois gerenciadores para a mesma planilha/diretório; não
 bloqueia o loop bash antigo nem programas externos. Ctrl+C encerra os processos;
@@ -258,6 +287,3 @@ os votos por município para Lula e Bolsonaro, salvo em
 ```sh
 python votacao_municipio.py
 ```
-
-
-Abas com totalização final recebem um asterisco no nome; a referência interna continua sendo a sigla da UF. O verde das abas com definição oficial é verde bandeira.

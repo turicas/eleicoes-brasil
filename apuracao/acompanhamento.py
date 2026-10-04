@@ -11,7 +11,7 @@ import sys
 import threading
 import time
 from collections.abc import Callable
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed, wait
 from contextlib import contextmanager
 from dataclasses import replace
 from datetime import datetime, timedelta, timezone
@@ -27,6 +27,7 @@ from .cor_aba import cor_resultado
 from .formatacao import UFS
 from .modelo import Contexto
 from .planilha import Planilha
+from .selecao import escolher_cobertura
 
 URL_CONFIGURACAO = "https://resultados.tse.jus.br/oficial/comum/config/ele-c.json"
 PLANILHAS = {
@@ -73,8 +74,12 @@ def cria_parser() -> argparse.ArgumentParser:
     parser.add_argument("turno", type=int, choices=(1, 2))
     parser.add_argument("--intervalo-presidente", type=_intervalo_presidente, default=25)
     parser.add_argument("--intervalo-ufs", type=_intervalo, default=60)
-    parser.add_argument(
+    fontes = parser.add_mutually_exclusive_group()
+    fontes.add_argument(
         "--presidente-por-uf", action="store_true", help="Soma 27 UFs + exterior em vez do JSON nacional (2026)"
+    )
+    fontes.add_argument(
+        "--presidente-automatico", action="store_true", help="Consulta nacional e UFs, escolhe a maior cobertura (2026)"
     )
     parser.add_argument("--data-path", type=Path, default=Path(__file__).parent / "data")
     return parser
@@ -169,12 +174,14 @@ class RotinaApuracao:
         planilha=None,
         coletor_factory=None,
         presidente_por_uf=False,
+        presidente_automatico=False,
     ):
         if tipo not in ("presidente", "governador"):
             raise ValueError("Tipo deve ser presidente ou governador")
-        if presidente_por_uf and ano != 2026:
+        if (presidente_por_uf or presidente_automatico) and ano != 2026:
             raise ValueError("--presidente-por-uf exige 2026")
-        self.presidente_por_uf = presidente_por_uf and tipo == "presidente"
+        self.presidente_automatico = presidente_automatico and tipo == "presidente"
+        self.presidente_por_uf = (presidente_por_uf or presidente_automatico) and tipo == "presidente"
         self.ano = ano
         self.turno = turno
         self.tipo = tipo
@@ -195,6 +202,9 @@ class RotinaApuracao:
         self._definicao_presidente = None
         self._definicao_publicada = None
         self._limite = LimiteConsultas()
+        self._pendentes_automatico = None
+        self._fontes_automatico = []
+        self._falha_automatico = False
 
     def _novo_coletor(self):
         return Coletor(self.data_path, timeout=8, tentativas=1)
@@ -249,8 +259,19 @@ class RotinaApuracao:
     def _registrar_historico(self, resultado):
         if self._historico is None:
             classe = Apuracao2022 if self.ano == 2022 else Apuracao2026
-            anteriores = self.coletor.historico(resultado.contexto, classe(resultado.contexto))
-            anteriores.extend(self._ler_historico_somas())
+            registro = self._arquivo_selecionados()
+            if self.presidente_automatico and registro.exists():
+                from .agregacao import fontes_salvas
+
+                anteriores = [
+                    fontes_salvas([json.loads(linha)])[0] for linha in registro.read_text().splitlines() if linha
+                ]
+            else:
+                anteriores = self.coletor.historico(resultado.contexto, classe(resultado.contexto))
+                anteriores.extend(self._ler_historico_somas())
+                if self.presidente_automatico:
+                    for anterior in anteriores:
+                        self._salvar_selecionado(anterior)
             anteriores.sort(key=lambda item: item.gerada_em)
             self._historico = []
             for anterior in anteriores:
@@ -260,8 +281,22 @@ class RotinaApuracao:
                     self._vistos.add(chave)
         chave = self._chave(resultado)
         if chave not in self._vistos:
+            if self.presidente_automatico:
+                self._salvar_selecionado(resultado)
             self._historico.append(resultado)
             self._vistos.add(chave)
+
+    def _arquivo_selecionados(self):
+        return self.data_path / str(self.ano) / f"turno-{self.turno}" / "historico-presidente-selecionado.jsonl"
+
+    def _salvar_selecionado(self, resultado):
+        from dataclasses import asdict
+
+        arquivo = self._arquivo_selecionados()
+        arquivo.parent.mkdir(parents=True, exist_ok=True)
+        with arquivo.open("a", encoding="utf-8") as stream:
+            stream.write(json.dumps(asdict(resultado), default=str, ensure_ascii=False) + "\n")
+            stream.flush()
 
     def _pasta_somas(self):
         return self.data_path / str(self.ano) / f"turno-{self.turno}" / "soma-presidente"
@@ -319,6 +354,53 @@ class RotinaApuracao:
         self._definicao_presidente = Apuracao2026(contexto).ler(dados)
         return cor_resultado(self._definicao_presidente)
 
+    def _coletar_automatico(self):
+        contexto = replace(self._contextos[0], abrangencia="br")
+        nacional = None
+        try:
+            nacional = self._coletar(contexto)
+            self._definicao_presidente = nacional
+        except Exception as erro:  # noqa: BLE001 - usa a alternativa se nacional indisponível
+            print(f"Fonte presidencial nacional indisponível: {erro}", file=sys.stderr, flush=True)
+        if self._pendentes_automatico is None:
+            self._pendentes_automatico = {
+                self._executor.submit(self._coletar, item, paralelo=True): item for item in self._contextos
+            }
+            self._fontes_automatico = []
+            self._falha_automatico = False
+        concluidos, _ = wait(self._pendentes_automatico, timeout=2)
+        for futuro in concluidos:
+            area = self._pendentes_automatico.pop(futuro).abrangencia
+            try:
+                self._fontes_automatico.append(futuro.result())
+            except Exception as erro:  # noqa: BLE001 - não usa soma parcial
+                self._falha_automatico = True
+                print(f"Fonte presidencial {area} indisponível: {erro}", file=sys.stderr, flush=True)
+        soma = None
+        if not self._pendentes_automatico:
+            if len(self._fontes_automatico) == 28 and not self._falha_automatico:
+                soma = replace(
+                    somar_presidente(self._fontes_automatico),
+                    capturada_em=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=-3))),
+                )
+            self._pendentes_automatico = None
+        try:
+            escolhido = escolher_cobertura(nacional, soma)
+        except ValueError:
+            if nacional is None:
+                raise
+            print("Soma incompatível; usando nacional", file=sys.stderr, flush=True)
+            escolhido = nacional
+        if escolhido is soma:
+            self._salvar_fontes_soma(self._fontes_automatico, soma)
+        print(
+            f"Cobertura presidente: nacional={nacional.secoes.totalizadas if nacional else 'indisponível'} "
+            f"soma={soma.secoes.totalizadas if soma else 'indisponível'} escolhido={escolhido.origem}",
+            file=sys.stderr,
+            flush=True,
+        )
+        return escolhido
+
     def run(self) -> None:
         inicio = time.perf_counter()
         print(f"{self.tipo}: início", file=sys.stderr, flush=True)
@@ -329,7 +411,11 @@ class RotinaApuracao:
         try:
             self.configurar()
             if self.tipo == "presidente":
-                if self.presidente_por_uf:
+                if self.presidente_automatico:
+                    resultado = self._coletar_automatico()
+                    if self._definicao_presidente is not None:
+                        cor_presidente = cor_resultado(self._definicao_presidente)
+                elif self.presidente_por_uf:
                     futuros = {
                         self._executor.submit(self._coletar, contexto, paralelo=True): contexto
                         for contexto in self._contextos
@@ -409,7 +495,7 @@ class RotinaApuracao:
                     tabelas[0].cor_aba = cor_presidente
                 titulo = None
                 if self.tipo == "presidente":
-                    tabelas.append(tabela_historico(self._historico))
+                    tabelas.append(tabela_historico(self._historico, incluir_origem=self.presidente_automatico))
                     titulo = titulo_resultado(alterados[0])
                 self.planilha.publicar(tabelas, titulo=titulo)
                 self._definicao_publicada = definicao_chave
@@ -440,14 +526,33 @@ class RotinaApuracao:
             session.close()
 
 
-def _trabalhar(ano, turno, tipo, sheet, data_path, intervalo, encerramento, presidente_por_uf=False, pid_pai=None):
+def _trabalhar(
+    ano,
+    turno,
+    tipo,
+    sheet,
+    data_path,
+    intervalo,
+    encerramento,
+    presidente_por_uf=False,
+    presidente_automatico=False,
+    pid_pai=None,
+):
     if pid_pai is not None:
         from .protecao_processo import proteger_filho
 
         proteger_filho(pid_pai)
     signal.signal(signal.SIGINT, signal.SIG_IGN)
     signal.signal(signal.SIGTERM, lambda *_: sys.exit(130))
-    rotina = RotinaApuracao(ano, turno, tipo, sheet, data_path, presidente_por_uf=presidente_por_uf)
+    rotina = RotinaApuracao(
+        ano,
+        turno,
+        tipo,
+        sheet,
+        data_path,
+        presidente_por_uf=presidente_por_uf,
+        presidente_automatico=presidente_automatico,
+    )
     try:
         executar_periodicamente(rotina.run, intervalo, espera=encerramento.wait, parar=encerramento.is_set)
     except KeyboardInterrupt:
@@ -497,6 +602,7 @@ def gerenciar(args, sheet: str, *, contexto=None) -> int:
                         intervalo,
                         encerramento,
                         args.presidente_por_uf,
+                        args.presidente_automatico,
                         os.getpid(),
                     ),
                     name=f"apuracao-{tipo}",
@@ -531,7 +637,7 @@ def gerenciar(args, sheet: str, *, contexto=None) -> int:
 def main(argv: list[str] | None = None) -> int:
     args = cria_parser().parse_args(argv)
     try:
-        if args.presidente_por_uf and args.ano != 2026:
+        if (args.presidente_por_uf or args.presidente_automatico) and args.ano != 2026:
             raise ValueError("--presidente-por-uf exige 2026")
         sheet = identificador_planilha(args.ano, args.turno)
         return gerenciar(args, sheet)
