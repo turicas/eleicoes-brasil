@@ -29,6 +29,8 @@ Algumas etapas de normalização são necessárias para facilitar análises e co
   TSE; `#NE` e `#NE#`, informação que não era registrada naquele ano; e, nos dados de candidatura, `NÃO DIVULGÁVEL` (ou
   `Não divulgável`), `-4`, `-1` e `-3` (sentinelas numéricas do TSE para nulo e não aplicável). Embora tenham origens
   distintas, todos ficam como nulas/vazias no CSV final, facilitando análises e reduzindo o tamanho do arquivo;
+  Sequências somente de `#` em valores monetários (ex.: `##################`) também viram vazio,
+  pois não contêm valor numérico recuperável; a causa não é confirmada pelos leiames examinados.
 - Normalização dos códigos de cargo: os códigos de cargo variam para alguns anos, tornando difícil o agrupamento entre
   anos e, para facilitar as análises, normalizamos todos os anos;
 - Renomear colunas: nem todas as colunas possuem nomes intuitivos e foram renomeadas (exemplo: `COD_SIT_TOT_TURNO` foi

@@ -261,6 +261,20 @@ def fix_sigla_unidade_federativa(value):
 
 
 def fix_valor(value):
+    """Normaliza valores monetários do TSE
+
+    O TSE usa vírgula como separador decimal. Sequências somente de '#' (ex.: '##################')
+    não contêm valor recuperável e viram vazio; os leiames examinados não confirmam a causa.
+
+    >>> fix_valor("37964,16")
+    '37964.16'
+    >>> fix_valor("##################")
+    ''
+    >>> fix_valor("")
+    ''
+    """
+    if value and set(value) == {"#"}:
+        return ""
     return value.replace(",", ".")
 
 

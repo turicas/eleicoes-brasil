@@ -30,7 +30,7 @@
 - Após alterar headers por ano, regenere os dicionários finais com `python tse.py headers` e revise o resultado.
 - `schema/` define os tipos e a ordem lógica de cada saída consolidada. Atualize schema, header final e conversão juntos quando um campo final mudar.
 - Preserve compatibilidade histórica. A normalização atual de maiúsculas/acentos existe em dados já publicados; não a amplie nem a altere globalmente sem decisão explícita e plano de migração. Dados novos destinados à apresentação não devem perder acentos/capitalização sem necessidade comprovada.
-- Valores sentinela do TSE (`#NULO`, `#NULO#`, `#NE`, `#NE#`, `-1`, `-3`, `-4`, `NÃO DIVULGÁVEL`), datas, documentos e valores financeiros exigem normalização explícita: todas as sentinelas de ausência devem virar vazio `""` no CSV consolidado final.
+- Valores sentinela do TSE (`#NULO`, `#NULO#`, `#NE`, `#NE#`, `-1`, `-3`, `-4`, `NÃO DIVULGÁVEL`; e sequências de `#` em campos monetários, sem valor recuperável), datas, documentos e valores financeiros exigem normalização explícita: todas as sentinelas de ausência devem virar vazio `""` no CSV consolidado final.
 - Em conjuntos que publicam arquivos por UF e também o consolidado `_BRASIL.` (como detalhe de votação e prestação anual), ignorar `_BRASIL.` e processar apenas UFs + `BR`, evitando duplicação.
 - Arquivos anuais do TSE que contenham apenas o cabeçalho (sem registros) devem ser tratados como _snapshots_ válidos, sem levantar exceção de arquivo vazio.
 - `data/` contém downloads e saídas locais, ignorados pelo Git. Versione código, headers, schemas, testes e documentação - não os CSVs/ZIPs gerados.
