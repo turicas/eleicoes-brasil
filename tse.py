@@ -52,7 +52,7 @@ def extract_data(
     output_fobj.close()
 
 
-def create_final_headers(header_type, order_columns, final_filename):
+def create_final_headers(header_type, order_columns, final_filename, calculated_fields=None):
     final_headers = {}
     filenames = sorted(
         [
@@ -94,6 +94,9 @@ def create_final_headers(header_type, order_columns, final_filename):
         )
     )
 
+    for nome_final, descricao in (calculated_fields or {}).items():
+        final_headers[nome_final] = {"nome_final": nome_final, "descricao": descricao, "original_names": []}
+
     header_list = sorted(final_headers.values(), key=lambda row: order_columns(row["nome_final"]))
     for row in header_list:
         descricao = []
@@ -102,7 +105,8 @@ def create_final_headers(header_type, order_columns, final_filename):
         row_data = {"nome_final": row["nome_final"]}
         introduced_on = row.get("introduced_on", None)
         original_names = ", ".join(f"{item[1]} ({item[0]})" for item in row.get("original_names"))
-        descricao.append(f"Aparece no TSE como: {original_names}")
+        if original_names:
+            descricao.append(f"Aparece no TSE como: {original_names}")
         if introduced_on:
             descricao.append(f"Coluna adicionada em {introduced_on}")
         descricao = ". ".join(descricao)
@@ -160,7 +164,9 @@ if __name__ == "__main__":
             extractor = extractors[header_type]["extractor_class"]()
             final_filename = settings.HEADERS_PATH / f"{header_type}_final.csv"
             print(f"Creating {final_filename}")
-            create_final_headers(header_type, extractor.order_columns, final_filename)
+            create_final_headers(
+                header_type, extractor.order_columns, final_filename, getattr(extractor, "calculated_fields", None)
+            )
 
     elif args.type == "mirror":
         added_urls, created_paths = [], []

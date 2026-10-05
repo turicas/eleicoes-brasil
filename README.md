@@ -23,16 +23,17 @@ TSE](http://www.tse.jus.br/eleicoes/estatisticas/repositorio-de-dados-eleitorais
 
 Algumas etapas de normalização são necessárias para facilitar análises e conversões dos dados, como:
 
-- Retirar todos os acentos: alguns nomes aparecem com acentos em um ano e sem em outros, dificultando muito os
-  agrupamentos;
+- Melhorar a grafia para valores categóricos, facilitando a exibição (ex: "2o SUPLENTE" -> "2º Suplente Senador");
+- Criar uma nova coluna com o nome completo padronizado (`nome_exibicao`), facilitando a exibição. O nome e nome na
+  urna originais são mantidos nas colunas `nome` e `nome_urna`, respectivamente;
 - Representar valores indisponíveis como células em branco: `#NULO` e `#NULO#` indicam informação em branco na base do
   TSE; `#NE` e `#NE#`, informação que não era registrada naquele ano; e, nos dados de candidatura, `NÃO DIVULGÁVEL` (ou
-  `Não divulgável`), `-4`, `-1` e `-3` (sentinelas numéricas do TSE para nulo e não aplicável). Embora tenham origens
-  distintas, todos ficam como nulas/vazias no CSV final, facilitando análises e reduzindo o tamanho do arquivo;
-  Sequências somente de `#` em valores monetários (ex.: `##################`) também viram vazio,
-  pois não contêm valor numérico recuperável; a causa não é confirmada pelos leiames examinados.
-- Normalização dos códigos de cargo: os códigos de cargo variam para alguns anos, tornando difícil o agrupamento entre
-  anos e, para facilitar as análises, normalizamos todos os anos;
+  `Não divulgável`), `-4`, `-1` e `-3` (representação do TSE para "nulo" e "não aplicável" em campos numéricos). Embora
+  tenham origens distintas, todos ficam como nulas/vazias no CSV final, facilitando análises e reduzindo o tamanho do
+  arquivo; Sequências somente de `#` em valores monetários (ex.: "##################") também viram vazio, pois não
+  contêm valor numérico recuperável;
+- Padronização dos códigos de cargo: os códigos de cargo variam para alguns anos, tornando difícil o agrupamento entre
+  anos;
 - Renomear colunas: nem todas as colunas possuem nomes intuitivos e foram renomeadas (exemplo: `COD_SIT_TOT_TURNO` foi
   renomeado para `codigo_totalizacao_turno`). Para saber mais detalhes sobre as colunas que foram renomeadas, olhe os
   arquivos no diretório `headers/` (caso você altere algum desses arquivos, gere novamente os cabeçalhos finais com

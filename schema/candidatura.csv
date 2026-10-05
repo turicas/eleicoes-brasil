@@ -44,6 +44,7 @@
 "idade_data_eleicao","integer"
 "idade_data_posse","integer"
 "nome","text"
+"nome_exibicao","text"
 "legenda","text"
 "municipio_nascimento","text"
 "partido","text"

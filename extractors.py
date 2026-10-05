@@ -10,6 +10,7 @@ from http.client import RemoteDisconnected
 from io import StringIO, TextIOWrapper
 from pathlib import Path
 from shutil import move as rename_file
+from typing import ClassVar
 from urllib.parse import urljoin
 from zipfile import ZipFile
 
@@ -210,10 +211,14 @@ def obfuscate_cpf(cpf):
 
 
 def gerar_pessoa_uuid(cpf, nome):
-    """Gera o URLid com base na descrição do Brasil.IO para entidade do tipo Pessoa (física)"""
+    """Gera o URLid com base na descrição do Brasil.IO para entidade do tipo Pessoa (física)
+
+    O nome original da pessoa deve ser usado (e não o `nome_exibicao`).
+    """
     # TODO: em vez da linha abaixo talvez possamos usar fix_cpf (porém com o suporte a '*')
     cpf = ("00000000000" + "".join(REGEXP_CPF_NUMBERS.findall(cpf)))[-11:]
-    nome = unaccent(nome).upper().replace(" ", "-")
+    nome_palavras = unaccent(limpa_nome(nome)).upper().split()
+    nome = "-".join(nome_palavras)
     return uuid.uuid5(uuid.NAMESPACE_URL, f"https://id.brasil.io/person/v1/{cpf[3:9]}-{nome}/")
 
 
@@ -250,11 +255,15 @@ def fix_cargo(codigo_cargo, cargo):
     return codigo_cargo, cargo, pergunta
 
 
-def fix_nome(value):
-    value = value.replace("`", "'").replace("' ", "'")
-    if value[0] in "',.]":
-        value = value[1:]
-    return nome_bonito(value)
+def limpa_nome(nome: str) -> str:
+    nome = nome.replace("`", "'").replace("' ", "'")
+    if nome and nome[0] in "',.]":
+        nome = nome[1:]
+    return nome.strip()
+
+
+def fix_nome(nome: str) -> str:
+    return nome_bonito(limpa_nome(nome))
 
 
 def fix_sigla_unidade_federativa(value):
@@ -474,6 +483,9 @@ class Extractor:
 class CandidaturaExtractor(Extractor):
     year_range = tuple(range(1996, max(last_elections_year(), 2026) + 1, 2))
     schema_filename = settings.SCHEMA_PATH / "candidatura.csv"
+    calculated_fields: ClassVar[dict[str, str]] = {
+        "nome_exibicao": "Coluna calculada a partir do nome para apresentação, com capitalização e pontuação normalizadas; preserva acentos."
+    }
 
     def filename(self, year):
         return f"consulta_cand/consulta_cand_{year}.zip"
@@ -529,11 +541,11 @@ class CandidaturaExtractor(Extractor):
                 value = row.get(key, "").strip()
                 if value in TSE_CANDIDATURA_UNAVAILABLE_VALUES:
                     value = ""
-                row[key] = unaccent(value).upper()  # TODO: e nomes com acento?
+                row[key] = value
 
             codigo_cargo, cargo, pergunta = fix_cargo(row["codigo_cargo"], row["cargo"])
             cpf = fix_cpf(row["cpf"])
-            nome = fix_nome(row["nome"])
+            nome = row["nome"]
             new = {
                 "candidatura_uuid": gerar_candidatura_uuid(row["ano"], row["numero_sequencial"]),
                 "pessoa_uuid": gerar_pessoa_uuid(cpf, nome) if cpf else None,
@@ -542,7 +554,8 @@ class CandidaturaExtractor(Extractor):
                 "data_nascimento": fix_data(row["data_nascimento"]),
                 "codigo_cargo": codigo_cargo,
                 "cpf": cpf,
-                "nome": nome,
+                "nome": nome,  # TODO: analisar se deveríamos passar pelo menos por `limpa_nome()`
+                "nome_exibicao": fix_nome(nome),
                 "cargo": cargo,
                 "sigla_unidade_federativa": fix_sigla_unidade_federativa(row["sigla_unidade_federativa"]),
                 "sigla_unidade_federativa_nascimento": fix_sigla_unidade_federativa(
@@ -558,14 +571,12 @@ class CandidaturaExtractor(Extractor):
             # TODO: fix data_nascimento (dd/mm/yyyy, dd/mm/yy, yyyymmdd, xx/xx/)
             # TODO: fix situacao
             # TODO: fix totalizacao
-            # TODO: seria interessante confirmar a idade na data da posse com
-            # os valores corrigidos, para verificar se a correção é compatível
-            # TODO: existem casos em que row['idade_data_eleicao'] é '' e
-            # row['idade_data_posse'] é '999' - esses provavelmente devem ser
-            # corrigidos (e a data de nascimento provavelmente deve ficar em
-            # branco).
-            # TODO: idade_data_eleicao está em branco em muitos casos, porém
-            # conseguimos preenchê-lo caso a data de nascimento esteja correta
+            # TODO: seria interessante confirmar a idade na data da posse com os valores corrigidos, para verificar se
+            # a correção é compatível
+            # TODO: existem casos em que row['idade_data_eleicao'] é '' e row['idade_data_posse'] é '999' - esses
+            # provavelmente devem ser corrigidos (e a data de nascimento provavelmente deve ficar em branco).
+            # TODO: idade_data_eleicao está em branco em muitos casos, porém conseguimos preenchê-lo caso a data de
+            # nascimento esteja correta
 
             return new
 
@@ -746,7 +757,7 @@ class VotacaoZonaExtractor(Extractor):
             codigo_cargo, cargo, _ = fix_cargo(row["codigo_cargo"], row["cargo"])
             new = {
                 "sigla_unidade_federativa": fix_sigla_unidade_federativa(row["sigla_unidade_federativa"]),
-                "nome": fix_nome(row["nome"]),
+                "nome": row["nome"],  # TODO: analisar se deveríamos passar pelo menos por `limpa_nome()`
                 "codigo_cargo": codigo_cargo,
                 "cargo": cargo,
                 "codigo_situacao_candidatura": self.codigo_situacao_candidatura[situacao_key],

@@ -2,6 +2,7 @@ import io
 import re
 import zipfile
 from csv import Dialect
+from functools import lru_cache
 from unicodedata import normalize
 
 from rows.fields import DateField
@@ -94,9 +95,10 @@ NUMERAIS_ROMANOS_NOMES: frozenset[str] = frozenset(
 )
 
 
-def nome_bonito(nome: str) -> str:
+@lru_cache(maxsize=64 * 1024)
+def nome_bonito(nome: str | None) -> str:
     """Formata o nome em Title Case inteligente com regras de capitalização do Português e casos especiais."""
-    if not nome:
+    if nome is None:
         return ""
 
     nome_limpo = nome.strip().replace("`", "'").replace("´", "'").replace("’", "'")

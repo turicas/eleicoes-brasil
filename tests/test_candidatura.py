@@ -4,6 +4,8 @@ from io import StringIO
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
 import settings
 from extractors import CandidaturaExtractor
 
@@ -57,6 +59,15 @@ class CandidaturaExtractorTestCase(unittest.TestCase):
             "email",
             "nome_social",
             "codigo_genero",
+            "etnia",
+            "estado_civil",
+            "genero",
+            "grau_instrucao",
+            "unidade_eleitoral",
+            "tipo_abrangencia_eleicao",
+            "tipo_eleicao",
+            "tipo_agremiacao",
+            "ocupacao",
         ]
         row = [
             "2024",
@@ -75,6 +86,15 @@ class CandidaturaExtractorTestCase(unittest.TestCase):
             "NÃO DIVULGÁVEL",
             "Não divulgável",
             "-4",
+            "PARDA",
+            "CASADO(A)",
+            "FEMININO",
+            "ENSINO MÉDIO COMPLETO",
+            "ABADIA DE GOIÁS",
+            "MUNICIPAL",
+            "ELEIÇÃO SUPLEMENTAR",
+            "PARTIDO ISOLADO",
+            "ADVOGADO",
         ]
 
         result = CandidaturaExtractor().convert_row(fields, fields)(row)
@@ -87,7 +107,7 @@ class CandidaturaExtractorTestCase(unittest.TestCase):
         self.assertEqual(result["codigo_genero"], "")
         self.assertEqual(result["sigla_unidade_federativa_nascimento"], "")
 
-    def test_conversao_nome_aplica_nome_bonito_e_preserva_nome_urna(self):
+    def test_conversao_preserva_nome_original_e_nome_urna_e_calcula_nome_exibicao(self):
         fields = [
             "ano",
             "numero_sequencial",
@@ -103,6 +123,15 @@ class CandidaturaExtractorTestCase(unittest.TestCase):
             "sigla_unidade_federativa_nascimento",
             "titulo_eleitoral",
             "candidatura_inserida_urna",
+            "etnia",
+            "estado_civil",
+            "genero",
+            "grau_instrucao",
+            "unidade_eleitoral",
+            "tipo_abrangencia_eleicao",
+            "tipo_eleicao",
+            "tipo_agremiacao",
+            "ocupacao",
         ]
         row = [
             "2024",
@@ -119,11 +148,21 @@ class CandidaturaExtractorTestCase(unittest.TestCase):
             "PE",
             "123456789012",
             "SIM",
+            "PRETA",
+            "SOLTEIRO(A)",
+            "MASCULINO",
+            "SUPERIOR INCOMPLETO",
+            "AFONSO CLÁUDIO",
+            "FEDERAL",
+            "ELEIÇÃO SUPLEMENTAR",
+            "COLIGAÇÃO",
+            "PROFESSOR DE ENSINO MÉDIO",
         ]
 
         result = CandidaturaExtractor().convert_row(fields, fields)(row)
 
-        self.assertEqual(result["nome"], "Luiz Inacio Lula da Silva")
+        self.assertEqual(result["nome"], "LUIZ INACIO LULA DA SILVA")
+        self.assertEqual(result["nome_exibicao"], "Luiz Inacio Lula da Silva")
         self.assertEqual(result["nome_urna"], "CB PM LULA")  # Preserva nome_urna como publicado
 
     def test_download_adiciona_cache_busting_em_urls_do_tse(self):
@@ -155,3 +194,143 @@ class CandidaturaExtractorTestCase(unittest.TestCase):
 
         self.assertEqual(headers["year_fields"][0].nome_tse, "DT_GERACAO")
         self.assertEqual(headers["year_fields"][-1].nome_tse, "DS_SIT_TOT_TURNO")
+
+
+@pytest.fixture
+def candidatura_identidade():
+    return {
+        "ano": "2024",
+        "numero_sequencial": "123",
+        "codigo_cargo": "6",
+        "cargo": "DEPUTADO FEDERAL",
+        "cpf": "12345678901",
+        "nome": "JOÃO D´ÁVILA",
+        "nome_urna": "JOÃO",
+        "data_eleicao": "06/10/2024",
+        "data_aceite": "",
+        "data_nascimento": "",
+        "sigla_unidade_federativa": "SP",
+        "sigla_unidade_federativa_nascimento": "SP",
+        "titulo_eleitoral": "",
+        "candidatura_inserida_urna": "SIM",
+        "etnia": "",
+        "estado_civil": "",
+        "genero": "",
+        "grau_instrucao": "",
+        "unidade_eleitoral": "SÃO PAULO",
+        "tipo_abrangencia_eleicao": "FEDERAL",
+        "tipo_eleicao": "ELEIÇÃO ORDINÁRIA",
+        "tipo_agremiacao": "PARTIDO ISOLADO",
+        "ocupacao": "",
+    }
+
+
+def converte_candidatura_identidade(candidatura_identidade):
+    campos = list(candidatura_identidade)
+    return CandidaturaExtractor().convert_row(campos, campos)(list(candidatura_identidade.values()))
+
+
+@pytest.mark.parametrize(
+    "nome,esperado",
+    [
+        ("JOÃO D´ÁVILA", "6bf49b6a-7d3f-5b93-85ad-485a15e69d14"),
+        ("` D' ÁVILA", "3a1f337d-ddea-5390-9d1b-1c5e652ff3cd"),
+        (" ANA  MARIA ", "66010900-8181-5149-9aad-932ef9cbe79c"),
+        ("MARIA DE SOUZA", "8c262b4d-fb51-5b0a-9184-033e3aeb9118"),
+        ("JOÃO-MARIA III", "f2973e32-a8f4-5e93-8ce7-4cd981959577"),
+        ("MCDONALD D’ÁVILA", "84617c8c-ff82-5035-9e23-4f1739ea5fe6"),
+    ],
+)
+def test_uuid_compativel_com_identidade_publicada(candidatura_identidade, nome, esperado):
+    candidatura_identidade["nome"] = nome
+    assert str(converte_candidatura_identidade(candidatura_identidade)["pessoa_uuid"]) == esperado
+
+
+def test_nome_original_e_apresentacao_separados(candidatura_identidade):
+    resultado = converte_candidatura_identidade(candidatura_identidade)
+    assert resultado["nome"] == "JOÃO D´ÁVILA"
+    assert resultado["nome_exibicao"] == "João D'Ávila"
+    assert resultado["nome_urna"] == "JOÃO"
+
+
+def test_identidade_independe_da_apresentacao(candidatura_identidade, monkeypatch):
+    import extractors
+
+    esperado = converte_candidatura_identidade(candidatura_identidade)["pessoa_uuid"]
+    monkeypatch.setattr(extractors, "nome_bonito", lambda nome: "Apresentação diferente")
+    resultado = converte_candidatura_identidade(candidatura_identidade)
+    assert resultado["pessoa_uuid"] == esperado
+    assert resultado["nome_exibicao"] == "Apresentação diferente"
+
+
+@pytest.mark.parametrize("cpf", ["", "#NULO#", "-4"])
+def test_pessoa_sem_cpf_nao_ganha_uuid(candidatura_identidade, cpf):
+    candidatura_identidade["cpf"] = cpf
+    assert converte_candidatura_identidade(candidatura_identidade)["pessoa_uuid"] is None
+
+
+def test_nome_ausente_nao_quebra_conversao(candidatura_identidade):
+    candidatura_identidade["nome"] = "#NULO#"
+    resultado = converte_candidatura_identidade(candidatura_identidade)
+    assert resultado["nome"] == resultado["nome_exibicao"] == ""
+
+
+def test_nome_exibicao_no_schema_dicionario_e_exportacao(candidatura_identidade, tmp_path):
+    import csv
+    from io import StringIO
+
+    import rows
+
+    import settings
+    from tse import create_final_headers
+
+    extractor = CandidaturaExtractor()
+    assert extractor.schema["nome_exibicao"] is rows.fields.TextField
+    destino = tmp_path / "candidatura_final.csv"
+    create_final_headers("candidatura", extractor.order_columns, destino, extractor.calculated_fields)
+    with destino.open() as arquivo:
+        gerado = list(csv.DictReader(arquivo))
+    with (settings.HEADERS_PATH / "candidatura_final.csv").open() as arquivo:
+        assert gerado == list(csv.DictReader(arquivo))
+    descricao = next(campo["descricao"] for campo in gerado if campo["nome_final"] == "nome_exibicao")
+    assert "calculada" in descricao and "Aparece no TSE" not in descricao
+    metadados = extractor.get_headers(2024, None, "consulta_cand_2024_SP.csv")
+    assert "nome_exibicao" not in [campo.nome_final for campo in metadados["year_fields"]]
+    campos_finais = [campo.nome_final for campo in metadados["final_fields"] if campo.nome_final]
+    resultado = extractor.convert_row(list(candidatura_identidade), campos_finais)(
+        list(candidatura_identidade.values())
+    )
+    saida = StringIO()
+    escritor = csv.DictWriter(saida, fieldnames=list(extractor.schema))
+    escritor.writeheader()
+    escritor.writerow(resultado)
+    publicado = next(csv.DictReader(StringIO(saida.getvalue())))
+    assert publicado["nome"] == candidatura_identidade["nome"]
+    assert publicado["nome_exibicao"] == "João D'Ávila"
+
+
+def test_extracao_publica_preserva_header_tse_e_calcula_apresentacao(candidatura_identidade, tmp_path, monkeypatch):
+    import csv
+    from io import StringIO
+    from zipfile import ZipFile
+
+    import settings
+    from utils import TSEDialect
+
+    extractor = CandidaturaExtractor()
+    monkeypatch.setattr(settings, "DOWNLOAD_PATH", tmp_path)
+    metadados = extractor.get_headers(2024, None, "consulta_cand_2024_SP.csv")
+    colunas = list(metadados["year_fields"])
+    conteudo = StringIO()
+    escritor = csv.writer(conteudo, dialect=TSEDialect)
+    escritor.writerow([campo.nome_tse for campo in colunas])
+    escritor.writerow([candidatura_identidade.get(campo.nome_final, "") for campo in colunas])
+    destino = extractor.download_filename(2024)
+    destino.parent.mkdir(parents=True)
+    with ZipFile(destino, "w") as arquivo:
+        arquivo.writestr("consulta_cand_2024_SP.csv", conteudo.getvalue().encode("latin-1"))
+    resultados = list(extractor.extract(2024))
+    assert len(resultados) == 1
+    assert resultados[0]["nome"] == candidatura_identidade["nome"]
+    assert resultados[0]["nome_exibicao"] == "João D'Ávila"
+    assert str(resultados[0]["pessoa_uuid"]) == "6bf49b6a-7d3f-5b93-85ad-485a15e69d14"

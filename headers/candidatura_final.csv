@@ -33,6 +33,7 @@ grau_instrucao,"Descrição do grau de instrução do candidato. Aparece no TSE 
 municipio_nascimento,"Nome do município de nascimento do candidato. Aparece no TSE como: NOME_MUNICIPIO_NASCIMENTO (1994_BR), NM_MUNICIPIO_NASCIMENTO (1996)."
 nacionalidade,"Descrição da nacionalidade do candidato. Aparece no TSE como: DESCRICAO_NACIONALIDADE (1994_BR), DS_NACIONALIDADE (1996)."
 nome,"Nome completo do candidato. Aparece no TSE como: NOME_CANDIDATO (1994_BR), NM_CANDIDATO (1996)."
+nome_exibicao,"Coluna calculada a partir do nome para apresentação, com capitalização e pontuação normalizadas; preserva acentos."
 nome_social,Nome social do candidato. Aparece no TSE como: NM_SOCIAL_CANDIDATO (1996). Coluna adicionada em 1996.
 ocupacao,"Descrição da ocupação do candidato. Aparece no TSE como: DESCRICAO_OCUPACAO (1994_BR), DS_OCUPACAO (1996)."
 ordem_suplencia,Aparece no TSE como: SQ_ORDEM_SUPLENCIA (2016). Coluna adicionada em 2016.
