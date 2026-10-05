@@ -110,9 +110,17 @@ para revisão. Não há reconhecimento de identidade. Overrides opcionais em JSO
 
 A janela deve ser quadrada, em pixels da imagem orientada. Use `--overrides ARQUIVO`.
 Erros por foto não bloqueiam as demais; verifique `erros-fotos.json` dentro do ZIP
-ou registros locais. A CLI retorna 1 se há fotos com erro. Uma folha de contato
-para revisão em lote não está implementada nesta entrega; pode-se abrir as WebP
-individualmente. O enquadramento automático precisa de revisão, principalmente
+ou registros locais. A CLI retorna 1 se há fotos com erro. Para revisar as imagens pelos nomes, gerar galeria HTML local:
+
+```bash
+python -m portal_eleitos.galeria \
+    data/portal-eleitos/publicacao/manifesto.json \
+    data/portal-eleitos/fotos-processadas
+```
+
+Abra `data/portal-eleitos/fotos-processadas/galeria.html` no navegador. Casos com
+fallback aparecem primeiro. As WebP individuais estão em `fotos/` e os originais
+em `originais/`. A galeria não altera imagens nem é publicada automaticamente. O enquadramento automático precisa de revisão, principalmente
 para fotos com iluminação/pessoas/enquadramentos incomuns.
 
 Incorporar o mapa numa nova revisão dos JSONs:
