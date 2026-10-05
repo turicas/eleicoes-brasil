@@ -27,6 +27,26 @@ python -m portal_eleitos.exportar 2026 data/portal-eleitos --turno 2
 ```
 
 Só funciona quando o segundo turno estiver explicitamente publicado no EA11.
+
+Ao concluir a coleta, o exportador detalha cada UF/cargo no stderr e grava
+`data/portal-eleitos/relatorio-conclusao.json` e `.md`. Situações:
+
+- `concluido`: tf=true e quantidade de eleitos igual às vagas.
+- `aguardando-tse`: ainda precisa executar novamente quando a fonte avançar.
+- `aguardando-segundo-turno`: não adianta repetir primeiro turno para descobrir o vencedor.
+- `sem-atribuicao`: fonte finalizada sem eleitos, exige acompanhamento específico.
+- `revisar`: lista/vagas incompatíveis ou dado insuficiente; não inventa eleito.
+- `atualizacao-falhou`: usa última versão válida; corrigir/repetir coleta.
+
+Reler o snapshot local sem download:
+
+```bash
+python -m portal_eleitos.relatorio data/portal-eleitos/publicacao/manifesto.json
+```
+
+`pode_encerrar_primeiro_turno=true` significa que não restam pendências de coleta
+ou inconsistências nessa revisão; não significa ausência de segundo turno,
+retotalizações ou casos sem atribuição.
 Não calcula quocientes, não atribui eleito por votos, nem tenta furar o cache do
 CDN com garantia. `coletado_em` é horário local da exportação; cada cargo tem geração
 oficial própria e hash do bruto.

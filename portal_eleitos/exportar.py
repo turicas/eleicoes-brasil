@@ -12,6 +12,7 @@ from hashlib import sha256
 from pathlib import Path
 
 from .infra import ClienteTSE, salvar_json
+from .relatorio import gravar_relatorio
 
 CONFIGURACAO = "https://resultados.tse.jus.br/oficial/comum/config/ele-c.json"
 
@@ -238,6 +239,7 @@ def exportar(
             "publicado_em": None,
             "territorios": caminhos,
         }
+        gravar_relatorio(destino, documentos)
         salvar_json(publicacao / "manifesto.json", manifesto)
         return publicacao / "manifesto.json"
     finally:
