@@ -1,9 +1,12 @@
 import csv
 import datetime
 import re
+import tempfile
 import time
 import uuid
+from contextlib import ExitStack, closing
 from functools import lru_cache
+from http.client import RemoteDisconnected
 from io import StringIO, TextIOWrapper
 from pathlib import Path
 from shutil import move as rename_file
@@ -11,12 +14,101 @@ from urllib.parse import urljoin
 from zipfile import ZipFile
 
 import rarfile
+import requests
 import rows
 from cached_property import cached_property
-from rows.utils import download_file, load_schema
+from requests.adapters import HTTPAdapter
+from rows.utils import load_schema
+from urllib3.exceptions import ProtocolError
+from urllib3.util import Retry
 
 import settings
 from utils import FixQuotes, TSEDialect, nome_bonito, unaccent
+
+DEFAULT_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "none",
+    "Upgrade-Insecure-Requests": "1",
+}
+
+
+class _ConnectionRetry(Retry):
+    """Inclui desconexão antes dos headers, sem retentar leitura de corpo ou timeout de leitura."""
+
+    def _is_connection_error(self, error):
+        # urllib3 classifica RemoteDisconnected como erro de leitura, mesmo sem resposta.
+        disconnected = isinstance(error, ProtocolError) and any(
+            isinstance(cause, RemoteDisconnected) for cause in error.args
+        )
+        return disconnected or super()._is_connection_error(error)
+
+
+def download_file(
+    uri,
+    filename=None,
+    progress=True,
+    chunk_size=256 * 1024,
+    headers=None,
+    user_agent=None,
+    proxies=None,
+    timeout=120,
+    title=None,
+) -> Path:
+    """Baixa arquivo via HTTP para `filename` (ou temporário) e devolve o caminho."""
+    request_headers = dict(DEFAULT_HEADERS)
+    if headers:
+        request_headers.update(headers)
+    if user_agent:
+        request_headers["User-Agent"] = user_agent
+
+    retries = _ConnectionRetry(
+        total=3, connect=3, read=0, status=0, other=0, backoff_factor=0, respect_retry_after_header=False
+    )
+    with requests.Session() as session:
+        session.mount("http://", HTTPAdapter(max_retries=retries))
+        session.mount("https://", HTTPAdapter(max_retries=retries))
+        target_path = None
+        try:
+            with closing(
+                session.get(uri, headers=request_headers, proxies=proxies, stream=True, timeout=timeout)
+            ) as response:
+                response.raise_for_status()
+
+                with ExitStack() as arquivos:
+                    if filename is None:
+                        fobj = arquivos.enter_context(tempfile.NamedTemporaryFile(delete=False))
+                        target_path = Path(fobj.name)
+                    else:
+                        target_path = Path(filename)
+                        target_path.parent.mkdir(parents=True, exist_ok=True)
+                        fobj = arquivos.enter_context(target_path.open("wb"))
+
+                    if progress:
+                        from tqdm import tqdm
+
+                        content_length = response.headers.get("Content-Length")
+                        total_bytes = int(content_length) if content_length else None
+                        progress_bar = tqdm(total=total_bytes, unit="B", unit_scale=True, desc=title)
+                    try:
+                        for chunk in response.iter_content(chunk_size=chunk_size):
+                            if chunk:
+                                fobj.write(chunk)
+                                if progress:
+                                    progress_bar.update(len(chunk))
+                    finally:
+                        if progress:
+                            progress_bar.close()
+        except (Exception, KeyboardInterrupt):
+            if filename is None and target_path is not None:
+                target_path.unlink(missing_ok=True)
+            raise
+
+        return target_path
+
 
 REGEXP_CPF_NUMBERS = re.compile("[0-9*]+")  # Inclui '*', diferente de outros documentos
 REGEXP_NUMBERS = re.compile("([0-9]+)")
@@ -308,8 +400,12 @@ class Extractor:
         proxies = None
         if self.proxy_url:
             proxies = {"http": self.proxy_url, "https": self.proxy_url}
-        file_data = download_file(url, progress=True, chunk_size=256 * 1024, user_agent="Mozilla/4", proxies=proxies)
-        rename_file(file_data.uri, filename)
+        # Baixa como temporário e renomeia depois para evitar arquivo incompleto com o nome completo (ficaria difícil
+        # distinguir se o arquivo é o completo ou não)
+        downloaded_filename = download_file(
+            url, progress=True, chunk_size=256 * 1024, proxies=proxies, title=f"Baixando {filename.name}"
+        )
+        rename_file(downloaded_filename, filename)
         return {"downloaded": True, "filename": filename}
 
     def extract_state_from_filename(self, filename):

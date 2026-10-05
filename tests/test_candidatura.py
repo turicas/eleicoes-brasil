@@ -2,7 +2,6 @@ import tempfile
 import unittest
 from io import StringIO
 from pathlib import Path
-from types import SimpleNamespace
 from unittest.mock import patch
 
 import settings
@@ -140,7 +139,7 @@ class CandidaturaExtractorTestCase(unittest.TestCase):
                     temp_fobj = tempfile.NamedTemporaryFile(delete=False)
                     temp_fobj.write(b"conteudo")
                     temp_fobj.close()
-                    return SimpleNamespace(uri=temp_fobj.name)
+                    return temp_fobj.name
 
                 with patch("extractors.download_file", side_effect=fake_download_file):
                     extractor.download(2026, force=True)
