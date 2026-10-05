@@ -5,6 +5,7 @@ import tempfile
 import time
 import uuid
 from contextlib import ExitStack, closing
+from decimal import Decimal, InvalidOperation
 from functools import lru_cache
 from http.client import RemoteDisconnected
 from io import StringIO, TextIOWrapper
@@ -123,6 +124,24 @@ TSE_CANDIDATURA_UNAVAILABLE_VALUES = (
     "Não divulgável",
     "-4",
 )
+TSE_UNAVAILABLE_NUMERIC_VALUES = ("-1", "-3", "-4")
+
+
+def normaliza_ausencia(value, monetario=False):
+    """Limpa sentinelas do TSE; em dinheiro, -1/-3 são ausência e outros negativos são preservados."""
+    value = value.strip()
+    if monetario:
+        try:
+            numero = Decimal(value.replace(",", "."))
+        except InvalidOperation:
+            numero = None
+        if numero in (Decimal("-1"), Decimal("-3")):
+            return ""
+        if value == "-4":
+            return value
+    elif value in TSE_UNAVAILABLE_NUMERIC_VALUES:
+        return ""
+    return "" if value in TSE_CANDIDATURA_UNAVAILABLE_VALUES else value
 
 
 MAP_CODIGO_CARGO = {
@@ -167,6 +186,70 @@ MAP_DESCRICAO_CARGO = {
     "PREFEITO": "Prefeito",
     "VICE-PREFEITO": "Vice-Prefeito",
     "VEREADOR": "Vereador",
+}
+MAP_ETNIA = {
+    "BRANCA": "Branca",
+    "PARDA": "Parda",
+    "PRETA": "Preta",
+    "NÃO INFORMADO": "Não informada",
+    "INDÍGENA": "Indígena",
+    "AMARELA": "Amarela",
+    "": "",
+}
+# TODO: decidir se o nome "etnia" será mantido ou trocado para "raça/cor"
+MAP_ESTADO_CIVIL = {
+    "NÃO INFORMADO": "Não informado",
+    "CASADO(A)": "Casado(a)",
+    "SOLTEIRO(A)": "Solteiro(a)",
+    "DIVORCIADO(A)": "Divorciado(a)",
+    "VIÚVO(A)": "Viúvo(a)",
+    "SEPARADO(A) JUDICIALMENTE": "Separado(a) judicialmente",
+    "": "",
+}
+MAP_GENERO = {
+    "NÃO INFORMADO": "Não informado",
+    "MASCULINO": "Masculino",
+    "FEMININO": "Feminino",
+    "": "",
+}
+MAP_TIPO_ABRANGENCIA_ELEICAO = {
+    "": "",
+    "MUNICIPAL": "Municipal",
+    "ESTADUAL": "Estadual",
+    "FEDERAL": "Federal",
+}
+MAP_TIPO_ELEICAO = {
+    "": "",
+    "ORDINÁRIA": "Eleição ordinária",
+    "ELEIÇÃO ORDINÁRIA": "Eleição ordinária",
+    "ELEIÇÃO SUPLEMENTAR": "Eleição suplementar",
+}
+MAP_TIPO_AGREMIACAO = {
+    "": "",
+    "PARTIDO ISOLADO": "Partido isolado",
+    "COLIGAÇÃO": "Coligação",
+    "FEDERAÇÃO": "Federação",
+}
+MAP_GRAU_INSTRUCAO = {
+    "NÃO INFORMADO": "Não informado",
+    # Preserva a terminologia histórica sem equiparar ciclos escolares de épocas diferentes.
+    "1º GRAU COMPLETO": "1º grau completo",
+    "1º GRAU INCOMPLETO": "1º grau incompleto",
+    "2º GRAU COMPLETO": "2º grau completo",
+    "2º GRAU INCOMPLETO": "2º grau incompleto",
+    "FUNDAMENTAL COMPLETO": "Ensino fundamental completo",
+    "FUNDAMENTAL INCOMPLETO": "Ensino fundamental incompleto",
+    "MÉDIO COMPLETO": "Ensino médio completo",
+    "MÉDIO INCOMPLETO": "Ensino médio incompleto",
+    "ENSINO MÉDIO COMPLETO": "Ensino médio completo",
+    "SUPERIOR COMPLETO": "Superior completo",
+    "ENSINO FUNDAMENTAL INCOMPLETO": "Ensino fundamental incompleto",
+    "ENSINO FUNDAMENTAL COMPLETO": "Ensino fundamental completo",
+    "SUPERIOR INCOMPLETO": "Superior incompleto",
+    "ENSINO MÉDIO INCOMPLETO": "Ensino médio incompleto",
+    "LÊ E ESCREVE": "Lê e escreve",
+    "": "",
+    "ANALFABETO": "Analfabeto",
 }
 
 
@@ -235,7 +318,7 @@ class SimNaoBooleanField(rows.fields.BoolField):
     FALSE_VALUES = ("não", "nao")
 
 
-@lru_cache()
+@lru_cache
 def read_header(filename, encoding="utf-8"):
     filename = Path(filename)
     return rows.import_from_csv(filename, encoding=encoding)
@@ -532,16 +615,14 @@ class CandidaturaExtractor(Extractor):
         }
 
     def convert_row(self, row_field_names, final_field_names):
+        # TODO: melhorar grafia dos campos categóricos ainda preservados sem mapeamento.
         def convert(row_data):
             if len(row_data) == 1 and "elapsed" in row_data[0].lower():
                 return None
 
             row = dict(zip(row_field_names, row_data))
             for key in final_field_names:
-                value = row.get(key, "").strip()
-                if value in TSE_CANDIDATURA_UNAVAILABLE_VALUES:
-                    value = ""
-                row[key] = value
+                row[key] = normaliza_ausencia(row.get(key, ""), monetario=key == "despesa_maxima_campanha")
 
             codigo_cargo, cargo, pergunta = fix_cargo(row["codigo_cargo"], row["cargo"])
             cpf = fix_cpf(row["cpf"])
@@ -564,6 +645,15 @@ class CandidaturaExtractor(Extractor):
                 "titulo_eleitoral": fix_titulo_eleitoral(row["titulo_eleitoral"]),
                 "pergunta": pergunta,
                 "candidatura_inserida_urna": SimNaoBooleanField.deserialize(row["candidatura_inserida_urna"]),
+                "etnia": MAP_ETNIA[row["etnia"]],
+                "estado_civil": MAP_ESTADO_CIVIL[row["estado_civil"]],
+                "genero": MAP_GENERO[row["genero"]],
+                "grau_instrucao": MAP_GRAU_INSTRUCAO[row["grau_instrucao"]],
+                "unidade_eleitoral": nome_bonito(row["unidade_eleitoral"]),
+                "tipo_abrangencia_eleicao": MAP_TIPO_ABRANGENCIA_ELEICAO[row["tipo_abrangencia_eleicao"]],
+                "tipo_eleicao": MAP_TIPO_ELEICAO[row["tipo_eleicao"]],
+                "tipo_agremiacao": MAP_TIPO_AGREMIACAO[row["tipo_agremiacao"]],
+                "ocupacao": row["ocupacao"].capitalize(),
             }
             for key in set(final_field_names) - set(new.keys()):
                 new[key] = row[key]
@@ -650,13 +740,11 @@ class BemDeclaradoExtractor(Extractor):
         }
 
     def convert_row(self, row_field_names, final_field_names):
+        # TODO: melhorar grafia de campos categóricos
         def convert(row_data):
             row = dict(zip(row_field_names, row_data))
             for key in final_field_names:
-                value = row.get(key, "").strip()
-                if value in ("#NULO", "#NULO#", "#NE#"):
-                    value = ""
-                row[key] = unaccent(value).upper()  # TODO: e nomes com acento?
+                row[key] = normaliza_ausencia(row.get(key, ""), monetario=key == "valor")
             new = {
                 "candidatura_uuid": gerar_candidatura_uuid(row["ano"], row["numero_sequencial"]),
                 "sigla_unidade_federativa": fix_sigla_unidade_federativa(row["sigla_unidade_federativa"]),
@@ -746,6 +834,7 @@ class VotacaoZonaExtractor(Extractor):
         }
 
     def convert_row(self, row_field_names, final_field_names):
+        # TODO: melhorar grafia dos campos categóricos ainda preservados sem mapeamento.
         def convert(row_data):
             row = dict(zip(row_field_names, row_data))
             for key in final_field_names:
@@ -969,6 +1058,7 @@ class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
     schema_filename = settings.SCHEMA_PATH / "receita.csv"
 
     def convert_row(self, row_field_names, final_field_names, year):
+        # TODO: melhorar grafia dos campos categóricos ainda preservados sem mapeamento.
         def convert(row_data):
             cleaned_year, *_unused_suffix = str(year).split("_")
             row = dict(zip(row_field_names, row_data))
@@ -1004,6 +1094,7 @@ class PrestacaoContasDespesasExtractor(PrestacaoContasExtractor):
     schema_filename = settings.SCHEMA_PATH / "despesa.csv"
 
     def convert_row(self, row_field_names, final_field_names, year):
+        # TODO: melhorar grafia dos campos categóricos ainda preservados sem mapeamento.
         def convert(row_data):
             cleaned_year, *_unused_suffix = str(year).split("_")
             row = dict(zip(row_field_names, row_data))

@@ -3,6 +3,7 @@ import unittest
 import pytest
 
 from divulgacandcontas import url_candidatura
+from extractors import CandidaturaExtractor
 
 
 class DivulgaCandContasTestCase(unittest.TestCase):
@@ -105,6 +106,11 @@ def candidatura_suplementar():
     }
 
 
+def converte_candidatura_suplementar(candidatura_suplementar):
+    campos = list(candidatura_suplementar)
+    return CandidaturaExtractor().convert_row(campos, campos)(list(candidatura_suplementar.values()))
+
+
 @pytest.mark.parametrize(
     "tipo_eleicao",
     ["ELEICAO SUPLEMENTAR", "ELEIÇÃO SUPLEMENTAR", "Eleição suplementar", " eleição SUPLEMENTAR "],
@@ -116,3 +122,11 @@ def test_suplementar_exige_identificador_especifico(candidatura_suplementar, tip
     with pytest.raises(ValueError, match="codigo_eleicao_divulgacand"):
         url_candidatura(candidatura_suplementar)
     assert "/987/" in url_candidatura(candidatura_suplementar, codigo_eleicao_divulgacand="987")
+
+
+def test_suplementar_convertida_exige_identificador_especifico(candidatura_suplementar):
+    from divulgacandcontas import url_candidatura
+
+    candidatura_suplementar.update(tipo_eleicao="ELEIÇÃO SUPLEMENTAR", sigla_unidade_eleitoral="SP")
+    with pytest.raises(ValueError, match="codigo_eleicao_divulgacand"):
+        url_candidatura(converte_candidatura_suplementar(candidatura_suplementar))

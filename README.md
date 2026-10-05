@@ -23,15 +23,18 @@ TSE](http://www.tse.jus.br/eleicoes/estatisticas/repositorio-de-dados-eleitorais
 
 Algumas etapas de normalização são necessárias para facilitar análises e conversões dos dados, como:
 
-- Melhorar a grafia para valores categóricos, facilitando a exibição (ex: "2o SUPLENTE" -> "2º Suplente Senador");
+- Melhorar a grafia para valores categóricos, facilitando a exibição (ex: "2o SUPLENTE" -> "2º Suplente Senador").
+  Categorias desconhecidas interrompem a conversão, alertando que uma revisão no mapeamento é necessária;
 - Criar uma nova coluna com o nome completo padronizado (`nome_exibicao`), facilitando a exibição. O nome e nome na
   urna originais são mantidos nas colunas `nome` e `nome_urna`, respectivamente;
 - Representar valores indisponíveis como células em branco: `#NULO` e `#NULO#` indicam informação em branco na base do
   TSE; `#NE` e `#NE#`, informação que não era registrada naquele ano; e, nos dados de candidatura, `NÃO DIVULGÁVEL` (ou
   `Não divulgável`), `-4`, `-1` e `-3` (representação do TSE para "nulo" e "não aplicável" em campos numéricos). Embora
   tenham origens distintas, todos ficam como nulas/vazias no CSV final, facilitando análises e reduzindo o tamanho do
-  arquivo; Sequências somente de `#` em valores monetários (ex.: "##################") também viram vazio, pois não
-  contêm valor numérico recuperável;
+  arquivo. Em campos monetários, `-1` e `-3` também são ausência, inclusive quando escritos com casas decimais,
+  conforme o leiame. Outros negativos e zero são preservados; `-4` não é documentado como ausência monetária nos
+  leiames de bens examinados. Sequências somente de `#` em valores monetários (ex.: "##################") também
+  viram vazio, pois não contêm valor numérico recuperável;
 - Padronização dos códigos de cargo: os códigos de cargo variam para alguns anos, tornando difícil o agrupamento entre
   anos;
 - Renomear colunas: nem todas as colunas possuem nomes intuitivos e foram renomeadas (exemplo: `COD_SIT_TOT_TURNO` foi

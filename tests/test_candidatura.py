@@ -334,3 +334,169 @@ def test_extracao_publica_preserva_header_tse_e_calcula_apresentacao(candidatura
     assert resultados[0]["nome"] == candidatura_identidade["nome"]
     assert resultados[0]["nome_exibicao"] == "João D'Ávila"
     assert str(resultados[0]["pessoa_uuid"]) == "6bf49b6a-7d3f-5b93-85ad-485a15e69d14"
+
+
+@pytest.fixture
+def candidatura_categorias():
+    return {
+        "ano": "2024",
+        "numero_sequencial": "123",
+        "codigo_cargo": "6",
+        "cargo": "DEPUTADO FEDERAL",
+        "cpf": "12345678901",
+        "nome": "JOÃO D´ÁVILA",
+        "nome_urna": "JOÃO",
+        "data_eleicao": "06/10/2024",
+        "data_aceite": "",
+        "data_nascimento": "",
+        "sigla_unidade_federativa": "SP",
+        "sigla_unidade_federativa_nascimento": "SP",
+        "titulo_eleitoral": "",
+        "candidatura_inserida_urna": "SIM",
+        "etnia": "",
+        "estado_civil": "",
+        "genero": "",
+        "grau_instrucao": "",
+        "unidade_eleitoral": "SÃO PAULO",
+        "tipo_abrangencia_eleicao": "FEDERAL",
+        "tipo_eleicao": "ELEIÇÃO ORDINÁRIA",
+        "tipo_agremiacao": "PARTIDO ISOLADO",
+        "ocupacao": "",
+    }
+
+
+def converte_candidatura_categorias(candidatura_categorias):
+    campos = list(candidatura_categorias)
+    return CandidaturaExtractor().convert_row(campos, campos)(list(candidatura_categorias.values()))
+
+
+CATEGORIAS_HISTORICAS = [
+    ("estado_civil", "NÃO INFORMADO", "Não informado"),
+    ("genero", "NÃO INFORMADO", "Não informado"),
+    ("grau_instrucao", "1º GRAU COMPLETO", "1º grau completo"),
+    ("grau_instrucao", "1º GRAU INCOMPLETO", "1º grau incompleto"),
+    ("grau_instrucao", "2º GRAU COMPLETO", "2º grau completo"),
+    ("grau_instrucao", "2º GRAU INCOMPLETO", "2º grau incompleto"),
+    ("grau_instrucao", "FUNDAMENTAL COMPLETO", "Ensino fundamental completo"),
+    ("grau_instrucao", "FUNDAMENTAL INCOMPLETO", "Ensino fundamental incompleto"),
+    ("grau_instrucao", "MÉDIO COMPLETO", "Ensino médio completo"),
+    ("grau_instrucao", "MÉDIO INCOMPLETO", "Ensino médio incompleto"),
+    ("grau_instrucao", "NÃO INFORMADO", "Não informado"),
+    ("tipo_agremiacao", "", ""),
+    ("tipo_eleicao", "ORDINÁRIA", "Eleição ordinária"),
+]
+
+
+@pytest.mark.parametrize("campo,original,esperado", CATEGORIAS_HISTORICAS)
+def test_categorias_historicas(candidatura_categorias, campo, original, esperado):
+    candidatura_categorias[campo] = original
+    assert converte_candidatura_categorias(candidatura_categorias)[campo] == esperado
+
+
+@pytest.mark.parametrize("campo", ["estado_civil", "genero", "grau_instrucao", "tipo_agremiacao", "tipo_eleicao"])
+def test_categoria_desconhecida_nao_e_silenciada(candidatura_categorias, campo):
+    candidatura_categorias[campo] = "CATEGORIA SEM SIGNIFICADO CONFIRMADO"
+    with pytest.raises(KeyError):
+        converte_candidatura_categorias(candidatura_categorias)
+
+
+@pytest.mark.parametrize("campo", ["estado_civil", "genero", "grau_instrucao", "tipo_agremiacao"])
+@pytest.mark.parametrize("ausencia", ["", "#NULO#", "#NE#"])
+def test_ausencia_de_categoria(candidatura_categorias, campo, ausencia):
+    candidatura_categorias[campo] = ausencia
+    assert converte_candidatura_categorias(candidatura_categorias)[campo] == ""
+
+
+@pytest.fixture
+def candidatura_sentinelas():
+    return {
+        "ano": "2024",
+        "numero_sequencial": "123",
+        "codigo_cargo": "6",
+        "cargo": "DEPUTADO FEDERAL",
+        "cpf": "12345678901",
+        "nome": "JOÃO D´ÁVILA",
+        "nome_urna": "JOÃO",
+        "data_eleicao": "06/10/2024",
+        "data_aceite": "",
+        "data_nascimento": "",
+        "sigla_unidade_federativa": "SP",
+        "sigla_unidade_federativa_nascimento": "SP",
+        "titulo_eleitoral": "",
+        "candidatura_inserida_urna": "SIM",
+        "etnia": "",
+        "estado_civil": "",
+        "genero": "",
+        "grau_instrucao": "",
+        "unidade_eleitoral": "SÃO PAULO",
+        "tipo_abrangencia_eleicao": "FEDERAL",
+        "tipo_eleicao": "ELEIÇÃO ORDINÁRIA",
+        "tipo_agremiacao": "PARTIDO ISOLADO",
+        "ocupacao": "",
+        "idade_data_posse": "42",
+        "codigo_etnia": "1",
+        "numero_partido": "10",
+        "despesa_maxima_campanha": "0",
+    }
+
+
+def converte_candidatura_sentinelas(extractor, dados):
+    campos = list(dados)
+    return extractor.convert_row(campos, campos)(list(dados.values()))
+
+
+@pytest.mark.parametrize("sentinela", ["-1", "-3", "-4", "#NULO", "#NULO#", "#NE", "#NE#", "NÃO DIVULGÁVEL"])
+@pytest.mark.parametrize(
+    "campo",
+    [
+        "cpf",
+        "titulo_eleitoral",
+        "codigo_etnia",
+        "idade_data_posse",
+        "numero_partido",
+        "nome",
+        "nome_urna",
+        "data_eleicao",
+        "data_nascimento",
+        "tipo_eleicao",
+        "tipo_abrangencia_eleicao",
+        "estado_civil",
+        "genero",
+        "grau_instrucao",
+        "etnia",
+        "tipo_agremiacao",
+        "ocupacao",
+        "candidatura_inserida_urna",
+    ],
+)
+def test_ausencia_nao_monetaria_em_candidatura(candidatura_sentinelas, campo, sentinela):
+    candidatura_sentinelas[campo] = sentinela
+    resultado = converte_candidatura_sentinelas(CandidaturaExtractor(), candidatura_sentinelas)
+    assert resultado[campo] in ("", None)
+    if campo == "cpf":
+        assert resultado["pessoa_uuid"] is None
+    if campo == "nome":
+        assert resultado["nome_exibicao"] == ""
+
+
+@pytest.mark.parametrize("valor", ["-4", "0", "-1,25", "-113,14"])
+def test_candidatura_preserva_valor_monetario(candidatura_sentinelas, valor):
+    candidatura_sentinelas["despesa_maxima_campanha"] = valor
+    assert (
+        converte_candidatura_sentinelas(CandidaturaExtractor(), candidatura_sentinelas)["despesa_maxima_campanha"]
+        == valor
+    )
+
+
+def test_cpf_real_mantem_uuid_publicado(candidatura_sentinelas):
+    assert (
+        str(converte_candidatura_sentinelas(CandidaturaExtractor(), candidatura_sentinelas)["pessoa_uuid"])
+        == "6bf49b6a-7d3f-5b93-85ad-485a15e69d14"
+    )
+
+
+@pytest.mark.parametrize("valor", ["-1", "-3", "-1,00", "-3,00", "-1.00", "-3.00"])
+def test_limite_de_despesa_sentinela_e_ausencia(candidatura_sentinelas, valor):
+    candidatura_sentinelas["despesa_maxima_campanha"] = valor
+    resultado = converte_candidatura_sentinelas(CandidaturaExtractor(), candidatura_sentinelas)
+    assert resultado["despesa_maxima_campanha"] == ""
