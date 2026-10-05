@@ -204,6 +204,10 @@ Instale as dependências de desenvolvimento:
 pip install -r requirements-development.txt
 ```
 
+
+Os testes ficam em `tests/test_<dominio>.py`. `make test` executa a suíte completa e os doctests;
+use `make test TEST_ARGS="tests/test_candidatura.py -q"` para uma execução focada.
+
 Rode os testes:
 
 ```bash

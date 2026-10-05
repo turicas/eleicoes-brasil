@@ -73,7 +73,7 @@ tags:					# Generate a tags file (requires universal-ctags)
 	@git ls-files | ctags -L - --tag-relative=yes --quiet --append -f "$(TAGS_FILE)"
 
 test:					# Run pytest and show the coverage report (use TEST_ARGS='...')
-	$(COMMAND_RUN) bash -c 'coverage run -m pytest $(TEST_ARGS) && coverage report'
+	$(COMMAND_RUN) bash -c 'coverage run -m pytest -c pytest.ini $(TEST_ARGS) && coverage report'
 
 tse:					# Run tse.py (use ARGS='candidatura --years=2024')
 	$(COMMAND_RUN) python tse.py $(ARGS)
