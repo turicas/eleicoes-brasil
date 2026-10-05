@@ -1,5 +1,7 @@
 import unittest
 
+import pytest
+
 from divulgacandcontas import url_candidatura
 
 
@@ -72,3 +74,45 @@ class DivulgaCandContasTestCase(unittest.TestCase):
                     "sigla_unidade_eleitoral": "3",
                 }
             )
+
+
+@pytest.fixture
+def candidatura_suplementar():
+    return {
+        "ano": "2024",
+        "numero_sequencial": "123",
+        "codigo_cargo": "6",
+        "cargo": "DEPUTADO FEDERAL",
+        "cpf": "12345678901",
+        "nome": "JOÃO D´ÁVILA",
+        "nome_urna": "JOÃO",
+        "data_eleicao": "06/10/2024",
+        "data_aceite": "",
+        "data_nascimento": "",
+        "sigla_unidade_federativa": "SP",
+        "sigla_unidade_federativa_nascimento": "SP",
+        "titulo_eleitoral": "",
+        "candidatura_inserida_urna": "SIM",
+        "etnia": "",
+        "estado_civil": "",
+        "genero": "",
+        "grau_instrucao": "",
+        "unidade_eleitoral": "SÃO PAULO",
+        "tipo_abrangencia_eleicao": "FEDERAL",
+        "tipo_eleicao": "ELEIÇÃO ORDINÁRIA",
+        "tipo_agremiacao": "PARTIDO ISOLADO",
+        "ocupacao": "",
+    }
+
+
+@pytest.mark.parametrize(
+    "tipo_eleicao",
+    ["ELEICAO SUPLEMENTAR", "ELEIÇÃO SUPLEMENTAR", "Eleição suplementar", " eleição SUPLEMENTAR "],
+)
+def test_suplementar_exige_identificador_especifico(candidatura_suplementar, tipo_eleicao):
+    from divulgacandcontas import url_candidatura
+
+    candidatura_suplementar.update(tipo_eleicao=tipo_eleicao, sigla_unidade_eleitoral="SP")
+    with pytest.raises(ValueError, match="codigo_eleicao_divulgacand"):
+        url_candidatura(candidatura_suplementar)
+    assert "/987/" in url_candidatura(candidatura_suplementar, codigo_eleicao_divulgacand="987")

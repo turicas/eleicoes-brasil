@@ -4,6 +4,8 @@ Para montar a URL, usamos `numero_sequencial` como ID da candidatura e a unidade
 O `codigo_eleicao` do CSV não é o ID de eleição do DivulgaCandContas.
 """
 
+from utils import unaccent
+
 BASE_URL = "https://divulgacandcontas.tse.jus.br/divulga/#/candidato"
 
 REGIAO_POR_UF = {
@@ -76,7 +78,7 @@ def url_candidatura(candidatura: dict, codigo_eleicao_divulgacand=None):
 
     ano = str(candidatura["ano"])
     if codigo_eleicao_divulgacand is None:
-        if candidatura.get("tipo_eleicao") == "ELEICAO SUPLEMENTAR":
+        if unaccent(candidatura.get("tipo_eleicao") or "").strip().upper() == "ELEICAO SUPLEMENTAR":
             raise ValueError("Informe codigo_eleicao_divulgacand para uma eleição suplementar")
         try:
             codigo_eleicao_divulgacand = CODIGO_ELEICAO_ORDINARIA_POR_ANO[ano]
