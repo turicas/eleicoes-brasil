@@ -231,6 +231,20 @@ Fontes: [manuais do TSE](https://www.tse.jus.br/eleicoes/eleicoes-2026-content/a
 [autenticação gspread](https://docs.gspread.org/en/latest/oauth2.html) e
 [cotas Google Sheets](https://developers.google.com/workspace/sheets/api/limits).
 
+### Aba LEIA-ME
+
+Cria ou atualiza autoria, redes sociais, fontes e legenda, colocando a aba em
+primeiro lugar sem modificar resultados/histórico:
+
+```sh
+python -m apuracao.leia_me 2026 1 1RGi20p_QECrdRo_KJgxhSDo7zO2wnIFuxRqKs2XrWa0 \
+    --intervalo-presidente 10 --intervalo-ufs 30
+```
+
+Os intervalos documentados devem corresponder aos argumentos do gerenciador;
+sem parâmetros, o texto informa que a frequência é configurável. A aba não é
+reescrita em cada captura. Se mudar o ritmo, execute este comando novamente.
+
 ### Ajuste visual pontual e gráfico
 
 O script usa as mesmas regras de formato do publicador, sem alterar valores.

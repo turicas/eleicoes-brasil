@@ -20,6 +20,7 @@ class TabelaPlanilha:
     linhas: list[list]
     colunas_percentuais: tuple[int, ...] = ()
     cor_aba: str | None = None
+    indice: int | None = None
 
 
 class Planilha:
@@ -30,7 +31,7 @@ class Planilha:
     """
 
     CHAVE_CONTEXTO = "apuracao.contexto"
-    CAMPOS_METADADOS = "sheets(properties(sheetId,title,gridProperties,tabColorStyle),charts),developerMetadata"
+    CAMPOS_METADADOS = "sheets(properties(sheetId,title,index,gridProperties,tabColorStyle),charts),developerMetadata"
 
     def __init__(
         self,
@@ -128,6 +129,10 @@ class Planilha:
             if not tabela.nome or tabela.nome in nomes:
                 raise ValueError("Os nomes das abas devem ser únicos e não vazios.")
             nomes.add(tabela.nome)
+            if tabela.indice is not None and (
+                isinstance(tabela.indice, bool) or not isinstance(tabela.indice, int) or tabela.indice < 0
+            ):
+                raise ValueError("Índice de aba inválido")
             if tabela.cor_aba is not None and tabela.cor_aba not in CORES:
                 raise ValueError("Cor de aba inválida")
             largura = max((len(linha) for linha in tabela.linhas), default=0)
@@ -224,6 +229,15 @@ class Planilha:
                             }
                         }
                     )
+            if tabela.indice is not None and (existente is None or existente.get("index") != tabela.indice):
+                pedidos.append(
+                    {
+                        "updateSheetProperties": {
+                            "properties": {"sheetId": identificador, "index": tabela.indice},
+                            "fields": "index",
+                        }
+                    }
+                )
             if tabela.cor_aba is not None:
                 atual = existente.get("tabColorStyle") if existente else None
                 normalizado = (
@@ -314,6 +328,8 @@ class Planilha:
                     aba for aba in self._metadados["sheets"] if aba["properties"]["sheetId"] == atualizacao["sheetId"]
                 )
                 aba["properties"]["gridProperties"].update(atualizacao.get("gridProperties", {}))
+                if "index" in atualizacao:
+                    aba["properties"]["index"] = atualizacao["index"]
                 if "title" in atualizacao:
                     aba["properties"]["title"] = atualizacao["title"]
                 if "tabColorStyle" in atualizacao:

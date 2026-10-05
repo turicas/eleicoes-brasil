@@ -96,6 +96,43 @@ def pedidos_formatacao(
             "dimensions": {"sheetId": identificador, "dimension": "COLUMNS", "startIndex": 0, "endIndex": total_colunas}
         }
     }
+    if nome == "LEIA-ME":
+        formato(0, total_linhas, 0, 1, {"textFormat": {"bold": True}}, "userEnteredFormat.textFormat.bold")
+        formato(
+            0,
+            total_linhas,
+            1,
+            2,
+            {"wrapStrategy": "WRAP", "verticalAlignment": "TOP"},
+            "userEnteredFormat.wrapStrategy,userEnteredFormat.verticalAlignment",
+        )
+        pedidos.extend(
+            [
+                {
+                    "updateDimensionProperties": {
+                        "range": {"sheetId": identificador, "dimension": "COLUMNS", "startIndex": 1, "endIndex": 2},
+                        "properties": {"pixelSize": 800},
+                        "fields": "pixelSize",
+                    }
+                },
+                {
+                    "autoResizeDimensions": {
+                        "dimensions": {"sheetId": identificador, "dimension": "COLUMNS", "startIndex": 0, "endIndex": 1}
+                    }
+                },
+                {
+                    "autoResizeDimensions": {
+                        "dimensions": {
+                            "sheetId": identificador,
+                            "dimension": "ROWS",
+                            "startIndex": 0,
+                            "endIndex": total_linhas,
+                        }
+                    }
+                },
+            ]
+        )
+        return pedidos
     if nome == "LinhaDoTempo":
         formato(
             1,
