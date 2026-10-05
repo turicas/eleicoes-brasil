@@ -104,6 +104,12 @@ def tabela_resultado(resultado: Resultado, nome: str, *, definicao_oficial: Resu
                 resultado.eleitorado.apurado,
                 "Eleitorado total",
                 resultado.eleitorado.total,
+                "Eleitorado que falta apurar",
+                (
+                    resultado.eleitorado.nao_totalizado
+                    if resultado.contexto.ano == 2026
+                    else resultado.eleitorado.total - resultado.eleitorado.apurado
+                ),
             ],
             [
                 "Seções totalizadas",

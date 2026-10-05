@@ -39,6 +39,7 @@ class Secoes:
 class Eleitorado:
     total: int
     apurado: int
+    nao_totalizado: int | None = None
 
 
 @dataclass(frozen=True)

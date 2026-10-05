@@ -123,7 +123,11 @@ class Apuracao2026(Apuracao):
                 percentual_totalizadas=self._percentual(secoes, "pst", "s", opcional=True),
                 percentual_apuradas=self._percentual(secoes, "psa", "s", opcional=True),
             ),
-            eleitorado=Eleitorado(self._numero(eleitorado, "te", "e.te"), self._numero(eleitorado, "esa", "e.esa")),
+            eleitorado=Eleitorado(
+                self._numero(eleitorado, "te", "e.te"),
+                self._numero(eleitorado, "esa", "e.esa"),
+                self._numero(eleitorado, "esnt", "e.esnt", opcional=True),
+            ),
             votos=Votos(
                 total=self._numero(votos, "tv", "v.tv"),
                 validos=self._numero(votos, "vv", "v.vv"),

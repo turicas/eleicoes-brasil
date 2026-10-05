@@ -118,6 +118,12 @@ consultas ao TSE usa `?_=time.time_ns()` (ou `&_=...`) com `Cache-Control: no-ca
 e `Pragma: no-cache`. Isso não faz o TSE produzir uma geração nova. A data/hora do
 histórico é a geração da fonte, não o horário de cada consulta.
 
+Presidente e UFs mostram "Eleitorado que falta apurar": em 2026 usa-se `e.esnt`,
+eleitorado das seções ainda não totalizadas, com separador de milhar. Seções não
+instaladas já totalizadas não são pendências. Não representa votos garantidos,
+pois inclui possíveis abstenções. Campo ausente fica vazio; a soma por UF conserva
+essa ausência. Em 2022 mantém-se o cálculo histórico de total menos apurado.
+
 As abas das UFs mostram o percentual de seções totalizadas e o indicador de
 apuradas dividido pelo total, com nomes distintos. LinhaDoTempo guarda data/hora
 numericamente e exibe apenas `HH:mm:ss`, preservando o dia no valor subjacente.

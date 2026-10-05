@@ -35,6 +35,7 @@ _QUANTIDADES = frozenset(
     (
         "Eleitorado de seções apuradas",
         "Eleitorado total",
+        "Eleitorado que falta apurar",
         "Seções totalizadas",
         "Seções totais",
         "Seções apuradas",
@@ -168,7 +169,7 @@ def pedidos_formatacao(
         linha = linhas[indice]
         if not linha:
             continue
-        for coluna in (0, 2):
+        for coluna in (0, 2, 4):
             if len(linha) <= coluna or not isinstance(linha[coluna], str) or not linha[coluna]:
                 continue
             formato(
