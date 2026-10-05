@@ -150,3 +150,9 @@ class CandidaturaExtractorTestCase(unittest.TestCase):
                 self.assertIn("_=", chamadas[0])
             finally:
                 settings.DOWNLOAD_PATH = orig_path
+
+    def test_uses_2024_headers_for_2026(self):
+        headers = CandidaturaExtractor().get_headers(2026, None, "consulta_cand_2026_AC.csv")
+
+        self.assertEqual(headers["year_fields"][0].nome_tse, "DT_GERACAO")
+        self.assertEqual(headers["year_fields"][-1].nome_tse, "DS_SIT_TOT_TURNO")

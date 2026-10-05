@@ -18,8 +18,6 @@ from rows.utils import download_file, load_schema
 import settings
 from utils import FixQuotes, TSEDialect, nome_bonito, unaccent
 
-# TODO: may add validators to convert_row methods
-
 REGEXP_CPF_NUMBERS = re.compile("[0-9*]+")  # Inclui '*', diferente de outros documentos
 REGEXP_NUMBERS = re.compile("([0-9]+)")
 REGEXP_WRONGQUOTE = re.compile(r';"([^;\r\n]+"[^;\r\n]*)";')
@@ -32,6 +30,8 @@ TSE_CANDIDATURA_UNAVAILABLE_VALUES = (
     "Não divulgável",
     "-4",
 )
+
+
 MAP_CODIGO_CARGO = {
     "PRESIDENTE": "1",
     "VICE-PRESIDENTE": "2",
@@ -361,7 +361,7 @@ class Extractor:
 
 
 class CandidaturaExtractor(Extractor):
-    year_range = tuple(range(1996, last_elections_year() + 1, 2))
+    year_range = tuple(range(1996, max(last_elections_year(), 2026) + 1, 2))
     schema_filename = settings.SCHEMA_PATH / "candidatura.csv"
 
     def filename(self, year):
@@ -397,7 +397,7 @@ class CandidaturaExtractor(Extractor):
             header_year = "1996"
         elif year in (2012, 2014, 2016):
             header_year = str(year)
-        elif year in (2018, 2020, 2022, 2024):
+        elif year in (2018, 2020, 2022, 2024, 2026):
             header_year = "2024"
         else:
             raise ValueError(
@@ -500,7 +500,7 @@ class CandidaturaExtractor(Extractor):
 
 
 class BemDeclaradoExtractor(Extractor):
-    year_range = tuple(range(2006, last_elections_year() + 1, 2))
+    year_range = tuple(range(2006, max(last_elections_year(), 2026) + 1, 2))
     schema_filename = settings.SCHEMA_PATH / "bem_declarado.csv"
 
     def filename(self, year):
@@ -515,7 +515,7 @@ class BemDeclaradoExtractor(Extractor):
             header_year = "2006"
         elif year == 2016:
             header_year = "2016"
-        elif 2014 == year or 2018 <= year <= 2024:
+        elif 2014 == year or 2018 <= year <= 2026:
             header_year = "2022"
         else:
             raise ValueError(
