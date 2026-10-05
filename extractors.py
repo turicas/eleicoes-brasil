@@ -125,47 +125,47 @@ TSE_CANDIDATURA_UNAVAILABLE_VALUES = (
 
 
 MAP_CODIGO_CARGO = {
-    "PRESIDENTE": "1",
-    "VICE-PRESIDENTE": "2",
-    "GOVERNADOR": "3",
-    "VICE-GOVERNADOR": "4",
-    "SENADOR": "5",
-    "DEPUTADO FEDERAL": "6",
-    "DEPUTADO ESTADUAL": "7",
-    "DEPUTADO DISTRITAL": "8",
-    "1o SUPLENTE SENADOR": "9",
-    "2o SUPLENTE SENADOR": "10",
-    "PREFEITO": "11",
-    "VICE-PREFEITO": "12",
-    "VEREADOR": "13",
+    "Presidente": "1",
+    "Vice-Presidente": "2",
+    "Governador": "3",
+    "Vice-Governador": "4",
+    "Senador": "5",
+    "Deputado Federal": "6",
+    "Deputado Estadual": "7",
+    "Deputado Distrital": "8",
+    "1º Suplente Senador": "9",
+    "2º Suplente Senador": "10",
+    "Prefeito": "11",
+    "Vice-Prefeito": "12",
+    "Vereador": "13",
 }
 MAP_DESCRICAO_CARGO = {
     # Must change
-    "1o SUPLENTE": "1o SUPLENTE SENADOR",
-    "1O SUPLENTE": "1o SUPLENTE SENADOR",
-    "1º SUPLENTE SENADOR": "1o SUPLENTE SENADOR",
-    "1º SUPLENTE": "1o SUPLENTE SENADOR",
-    "2o SUPLENTE": "2o SUPLENTE SENADOR",
-    "2O SUPLENTE": "2o SUPLENTE SENADOR",
-    "2º SUPLENTE SENADOR": "2o SUPLENTE SENADOR",
-    "2º SUPLENTE": "2o SUPLENTE SENADOR",
-    "VICE PREFEITO": "VICE-PREFEITO",
-    "1O SUPLENTE SENADOR": "1o SUPLENTE SENADOR",
-    "2O SUPLENTE SENADOR": "2o SUPLENTE SENADOR",
+    "1o SUPLENTE": "1º Suplente Senador",
+    "1O SUPLENTE": "1º Suplente Senador",
+    "1º SUPLENTE SENADOR": "1º Suplente Senador",
+    "1º SUPLENTE": "1º Suplente Senador",
+    "2o SUPLENTE": "2º Suplente Senador",
+    "2O SUPLENTE": "2º Suplente Senador",
+    "2º SUPLENTE SENADOR": "2º Suplente Senador",
+    "2º SUPLENTE": "2º Suplente Senador",
+    "VICE PREFEITO": "Vice-Prefeito",
+    "1O SUPLENTE SENADOR": "1º Suplente Senador",
+    "2O SUPLENTE SENADOR": "2º Suplente Senador",
     # Do not change
-    "PRESIDENTE": "PRESIDENTE",
-    "VICE-PRESIDENTE": "VICE-PRESIDENTE",
-    "GOVERNADOR": "GOVERNADOR",
-    "VICE-GOVERNADOR": "VICE-GOVERNADOR",
-    "SENADOR": "SENADOR",
-    "DEPUTADO FEDERAL": "DEPUTADO FEDERAL",
-    "DEPUTADO ESTADUAL": "DEPUTADO ESTADUAL",
-    "DEPUTADO DISTRITAL": "DEPUTADO DISTRITAL",
-    "1o SUPLENTE SENADOR": "1o SUPLENTE SENADOR",
-    "2o SUPLENTE SENADOR": "2o SUPLENTE SENADOR",
-    "PREFEITO": "PREFEITO",
-    "VICE-PREFEITO": "VICE-PREFEITO",
-    "VEREADOR": "VEREADOR",
+    "PRESIDENTE": "Presidente",
+    "VICE-PRESIDENTE": "Vice-Presidente",
+    "GOVERNADOR": "Governador",
+    "VICE-GOVERNADOR": "Vice-Governador",
+    "SENADOR": "Senador",
+    "DEPUTADO FEDERAL": "Deputado Federal",
+    "DEPUTADO ESTADUAL": "Deputado Estadual",
+    "DEPUTADO DISTRITAL": "Deputado Distrital",
+    "1o SUPLENTE SENADOR": "1º Suplente Senador",
+    "2o SUPLENTE SENADOR": "2º Suplente Senador",
+    "PREFEITO": "Prefeito",
+    "VICE-PREFEITO": "Vice-Prefeito",
+    "VEREADOR": "Vereador",
 }
 
 
@@ -239,11 +239,12 @@ def read_header(filename, encoding="utf-8"):
 def fix_cargo(codigo_cargo, cargo):
     if codigo_cargo == "91":
         # It's a question on a plebiscite
-        cargo, pergunta = "OPCAO PLEBISCITO", cargo
+        cargo, pergunta = "Opção Plebiscito", cargo
 
     else:
         # Normalize cargo spelling and fix codigo_cargo accordingly
-        cargo = MAP_DESCRICAO_CARGO[cargo]
+        cargo_key = unaccent(cargo).upper()
+        cargo = MAP_DESCRICAO_CARGO[cargo_key]
         codigo_cargo = MAP_CODIGO_CARGO[cargo]
         pergunta = ""
     return codigo_cargo, cargo, pergunta
