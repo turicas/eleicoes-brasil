@@ -35,8 +35,9 @@ Algumas etapas de normalização são necessárias para facilitar análises e co
   conforme o leiame. Outros negativos e zero são preservados; `-4` não é documentado como ausência monetária nos
   leiames de bens examinados. Sequências somente de `#` em valores monetários (ex.: "##################") também
   viram vazio, pois não contêm valor numérico recuperável;
-- Padronização dos códigos de cargo: os códigos de cargo variam para alguns anos, tornando difícil o agrupamento entre
-  anos;
+- Preservar os códigos de cargo publicados pelo TSE e melhorar somente a descrição, inclusive para doadores e
+  fornecedores em prestação de contas. A descrição não é deduzida do número do código; valores desconhecidos
+  interrompem a conversão. Sentinelas de ausência viram vazio, sem criar códigos substitutos;
 - Renomear colunas: nem todas as colunas possuem nomes intuitivos e foram renomeadas (exemplo: `COD_SIT_TOT_TURNO` foi
   renomeado para `codigo_totalizacao_turno`). Para saber mais detalhes sobre as colunas que foram renomeadas, olhe os
   arquivos no diretório `headers/` (caso você altere algum desses arquivos, gere novamente os cabeçalhos finais com

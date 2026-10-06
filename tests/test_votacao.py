@@ -32,15 +32,25 @@ CARGOS = [
 
 @pytest.mark.parametrize("forma", [str.upper, str.title, str.lower], ids=["uppercase", "mixed", "lowercase"])
 @pytest.mark.parametrize("original,codigo,esperado", CARGOS)
-def test_fix_cargo_aceita_grafias_e_corrige_codigo(original, codigo, esperado, forma):
-    assert fix_cargo("0", forma(original)) == (codigo, esperado, "")
+def test_fix_cargo_aceita_grafias_e_preserva_codigo(original, codigo, esperado, forma):
+    assert fix_cargo("0", forma(original)) == ("0", esperado, "")
 
 
-def test_fix_cargo_preserva_pergunta_original_plebiscito():
-    pergunta = "Você é a favor da criação de São João?"
-    assert fix_cargo("91", pergunta) == ("91", "Opção Plebiscito", pergunta)
+def test_codigo_nao_transforma_pergunta_em_descricao_conhecida():
+    with pytest.raises(KeyError):
+        fix_cargo("91", "Você é a favor da criação de São João?")
 
 
 def test_fix_cargo_desconhecido_nao_e_silenciado():
     with pytest.raises(KeyError, match="CARGO DESCONHECIDO"):
         fix_cargo("0", "Cargo desconhecido")
+
+
+@pytest.mark.parametrize("codigo", ["2", "17", "91", "DEFERIDO", "999", ""])
+def test_cargo_nao_deduz_codigo_pela_descricao(codigo):
+    assert fix_cargo(codigo, "Vereador") == (codigo, "Vereador", "")
+
+
+@pytest.mark.parametrize("ausencia", ["-1", "-3", "-4", "#NE", "#NULO", ""])
+def test_cargo_limpa_sentinelas_sem_criar_codigo(ausencia):
+    assert fix_cargo(ausencia, ausencia) == ("", "", "")

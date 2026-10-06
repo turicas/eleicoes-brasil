@@ -144,22 +144,8 @@ def normaliza_ausencia(value, monetario=False):
     return "" if value in TSE_CANDIDATURA_UNAVAILABLE_VALUES else value
 
 
-MAP_CODIGO_CARGO = {
-    "Presidente": "1",
-    "Vice-Presidente": "2",
-    "Governador": "3",
-    "Vice-Governador": "4",
-    "Senador": "5",
-    "Deputado Federal": "6",
-    "Deputado Estadual": "7",
-    "Deputado Distrital": "8",
-    "1º Suplente Senador": "9",
-    "2º Suplente Senador": "10",
-    "Prefeito": "11",
-    "Vice-Prefeito": "12",
-    "Vereador": "13",
-}
 MAP_DESCRICAO_CARGO = {
+    "": "",
     # Must change
     "1o SUPLENTE": "1º Suplente Senador",
     "1O SUPLENTE": "1º Suplente Senador",
@@ -324,18 +310,15 @@ def read_header(filename, encoding="utf-8"):
     return rows.import_from_csv(filename, encoding=encoding)
 
 
-def fix_cargo(codigo_cargo, cargo):
-    if codigo_cargo == "91":
-        # It's a question on a plebiscite
-        cargo, pergunta = "Opção Plebiscito", cargo
+def normaliza_descricao_cargo(cargo):
+    """Melhora a descrição publicada; valores desconhecidos interrompem a conversão."""
+    cargo = normaliza_ausencia(cargo)
+    return MAP_DESCRICAO_CARGO[unaccent(cargo).upper()]
 
-    else:
-        # Normalize cargo spelling and fix codigo_cargo accordingly
-        cargo_key = unaccent(cargo).upper()
-        cargo = MAP_DESCRICAO_CARGO[cargo_key]
-        codigo_cargo = MAP_CODIGO_CARGO[cargo]
-        pergunta = ""
-    return codigo_cargo, cargo, pergunta
+
+def fix_cargo(codigo_cargo, cargo):
+    """Preserva o código publicado e consulta a grafia pela descrição, nunca pelo código."""
+    return normaliza_ausencia(codigo_cargo), normaliza_descricao_cargo(cargo), ""
 
 
 def limpa_nome(nome: str) -> str:
@@ -1066,7 +1049,13 @@ class PrestacaoContasReceitasExtractor(PrestacaoContasExtractor):
                 value = row.get(key, "").strip()
                 if value in ("#NULO", "#NULO#", "#NE#", "#NE"):
                     value = ""
-                row[key] = unaccent(value).upper()  # TODO: e nomes com acento?
+                if key in ("cargo", "cargo_doador", "cargo_fornecedor"):
+                    value = normaliza_descricao_cargo(value)
+                elif key in ("codigo_cargo", "codigo_cargo_doador", "codigo_cargo_fornecedor"):
+                    value = normaliza_ausencia(value)
+                else:
+                    value = unaccent(value).upper()
+                row[key] = value
             # TODO: não preencher `candidatura_uuid` quando o registro não é referente a uma candidatura
             # TODO: talvez adicionar outros campos `*_uuid`
             new = {
@@ -1102,7 +1091,13 @@ class PrestacaoContasDespesasExtractor(PrestacaoContasExtractor):
                 value = row.get(key, "").strip()
                 if value in ("#NULO", "#NULO#", "#NE#", "#NE"):
                     value = ""
-                row[key] = unaccent(value).upper()  # TODO: e nomes com acento?
+                if key in ("cargo", "cargo_doador", "cargo_fornecedor"):
+                    value = normaliza_descricao_cargo(value)
+                elif key in ("codigo_cargo", "codigo_cargo_doador", "codigo_cargo_fornecedor"):
+                    value = normaliza_ausencia(value)
+                else:
+                    value = unaccent(value).upper()
+                row[key] = value
 
             # TODO: não preencher `candidatura_uuid` quando o registro não é referente a uma candidatura
             # TODO: talvez adicionar outros campos `*_uuid`
