@@ -8,6 +8,8 @@ from scrapy.downloadermiddlewares.retry import RetryMiddleware
 from scrapy.exporters import CsvItemExporter
 from twisted.internet.task import deferLater
 
+from extractors import DEFAULT_HEADERS
+
 
 def retry_delay(retry_times, base, maximum):
     """Calcula a espera exponencial, limitada, antes de uma nova tentativa."""
@@ -269,6 +271,10 @@ class MultiCSVItemPipeline:
 
 class FiliacaoSpider(scrapy.Spider):
     name = "filiado"
+    custom_settings = {
+        "DEFAULT_REQUEST_HEADERS": DEFAULT_HEADERS,
+        "USER_AGENT": DEFAULT_HEADERS["User-Agent"],
+    }
 
     def start_requests(self):
         self.partidos = []
@@ -336,9 +342,9 @@ class FiliacaoSpider(scrapy.Spider):
         elif tipo == "filiacao":
             zona = response.request.meta["zona"]
             data = json.loads(response.text)
-            assert len(data["entitys"]) == data["totalElements"], (
-                f"Quantidade de elementos difere: {data['totalElements']}"
-            )
+            assert (
+                len(data["entitys"]) == data["totalElements"]
+            ), f"Quantidade de elementos difere: {data['totalElements']}"
             for item in data["entitys"]:
                 obj = Filiacao.from_dict(item, zona_obj=zona)
                 yield obj
@@ -360,7 +366,6 @@ if __name__ == "__main__":
             MultiCSVItemPipeline: 300,
         },
         "LOG_LEVEL": "INFO",
-        "USER_AGENT": "Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0",
         # Menos pressão sobre a API e ritmo adaptado à latência observada.
         "AUTOTHROTTLE_ENABLED": True,
         "AUTOTHROTTLE_START_DELAY": 1.0,

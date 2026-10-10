@@ -1,6 +1,12 @@
 import asyncio
 import unittest
 
+from scrapy.crawler import Crawler
+from scrapy.downloadermiddlewares.defaultheaders import DefaultHeadersMiddleware
+from scrapy.downloadermiddlewares.useragent import UserAgentMiddleware
+from scrapy.http import TextResponse
+
+from extractors import DEFAULT_HEADERS
 from filiacao import FiliacaoSpider, retry_delay
 
 
@@ -9,6 +15,24 @@ class FiliacaoTestCase(unittest.TestCase):
         self.assertEqual(retry_delay(1, base=2, maximum=30), 2)
         self.assertEqual(retry_delay(2, base=2, maximum=30), 4)
         self.assertEqual(retry_delay(5, base=2, maximum=30), 30)
+
+    def test_usa_os_mesmos_cabecalhos_dos_downloads_do_tse(self):
+        crawler = Crawler(FiliacaoSpider)
+        spider = FiliacaoSpider.from_crawler(crawler)
+        inicial = next(spider.start_requests())
+        resposta = TextResponse(inicial.url, request=inicial, body=b"[]", encoding="utf-8")
+        seguinte = next(spider.parse(resposta))
+        middlewares = [
+            DefaultHeadersMiddleware.from_crawler(crawler),
+            UserAgentMiddleware.from_crawler(crawler),
+        ]
+
+        for request in (inicial, seguinte):
+            with self.subTest(url=request.url):
+                for middleware in middlewares:
+                    middleware.process_request(request, spider)
+                for nome, valor in DEFAULT_HEADERS.items():
+                    self.assertEqual(request.headers.get(nome), valor.encode("utf-8"))
 
     def test_inicia_spider_com_a_api_atual_do_scrapy(self):
         async def collect_start_requests():
