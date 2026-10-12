@@ -283,7 +283,28 @@ def gerar_pessoa_uuid(cpf, nome):
     """Gera o URLid com base na descrição do Brasil.IO para entidade do tipo Pessoa (física)
 
     O nome original da pessoa deve ser usado (e não o `nome_exibicao`).
+
+    A normalização não equivale a `person_uuid` em `sql/urlid.sql`: esta função pode
+    preservar pontuação que `slug` transforma em hífen ou remove nas extremidades.
+    Isso gera identidades diferentes ao cruzar dados Python com tabelas geradas pelo SQL.
+    `scripts/conserta-candidatura-2024.sh` recalcula os UUIDs pelo SQL em todos os anos.
+
+    Exemplos reais da entrada e da saída desse script, com CPF mascarado (os seis
+    dígitos centrais usados no URLid são preservados):
+
+    MABEL TENORIO CAVALCANTE M. DE LIMA (2014, CPF ***342574**):
+        Python: MABEL-TENORIO-CAVALCANTE-M.-DE-LIMA
+                9c09399f-0209-5024-b685-cdf05fbaa658
+        SQL:    MABEL-TENORIO-CAVALCANTE-M-DE-LIMA
+                40f948a4-9060-5034-9cfb-225e1427ce9e
+
+    MARCOS FRANCISCO SERAFIM DE SOUZA, (2018, CPF ***132948**):
+        Python: MARCOS-FRANCISCO-SERAFIM-DE-SOUZA,
+                9e392273-eb7b-57be-bba0-04db44f06940
+        SQL:    MARCOS-FRANCISCO-SERAFIM-DE-SOUZA
+                6647d9bd-386b-509c-ba4c-fd9a599a7819
     """
+    # TODO: alinhar com person_uuid do SQL para cruzar tabelas, planejando a migração dos UUIDs Python já publicados.
     # TODO: em vez da linha abaixo talvez possamos usar fix_cpf (porém com o suporte a '*')
     cpf = ("00000000000" + "".join(REGEXP_CPF_NUMBERS.findall(cpf)))[-11:]
     nome_palavras = unaccent(limpa_nome(nome)).upper().split()
