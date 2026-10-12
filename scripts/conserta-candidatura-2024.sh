@@ -16,8 +16,9 @@
 #     python scripts/simplifica_filiacao.py data/2024-12-10-Filiacao.csv.gz data/output/filiacao_partidaria_4.csv.gz
 #     python scripts/simplifica_filiacao.py data/2026-03-08-Filiacao.csv.gz data/output/filiacao_partidaria_5.csv.gz
 #     python scripts/simplifica_filiacao.py data/2026-08-01-Filiacao.csv.gz data/output/filiacao_partidaria_6.csv.gz
-#     for i in 1 2 3 4 5 6; do echo "DROP TABLE IF EXISTS filiacao_${i}" | psql --no-psqlrc "$DATABASE_URL"; done
-#     for i in 1 2 3 4 5 6; do rows pgimport -s :text: -e utf-8 -d excel data/output/filiacao_partidaria_${i}.csv.gz "$DATABASE_URL" filiacao_${i}; done
+#     python scripts/simplifica_filiacao.py data/2026-10-11-Filiacao.csv.gz data/output/filiacao_partidaria_7.csv.gz
+#     for i in 1 2 3 4 5 6 7; do echo "DROP TABLE IF EXISTS filiacao_${i}" | psql --no-psqlrc "$DATABASE_URL"; done
+#     for i in 1 2 3 4 5 6 7; do rows pgimport -s :text: -e utf-8 -d excel data/output/filiacao_partidaria_${i}.csv.gz "$DATABASE_URL" filiacao_${i}; done
 #     cat > /tmp/filiacao.sql <<'EOL'
 #     SELECT DISTINCT * FROM (
 #       SELECT titulo_eleitor, cpf, situacao_eleitor, nome FROM filiacao_1
@@ -31,6 +32,8 @@
 #       SELECT titulo_eleitor, cpf, situacao_eleitor, nome FROM filiacao_5
 #       UNION
 #       SELECT titulo_eleitor, cpf, situacao_eleitor, nome FROM filiacao_6
+#       UNION
+#       SELECT titulo_eleitor, cpf, situacao_eleitor, nome FROM filiacao_7
 #     ) AS t
 #     EOL
 #     time rows pgexport $DATABASE_URL "$(cat /tmp/filiacao.sql)" data/output/filiacao_partidaria.csv.gz
@@ -62,7 +65,7 @@ fi
 log "Instalando funções URLid"
 psql --no-psqlrc "$DATABASE_URL" -f sql/urlid.sql
 
-echo "DROP TABLE IF EXISTS filiacao_orig" | psql --no-psqlrc "$DATABASE_URL"
+execsql "DROP TABLE IF EXISTS filiacao_orig"
 rows pgimport \
 	--input-encoding=utf-8 \
 	--schema=:text: \
@@ -71,7 +74,7 @@ rows pgimport \
 	"$DATABASE_URL" \
 	filiacao_orig
 
-echo "DROP TABLE IF EXISTS candidatura_orig" | psql --no-psqlrc "$DATABASE_URL"
+execsql "DROP TABLE IF EXISTS candidatura_orig"
 rows pgimport \
 	--input-encoding=utf-8 \
 	--schema=schema/candidatura.csv \
@@ -94,16 +97,17 @@ CREATE TABLE titulo_cpf AS
        = NULLIF(REGEXP_REPLACE(f.titulo_eleitor, '[^0-9]', '', 'g'), '')::bigint
     WHERE
       COALESCE(f.titulo_eleitor, '') <> ''
-      AND COALESCE(f.cpf, '') <> ''
+      AND COALESCE(f.cpf, '') NOT IN ('', '00000000004', '4', '-4')
+
     UNION
+
     SELECT DISTINCT
       c.titulo_eleitoral,
       RIGHT('00000000000' || c.cpf, 11) AS cpf
     FROM candidatura_orig AS c
     WHERE
       COALESCE(c.titulo_eleitoral, '') <> ''
-      AND COALESCE(c.cpf, '') <> ''
-      AND c.cpf <> '00000000004'
+      AND COALESCE(c.cpf, '') NOT IN ('', '00000000004', '4', '-4')
   )
   SELECT
     titulo_eleitoral,
@@ -120,7 +124,7 @@ query="
 CREATE TABLE candidatura_final AS
   SELECT
     CASE
-      WHEN NULLIF(cpf, '') IS NOT NULL AND cpf NOT IN ('4', '00000000004') THEN person_uuid(cpf, nome)
+      WHEN COALESCE(cpf, '') NOT IN ('', '00000000004', '4', '-4') THEN person_uuid(cpf, nome)
       ELSE NULL
     END AS pessoa_uuid,
     *
@@ -148,7 +152,7 @@ CREATE TABLE candidatura_final AS
       c.composicao_legenda,
       c.concorre_reeleicao,
       CASE
-        WHEN COALESCE(c.cpf, '') IN ('', '4', '00000000004') THEN t.cpf
+        WHEN COALESCE(c.cpf, '') IN ('', '00000000004', '4', '-4') THEN t.cpf
         ELSE c.cpf
       END AS cpf,
       c.data_eleicao,
@@ -173,6 +177,7 @@ CREATE TABLE candidatura_final AS
       c.idade_data_eleicao,
       c.idade_data_posse,
       c.nome,
+      c.nome_exibicao,
       c.legenda,
       c.municipio_nascimento,
       c.partido,
@@ -194,12 +199,12 @@ CREATE TABLE candidatura_final AS
       c.tipo_abrangencia_eleicao,
       c.tipo_agremiacao,
       c.titulo_eleitoral,
+      c.codigo_situacao_candidato_tot,
       c.federacao,
       c.federacao_composicao,
       c.federacao_numero,
       c.federacao_sigla,
       c.situacao_candidato_tot,
-      c.codigo_situacao_candidato_tot,
       c.situacao_prestacao_contas,
       c.tipo_destinacao_votos,
       c.data_aceite,
@@ -225,7 +230,7 @@ SELECT
   COUNT(DISTINCT cpf) AS cpfs_distintos,
   COUNT(DISTINCT titulo_eleitoral) AS titulos_eleitorais_distintos
 "
-where="WHERE COALESCE(cpf, '') IN ('', '4', '00000000004')"
+where="WHERE COALESCE(cpf, '') IN ('', '00000000004', '4', '-4')"
 group_order="GROUP BY 1 ORDER BY 1"
 log " -> Candidaturas com CPFs totais e distintos por ano (ANTES de cruzar com filiação + candidaturas históricas):"
 execsql "${select} FROM candidatura_orig ${group_order}"
