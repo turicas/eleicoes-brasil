@@ -114,6 +114,7 @@ def download_file(
 
 REGEXP_CPF_NUMBERS = re.compile("[0-9*]+")  # Inclui '*', diferente de outros documentos
 REGEXP_NUMBERS = re.compile("([0-9]+)")
+REGEXP_ESPACOS = re.compile(r"\s+")
 REGEXP_WRONGQUOTE = re.compile(r';"([^;\r\n]+"[^;\r\n]*)";')
 TSE_CANDIDATURA_UNAVAILABLE_VALUES = (
     "#NULO",
@@ -627,6 +628,9 @@ class CandidaturaExtractor(Extractor):
             row = dict(zip(row_field_names, row_data))
             for key in final_field_names:
                 row[key] = normaliza_ausencia(row.get(key, ""), monetario=key == "despesa_maxima_campanha")
+
+            for campo in ("nome", "nome_urna"):
+                row[campo] = REGEXP_ESPACOS.sub(" ", row.get(campo, ""))
 
             codigo_cargo, cargo, pergunta = fix_cargo(row["codigo_cargo"], row["cargo"])
             cpf = fix_cpf(row["cpf"])

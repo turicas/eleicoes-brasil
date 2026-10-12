@@ -26,7 +26,9 @@ Algumas etapas de normalização são necessárias para facilitar análises e co
 - Melhorar a grafia para valores categóricos, facilitando a exibição (ex: "2o SUPLENTE" -> "2º Suplente Senador").
   Categorias desconhecidas interrompem a conversão, alertando que uma revisão no mapeamento é necessária;
 - Criar uma nova coluna com o nome completo padronizado (`nome_exibicao`), facilitando a exibição. O nome e nome na
-  urna originais são mantidos nas colunas `nome` e `nome_urna`, respectivamente;
+  urna originais são mantidos nas colunas `nome` e `nome_urna`, respectivamente, com sequências de espaços em branco
+  (`\s+`, incluindo espaços não separáveis `U+00A0`) substituídas por um único espaço comum (`U+0020`), sem alterar
+  acentos, capitalização ou pontuação;
 - Representar valores indisponíveis como células em branco: `#NULO` e `#NULO#` indicam informação em branco na base do
   TSE; `#NE` e `#NE#`, informação que não era registrada naquele ano; e, nos dados de candidatura, `NÃO DIVULGÁVEL` (ou
   `Não divulgável`), `-4`, `-1` e `-3` (representação do TSE para "nulo" e "não aplicável" em campos numéricos). Embora

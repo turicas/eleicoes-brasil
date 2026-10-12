@@ -253,6 +253,43 @@ def test_nome_original_e_apresentacao_separados(candidatura_identidade):
     assert resultado["nome_urna"] == "JOÃO"
 
 
+@pytest.mark.parametrize("campo", ["nome", "nome_urna"])
+@pytest.mark.parametrize(
+    "valor,esperado",
+    [
+        ("ANA\xa0MARIA", "ANA MARIA"),
+        ("ANA\xa0\xa0D´ÁVILA", "ANA D´ÁVILA"),
+        ("ANA MARIA", "ANA MARIA"),
+        ("ANA  MARIA", "ANA MARIA"),
+        ("ANAMARIA", "ANAMARIA"),
+        ("ANA\u2003MARIA", "ANA MARIA"),
+        ("ANA\t\n\xa0 MARIA", "ANA MARIA"),
+        ("ANA\u202f\u202fMARIA", "ANA MARIA"),
+        ("ANA\r\nMARIA", "ANA MARIA"),
+        ("ANA\v\fMARIA", "ANA MARIA"),
+        ("ANA\u200bMARIA", "ANA\u200bMARIA"),
+        ("SOLANGE JANE  TAVARES DUAILIBE DE JESUS", "SOLANGE JANE TAVARES DUAILIBE DE JESUS"),
+        ("AMELIO CAYRES DE  ALMEIDA", "AMELIO CAYRES DE ALMEIDA"),
+        ("JOSÉ AUGUSTO  RODRIGUES", "JOSÉ AUGUSTO RODRIGUES"),
+        ("ANA DE   CARLI", "ANA DE CARLI"),
+    ],
+)
+def test_nomes_normalizam_sequencias_de_espacos(candidatura_identidade, campo, valor, esperado):
+    candidatura_identidade[campo] = valor
+    resultado = converte_candidatura_identidade(candidatura_identidade)
+    assert resultado[campo] == esperado
+
+
+@pytest.mark.parametrize("espacos", ["\xa0", "  ", "\u2003", "\t\n\xa0 "])
+def test_normalizacao_de_espacos_preserva_identidade_e_apresentacao(candidatura_identidade, espacos):
+    candidatura_identidade["nome"] = "ANA MARIA D´ÁVILA"
+    esperado = converte_candidatura_identidade(candidatura_identidade)
+    candidatura_identidade["nome"] = f"ANA{espacos}MARIA{espacos}D´ÁVILA"
+    resultado = converte_candidatura_identidade(candidatura_identidade)
+    assert resultado["pessoa_uuid"] == esperado["pessoa_uuid"]
+    assert resultado["nome_exibicao"] == esperado["nome_exibicao"] == "Ana Maria D'Ávila"
+
+
 def test_identidade_independe_da_apresentacao(candidatura_identidade, monkeypatch):
     import extractors
 
