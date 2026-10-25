@@ -289,6 +289,14 @@ percentuais de Lula e Flávio e seus votos absolutos. "Urnas apuradas" correspon
 A ordenação é alfabética por região e depois por sigla; `ZZ` fica na região "Exterior".
 Percentuais sem denominador e votação ainda não liberada ficam vazios, sem inventar zeros.
 
+No modo `--presidente-automatico`, as 28 fontes regionais continuam sendo consultadas
+mesmo quando o nacional é escolhido. A aba é atualizada em lote quando uma geração
+regional muda, independentemente do resultado nacional e da linha do tempo. Cada UF
+mantém sua última resposta válida em caso de falha. Resultados regionais já recebidos
+podem aparecer antes de completar a rodada; isso não autoriza publicar uma soma parcial.
+O modo `--presidente-por-uf` também publica a tabela junto de sua soma completa.
+Não é necessário adicionar opções ao comando de acompanhamento já existente.
+
 ### Segundo turno de 2026
 
 A planilha do segundo turno é [Apuração Eleições 2026 - 2º turno](https://docs.google.com/spreadsheets/d/1B7tb4yJv8qoJEVoK-TkSQs8n7YewFSGXkhA7LEGFOLQ/edit).

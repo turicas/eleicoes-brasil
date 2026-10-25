@@ -15,6 +15,8 @@ def test_conteudo_fontes_e_redes_2026():
     assert "6257/dados/br/br-c0001-e006257-u.json" in linhas["Fonte dos dados (presidente nacional):"]
     assert "6259/dados/sp/sp-c0003-e006259-u.json" in linhas["Fonte dos dados (governador - ex. SP):"]
     assert "10s" in linhas["Consulta a cada:"] and "30s" in linhas["Consulta a cada:"]
+    assert "27 UFs e do exterior (ZZ)" in linhas["PresidentePorUF:"]
+    assert "mesmo quando o nacional é escolhido" in linhas["PresidentePorUF:"]
 
 
 def test_cria_leia_me_primeira_sem_tocar_resultados():

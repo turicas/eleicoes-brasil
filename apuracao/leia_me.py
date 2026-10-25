@@ -99,6 +99,13 @@ def tabela_leia_me(
             ),
         ],
     ]
+    if ano == 2026:
+        linhas.append(
+            [
+                "PresidentePorUF:",
+                "Votos presidenciais e cobertura das 27 UFs e do exterior (ZZ), em ordem alfabética por região e sigla. Atualiza pelas fontes regionais mesmo quando o nacional é escolhido. Urnas apuradas são seções apuradas do TSE (s.sa).",
+            ]
+        )
     if governadores:
         linhas.append(
             ["Governos acompanhados:", ", ".join(sorted({item.abrangencia.upper() for item in governadores}))]

@@ -175,3 +175,109 @@ def test_segundo_turno_preserva_nacional_se_todas_fontes_falham_depois(dados_202
         assert len(publicador.lotes) == 1
     finally:
         rotina.close()
+
+
+def test_publica_ufs_mesmo_quando_nacional_nao_muda(dados_2022, tmp_path, monkeypatch):
+    rotina, coletor, publicador = rotina_segundo_turno(dados_2022, tmp_path, monkeypatch)
+    coletor.nacional_totalizadas = 2000
+    original = coletor.coletar
+    coletas = []
+    geracao = [1]
+
+    def coletar(contexto, adaptador, url):
+        coletas.append(contexto.abrangencia)
+        resultado = original(contexto, adaptador, url)
+        if contexto.abrangencia != "br":
+            return replace(
+                resultado, geracao=f"{contexto.abrangencia}-{geracao[0]}", secoes=Secoes(100, geracao[0], geracao[0])
+            )
+        return resultado
+
+    monkeypatch.setattr(coletor, "coletar", coletar)
+    try:
+        rotina.run()
+        geracao[0] = 2
+        rotina.run()
+        assert [tabela.nome for tabela in publicador.lotes[-1]] == ["PresidentePorUF"]
+        assert len(publicador.lotes[-1][0].linhas) == 29
+        assert all(linha[2] == 2 for linha in publicador.lotes[-1][0].linhas[1:])
+        rotina.run()
+        assert len(publicador.lotes) == 2
+        assert coletas.count("br") == 3
+        assert len([area for area in coletas if area != "br"]) == 84
+    finally:
+        rotina.close()
+
+
+def test_uf_com_falha_preserva_ultima_linha_valida(dados_2022, tmp_path, monkeypatch):
+    rotina, coletor, publicador = rotina_segundo_turno(dados_2022, tmp_path, monkeypatch)
+    original = coletor.coletar
+    try:
+        rotina.run()
+        anterior = next(
+            linha
+            for tabela in publicador.lotes[-1]
+            if tabela.nome == "PresidentePorUF"
+            for linha in tabela.linhas[1:]
+            if linha[1] == "AC"
+        )
+
+        def coletar(contexto, adaptador, url):
+            if contexto.abrangencia == "ac":
+                raise OSError("falha temporária em AC")
+            resultado = original(contexto, adaptador, url)
+            return replace(resultado, geracao=resultado.geracao + "-nova")
+
+        monkeypatch.setattr(coletor, "coletar", coletar)
+        rotina.run()
+        tabela = next(tabela for tabela in publicador.lotes[-1] if tabela.nome == "PresidentePorUF")
+        assert len(tabela.linhas) == 29
+        assert next(linha for linha in tabela.linhas[1:] if linha[1] == "AC") == anterior
+    finally:
+        rotina.close()
+
+
+def test_falha_no_sheets_nao_confirma_geracoes_por_uf(dados_2022, tmp_path, monkeypatch):
+    import pytest
+
+    rotina, coletor, publicador = rotina_segundo_turno(dados_2022, tmp_path, monkeypatch)
+    coletor.nacional_totalizadas = 2000
+    original = coletor.coletar
+    try:
+        rotina.run()
+
+        def coletar(contexto, adaptador, url):
+            resultado = original(contexto, adaptador, url)
+            return (
+                replace(resultado, geracao=resultado.geracao + "-nova") if contexto.abrangencia != "br" else resultado
+            )
+
+        monkeypatch.setattr(coletor, "coletar", coletar)
+        publicador.falhar = True
+        with pytest.raises(OSError, match="Google"):
+            rotina.run()
+        publicador.falhar = False
+        rotina.run()
+        assert [tabela.nome for tabela in publicador.lotes[-1]] == ["PresidentePorUF"]
+        assert len(publicador.lotes) == 2
+    finally:
+        rotina.close()
+
+
+def test_publica_uf_recebida_sem_nacional_nem_soma_completa(dados_2022, tmp_path, monkeypatch):
+    rotina, coletor, publicador = rotina_segundo_turno(dados_2022, tmp_path, monkeypatch)
+    coletor.nacional_disponivel = False
+    original = rotina._executor.submit
+
+    def submeter(executar, contexto, **kwargs):
+        rotina._executor.pendente = contexto.abrangencia != "ac"
+        return original(executar, contexto, **kwargs)
+
+    monkeypatch.setattr(rotina._executor, "submit", submeter)
+    try:
+        rotina.run()
+        assert [tabela.nome for tabela in publicador.lotes[-1]] == ["PresidentePorUF"]
+        assert publicador.lotes[-1][0].linhas[1][1] == "AC"
+        assert len(publicador.lotes[-1][0].linhas) == 2
+    finally:
+        rotina.close()

@@ -20,7 +20,7 @@ from pathlib import Path
 from .adaptador2022 import Apuracao2022
 from .adaptador2026 import Apuracao2026
 from .agregacao import somar_presidente
-from .apresentacao import tabela_historico, tabela_resultado, titulo_resultado
+from .apresentacao import tabela_historico, tabela_presidente_por_uf, tabela_resultado, titulo_resultado
 from .coleta import Coletor
 from .configuracao import codigo_eleicao, contextos_eleicao, url_municipios, url_resultado
 from .cor_aba import cor_resultado
@@ -208,6 +208,8 @@ class RotinaApuracao:
         self._falha_automatico = False
         self._ultima_soma = None
         self._ultimas_fontes_soma = []
+        self._resultados_por_uf = {}
+        self._geracoes_por_uf_publicadas = {}
 
     def _novo_coletor(self):
         return Coletor(self.data_path, timeout=8, tentativas=1)
@@ -375,7 +377,9 @@ class RotinaApuracao:
         for futuro in concluidos:
             area = self._pendentes_automatico.pop(futuro).abrangencia
             try:
-                self._fontes_automatico.append(futuro.result())
+                fonte = futuro.result()
+                self._fontes_automatico.append(fonte)
+                self._resultados_por_uf[area] = fonte
             except Exception as erro:  # noqa: BLE001 - não usa soma parcial
                 self._falha_automatico = True
                 print(f"Fonte presidencial {area} indisponível: {erro}", file=sys.stderr, flush=True)
@@ -389,6 +393,13 @@ class RotinaApuracao:
                 self._ultima_soma = soma
                 self._ultimas_fontes_soma = list(self._fontes_automatico)
             self._pendentes_automatico = None
+        if nacional is None and soma is None:
+            print(
+                "Presidente: aguardando nacional ou soma completa; publicando UFs disponíveis",
+                file=sys.stderr,
+                flush=True,
+            )
+            return None
         try:
             escolhido = escolher_cobertura(nacional, soma)
         except ValueError:
@@ -429,7 +440,9 @@ class RotinaApuracao:
                     falhas = []
                     for futuro in as_completed(futuros):
                         try:
-                            fontes.append(futuro.result())
+                            fonte = futuro.result()
+                            fontes.append(fonte)
+                            self._resultados_por_uf[fonte.contexto.abrangencia] = fonte
                         except Exception as erro:  # noqa: BLE001 - não publica soma parcial
                             falhas.append(f"{futuros[futuro].abrangencia}: {erro}")
                     if falhas:
@@ -445,16 +458,17 @@ class RotinaApuracao:
                         print(f"Cor presidencial não atualizada: {erro}", file=sys.stderr, flush=True)
                 else:
                     resultado = self._coletar(self._contextos[0])
-                concluidos = 1
-                self._registrar_historico(resultado)
-                if self._definicao_presidente is not None:
-                    nacional = self._definicao_presidente
-                    definicao_chave = (nacional.geracao, nacional.matematicamente_definida, nacional.finalizada)
-                if (
-                    self._publicados.get(resultado.contexto) != self._chave(resultado)
-                    or definicao_chave != self._definicao_publicada
-                ) or (cor_presidente is not None and cor_presidente != self._cor_publicada):
-                    alterados.append(resultado)
+                if resultado is not None:
+                    concluidos = 1
+                    self._registrar_historico(resultado)
+                    if self._definicao_presidente is not None:
+                        nacional = self._definicao_presidente
+                        definicao_chave = (nacional.geracao, nacional.matematicamente_definida, nacional.finalizada)
+                    if (
+                        self._publicados.get(resultado.contexto) != self._chave(resultado)
+                        or definicao_chave != self._definicao_publicada
+                    ) or (cor_presidente is not None and cor_presidente != self._cor_publicada):
+                        alterados.append(resultado)
             else:
                 futuros = {
                     self._executor.submit(self._coletar, contexto, paralelo=True): contexto
@@ -487,6 +501,8 @@ class RotinaApuracao:
                     if self._publicados.get(resultado.contexto) != self._chave(resultado):
                         alterados.append(resultado)
                 alterados.sort(key=lambda resultado: resultado.contexto.abrangencia)
+            tabelas = []
+            titulo = None
             if alterados:
                 tabelas = [
                     tabela_resultado(
@@ -498,11 +514,22 @@ class RotinaApuracao:
                 ]
                 if self.presidente_por_uf:
                     tabelas[0].cor_aba = cor_presidente
-                titulo = None
                 if self.tipo == "presidente":
                     tabelas.append(tabela_historico(self._historico, incluir_origem=self.presidente_automatico))
                     titulo = titulo_resultado(alterados[0])
+            geracoes_por_uf = {area: self._chave(fonte) for area, fonte in self._resultados_por_uf.items()}
+            ufs_alteradas = geracoes_por_uf != self._geracoes_por_uf_publicadas
+            if ufs_alteradas:
+                tabelas.append(tabela_presidente_por_uf(list(self._resultados_por_uf.values())))
+            if tabelas:
                 self.planilha.publicar(tabelas, titulo=titulo)
+                self._geracoes_por_uf_publicadas = geracoes_por_uf
+                if ufs_alteradas:
+                    print(
+                        f"PresidentePorUF: {len(geracoes_por_uf)}/28 abrangências publicadas",
+                        file=sys.stderr,
+                        flush=True,
+                    )
                 self._definicao_publicada = definicao_chave
                 if cor_presidente is not None:
                     self._cor_publicada = cor_presidente
