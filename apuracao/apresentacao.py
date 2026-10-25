@@ -179,6 +179,7 @@ def _identidade(candidato: Candidato) -> str:
 
 
 def tabela_historico(resultados: list[Resultado], *, incluir_origem: bool = False) -> TabelaPlanilha:
+    """Monta a linha do tempo sem pontos sem votos válidos; preserva zeros legítimos dos candidatos."""
     if len({resultado.contexto for resultado in resultados}) > 1:
         raise ValueError("O histórico não pode misturar contextos eleitorais")
     ordenados = sorted(resultados, key=hora_historico)
@@ -204,6 +205,8 @@ def tabela_historico(resultados: list[Resultado], *, incluir_origem: bool = Fals
         linhas[0].append("Origem")
     vistos = set()
     for resultado in ordenados:
+        if resultado.votos.validos == 0:
+            continue
         chave = resultado.geracao or resultado.gerada_em
         if chave in vistos:
             continue

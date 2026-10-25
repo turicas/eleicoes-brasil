@@ -73,3 +73,30 @@ def test_resumo_distingue_totalizadas_apuradas_e_anulados(dados_2022):
 
 def test_historico_vazio_tem_cabecalho():
     assert tabela_historico([]).linhas == [["Data/Hora", "% Seções totalizadas"]]
+
+
+def test_historico_omite_snapshots_sem_votos_validos(dados_2022):
+    apurado = replace(resultado_2022(dados_2022), geracao="com-votos")
+    inicial = replace(
+        apurado,
+        geracao="sem-votos",
+        gerada_em=apurado.gerada_em - timedelta(minutes=1),
+        secoes=Secoes(100, 0, 0, Decimal(0)),
+        votos=Votos(0, 0, 0, 0),
+        candidatos=tuple(replace(candidato, votos=0, percentual=Decimal(0)) for candidato in apurado.candidatos),
+    )
+    tabela = tabela_historico([inicial, apurado], incluir_origem=True)
+    assert tabela.linhas == tabela_historico([apurado], incluir_origem=True).linhas
+    assert len(tabela_historico([inicial]).linhas) == 1
+
+
+def test_historico_preserva_zero_legitimo_de_candidato(dados_2022):
+    resultado = resultado_2022(dados_2022)
+    resultado = replace(
+        resultado,
+        candidatos=(
+            replace(resultado.candidatos[0], votos=0, percentual=Decimal(0)),
+            replace(resultado.candidatos[1], votos=resultado.votos.validos, percentual=Decimal(1)),
+        ),
+    )
+    assert tabela_historico([resultado]).linhas[1][2:] == [0.0, 1.0]

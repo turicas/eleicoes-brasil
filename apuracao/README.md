@@ -129,7 +129,9 @@ apuradas dividido pelo total, com nomes distintos. LinhaDoTempo guarda data/hora
 numericamente e exibe apenas `HH:mm:ss`, preservando o dia no valor subjacente.
 Suas colunas são data/hora, percentual de seções totalizadas, Lula, Flávio e os
 demais candidatos. Ao mudar a ordem, o gráfico administrado é remapeado no mesmo
-lote dos valores, sem alterar seus ajustes visuais.
+lote dos valores, sem alterar seus ajustes visuais. Snapshots sem votos válidos
+não entram na linha do tempo, evitando pontos de 0% anteriores à apuração.
+Os arquivos brutos são preservados; zeros legítimos dos candidatos continuam visíveis.
 
 ```sh
 python -m apuracao.acompanhamento 2026 1 --intervalo-presidente 20 --intervalo-ufs 30
