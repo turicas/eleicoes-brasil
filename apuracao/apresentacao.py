@@ -5,6 +5,19 @@ from .formatacao import UFS, nome_canonico
 from .modelo import Candidato, Resultado
 from .planilha import TabelaPlanilha
 
+_REGIOES_POR_UF = {
+    sigla: regiao
+    for regiao, siglas in (
+        ("Centro-Oeste", ("DF", "GO", "MS", "MT")),
+        ("Exterior", ("ZZ",)),
+        ("Nordeste", ("AL", "BA", "CE", "MA", "PB", "PE", "PI", "RN", "SE")),
+        ("Norte", ("AC", "AM", "AP", "PA", "RO", "RR", "TO")),
+        ("Sudeste", ("ES", "MG", "RJ", "SP")),
+        ("Sul", ("PR", "RS", "SC")),
+    )
+    for sigla in siglas
+}
+
 
 def percentual(valor: int, total: int) -> str:
     return f"{100 * (valor / total):02.02f}%" if total else ""
@@ -172,6 +185,72 @@ def tabela_resultado(resultado: Resultado, nome: str, *, definicao_oficial: Resu
     if canonico in UFS:
         nome = canonico + ("*" if resultado.finalizada is True else "")
     return TabelaPlanilha(nome, linhas, (4,), cor_resultado(definicao))
+
+
+def tabela_presidente_por_uf(resultados: list[Resultado]) -> TabelaPlanilha:
+    """Apresenta votos presidenciais e cobertura por região/UF; ausência e divisão por zero ficam vazias."""
+    linhas = [
+        [
+            "Região",
+            "UF",
+            "Urnas apuradas",
+            "Urnas totais",
+            "Urnas apuradas %",
+            "Eleitorado apurado",
+            "Eleitorado total",
+            "Eleitorado apurado %",
+            "% LULA",
+            "% FLÁVIO",
+            "Votos LULA",
+            "Votos FLÁVIO",
+        ]
+    ]
+    contexto = resultados[0].contexto if resultados else None
+    vistos = set()
+    for resultado in resultados:
+        atual = resultado.contexto
+        if (
+            atual.ano != 2026
+            or atual.cargo != 1
+            or resultado.origem != "tse"
+            or (atual.ano, atual.turno, atual.eleicao) != (contexto.ano, contexto.turno, contexto.eleicao)
+        ):
+            raise ValueError("Resultados por UF exigem o mesmo contexto presidencial oficial de 2026")
+        sigla = atual.abrangencia.upper()
+        if sigla not in _REGIOES_POR_UF:
+            raise ValueError(f"Abrangência presidencial inválida: {sigla}")
+        if sigla in vistos:
+            raise ValueError(f"Abrangência presidencial duplicada: {sigla}")
+        vistos.add(sigla)
+        secoes = resultado.secoes
+        eleitorado = resultado.eleitorado
+        percentual_secoes = secoes.apuradas / secoes.total if secoes.total else None
+        candidatos = {candidato.numero: candidato for candidato in resultado.candidatos}
+        percentuais = []
+        votos = []
+        for numero in ("13", "22"):
+            candidato = candidatos.get(numero)
+            votos.append(candidato.votos if candidato is not None and resultado.divulgacao_liberada else None)
+            percentual = None
+            if candidato is not None and resultado.divulgacao_liberada and resultado.votos.validos:
+                percentual = float(candidato.percentual) if candidato.percentual is not None else None
+            percentuais.append(percentual)
+        linhas.append(
+            [
+                _REGIOES_POR_UF[sigla],
+                sigla,
+                secoes.apuradas,
+                secoes.total,
+                percentual_secoes,
+                eleitorado.apurado,
+                eleitorado.total,
+                eleitorado.apurado / eleitorado.total if eleitorado.total else None,
+                *percentuais,
+                *votos,
+            ]
+        )
+    linhas[1:] = sorted(linhas[1:], key=lambda linha: (linha[0], linha[1]))
+    return TabelaPlanilha("PresidentePorUF", linhas, (4, 7, 8, 9))
 
 
 def _identidade(candidato: Candidato) -> str:

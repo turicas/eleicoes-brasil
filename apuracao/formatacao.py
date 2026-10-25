@@ -133,6 +133,26 @@ def pedidos_formatacao(
             ]
         )
         return pedidos
+    if nome == "PresidentePorUF":
+        formato(0, 1, 0, total_colunas, {"textFormat": {"bold": True}}, "userEnteredFormat.textFormat.bold")
+        formato(
+            1,
+            total_linhas,
+            2,
+            total_colunas,
+            {"numberFormat": {"type": "NUMBER", "pattern": "#,##0"}},
+            "userEnteredFormat.numberFormat",
+        )
+        for coluna in (4, 7, 8, 9):
+            formato(
+                1,
+                total_linhas,
+                coluna,
+                coluna + 1,
+                {"numberFormat": {"type": "PERCENT", "pattern": "0.00%"}},
+                "userEnteredFormat.numberFormat",
+            )
+        return pedidos + [auto_resize]
     if nome == "LinhaDoTempo":
         formato(
             1,

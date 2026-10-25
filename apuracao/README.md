@@ -280,6 +280,15 @@ atual, sem criar outro gráfico. Não é necessário alterar o intervalo a cada 
 
 Fonte da estrutura dos pedidos: [Google Sheets - gráficos](https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets/charts).
 
+### Presidente por UF
+
+A tabela `PresidentePorUF` reúne as 27 UFs e o exterior (`ZZ`), com região,
+sigla, urnas apuradas/totais e percentual, eleitorado apurado/total e percentual,
+percentuais de Lula e Flávio e seus votos absolutos. "Urnas apuradas" corresponde
+às seções apuradas do TSE (`s.sa`), não às seções totalizadas (`s.st`).
+A ordenação é alfabética por região e depois por sigla; `ZZ` fica na região "Exterior".
+Percentuais sem denominador e votação ainda não liberada ficam vazios, sem inventar zeros.
+
 ### Segundo turno de 2026
 
 A planilha do segundo turno é [Apuração Eleições 2026 - 2º turno](https://docs.google.com/spreadsheets/d/1B7tb4yJv8qoJEVoK-TkSQs8n7YewFSGXkhA7LEGFOLQ/edit).
