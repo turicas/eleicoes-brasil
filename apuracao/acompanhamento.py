@@ -206,6 +206,8 @@ class RotinaApuracao:
         self._pendentes_automatico = None
         self._fontes_automatico = []
         self._falha_automatico = False
+        self._ultima_soma = None
+        self._ultimas_fontes_soma = []
 
     def _novo_coletor(self):
         return Coletor(self.data_path, timeout=8, tentativas=1)
@@ -357,7 +359,7 @@ class RotinaApuracao:
 
     def _coletar_automatico(self):
         contexto = replace(self._contextos[0], abrangencia="br")
-        nacional = None
+        nacional = self._definicao_presidente
         try:
             nacional = self._coletar(contexto)
             self._definicao_presidente = nacional
@@ -377,13 +379,15 @@ class RotinaApuracao:
             except Exception as erro:  # noqa: BLE001 - não usa soma parcial
                 self._falha_automatico = True
                 print(f"Fonte presidencial {area} indisponível: {erro}", file=sys.stderr, flush=True)
-        soma = None
+        soma = self._ultima_soma
         if not self._pendentes_automatico:
             if len(self._fontes_automatico) == 28 and not self._falha_automatico:
                 soma = replace(
                     somar_presidente(self._fontes_automatico),
                     capturada_em=datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=-3))),
                 )
+                self._ultima_soma = soma
+                self._ultimas_fontes_soma = list(self._fontes_automatico)
             self._pendentes_automatico = None
         try:
             escolhido = escolher_cobertura(nacional, soma)
@@ -393,7 +397,7 @@ class RotinaApuracao:
             print("Soma incompatível; usando nacional", file=sys.stderr, flush=True)
             escolhido = nacional
         if escolhido is soma:
-            self._salvar_fontes_soma(self._fontes_automatico, soma)
+            self._salvar_fontes_soma(self._ultimas_fontes_soma, soma)
         print(
             f"Cobertura presidente: nacional={nacional.secoes.totalizadas if nacional else 'indisponível'} "
             f"soma={soma.secoes.totalizadas if soma else 'indisponível'} escolhido={escolhido.origem}",

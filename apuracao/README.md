@@ -185,6 +185,12 @@ A consulta nacional também alimenta MD/TF e cor, sem requisição duplicada.
 O histórico anterior é preservado, a coluna Origem fica depois dos candidatos e
 as escolhas novas são persistidas em `historico-presidente-selecionado.jsonl`.
 Ao reiniciar, esse registro evita inserir no histórico somas que não foram escolhidas.
+O modo automático conserva a última soma completa entre rodadas regionais e a última
+resposta nacional válida diante de falhas temporárias. Uma rodada incompleta ou com
+falhas não substitui a soma anterior nem produz uma soma parcial. As fontes originais
+e seus horários são preservados; reutilizar um resultado não cria uma geração nova
+na linha do tempo.
+
 As opções `--presidente-automatico` e `--presidente-por-uf` são mutuamente exclusivas.
 
 No Linux, cada trabalhador recebe SIGKILL do kernel se o pai morrer, com verificação
