@@ -47,3 +47,22 @@ def test_exemplo_por_uf_2022_nao_usa_codigo_2026():
     assert (
         "ele2022/545/dados-simplificados/sp/sp-c0001-e000545-r.json" in linhas["Fonte dos dados (presidente por UF):"]
     )
+
+
+def test_segundo_turno_documenta_apenas_governos_em_disputa():
+    from apuracao.modelo import Contexto
+
+    contextos = [Contexto(2026, 2, 6260, 3, uf) for uf in ("am", "rn", "df", "es", "ac", "to")]
+    linhas = dict(tabela_leia_me(2026, 2, governadores=contextos).linhas)
+    assert linhas["Edição:"] == "Eleições 2026, 2º turno"
+    assert "6258/dados/br/br-c0001-e006258-u.json" in linhas["Fonte dos dados (presidente nacional):"]
+    assert "6260/dados/ac/ac-c0003-e006260-u.json" in linhas["Fonte dos dados (governador - ex. AC):"]
+    assert linhas["Governos acompanhados:"] == "AC, AM, DF, ES, RN, TO"
+    assert "Fonte dos dados (governador - ex. SP):" not in linhas
+
+
+def test_segundo_turno_nao_inventa_abrangencias_para_leia_me():
+    import pytest
+
+    with pytest.raises(ValueError, match="abrangências"):
+        tabela_leia_me(2026, 2)

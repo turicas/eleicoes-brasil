@@ -287,6 +287,14 @@ na eleição federal ordinária; governador é o cargo 3 na eleição estadual o
 No snapshot de 18/10/2026, os códigos são 6258 e 6260, e as UFs estaduais publicadas
 são AC, AM, DF, ES, RN e TO. Eleições suplementares e consultas populares não entram
 nesse acompanhamento. A linha do tempo presidencial fica na aba `LinhaDoTempo`.
+A apresentação fica na primeira aba, `LEIA-ME`, com um exemplo de governo realmente
+em disputa e a lista de abrangências descoberta no TSE. Sua preparação é independente
+das atualizações frequentes:
+
+```sh
+python -m apuracao.leia_me 2026 2 1B7tb4yJv8qoJEVoK-TkSQs8n7YewFSGXkhA7LEGFOLQ \
+    --intervalo-presidente 10 --intervalo-ufs 30
+```
 
 ### Testes
 
