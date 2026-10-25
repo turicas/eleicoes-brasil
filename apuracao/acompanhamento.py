@@ -32,6 +32,7 @@ from .selecao import escolher_cobertura
 URL_CONFIGURACAO = "https://resultados.tse.jus.br/oficial/comum/config/ele-c.json"
 PLANILHAS = {
     (2026, 1): "1RGi20p_QECrdRo_KJgxhSDo7zO2wnIFuxRqKs2XrWa0",
+    (2026, 2): "1B7tb4yJv8qoJEVoK-TkSQs8n7YewFSGXkhA7LEGFOLQ",
     (2022, 1): "1Oy1mHo78313Ls1jSKayyVWW4KeqFyS94eg3LIIe1UXU",
     (2022, 2): "1r9UmthUo9IPSLqNN89r_fhrsXo-igSjzCMv2sViwNZo",
 }

@@ -272,6 +272,22 @@ atual, sem criar outro gráfico. Não é necessário alterar o intervalo a cada 
 
 Fonte da estrutura dos pedidos: [Google Sheets - gráficos](https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets/charts).
 
+### Segundo turno de 2026
+
+A planilha do segundo turno é [Apuração Eleições 2026 - 2º turno](https://docs.google.com/spreadsheets/d/1B7tb4yJv8qoJEVoK-TkSQs8n7YewFSGXkhA7LEGFOLQ/edit).
+Usa as mesmas credenciais de 2026 e mantém histórico separado por turno.
+
+```sh
+python -m apuracao.acompanhamento 2026 2 --presidente-automatico --intervalo-presidente 10 --intervalo-ufs 30
+```
+
+As eleições e as UFs são descobertas na configuração oficial EA11, exigindo uma eleição
+publicada de turno 2, sem inferir sua existência apenas por `cdt2`. Presidente é o cargo 1
+na eleição federal ordinária; governador é o cargo 3 na eleição estadual ordinária.
+No snapshot de 18/10/2026, os códigos são 6258 e 6260, e as UFs estaduais publicadas
+são AC, AM, DF, ES, RN e TO. Eleições suplementares e consultas populares não entram
+nesse acompanhamento. A linha do tempo presidencial fica na aba `LinhaDoTempo`.
+
 ### Testes
 
 ```sh

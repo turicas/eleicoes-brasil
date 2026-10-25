@@ -71,8 +71,9 @@ def test_cli_planilhas_e_credenciais(monkeypatch):
     assert acompanhamento.identificador_planilha(2026, 1) == "1RGi20p_QECrdRo_KJgxhSDo7zO2wnIFuxRqKs2XrWa0"
     assert acompanhamento.identificador_planilha(2022, 1) == "1Oy1mHo78313Ls1jSKayyVWW4KeqFyS94eg3LIIe1UXU"
     assert acompanhamento.identificador_planilha(2022, 2) == "1r9UmthUo9IPSLqNN89r_fhrsXo-igSjzCMv2sViwNZo"
+    assert acompanhamento.identificador_planilha(2026, 2) == "1B7tb4yJv8qoJEVoK-TkSQs8n7YewFSGXkhA7LEGFOLQ"
     with pytest.raises(ValueError, match="planilha"):
-        acompanhamento.identificador_planilha(2026, 2)
+        acompanhamento.identificador_planilha(2030, 1)
 
 
 def test_nao_inicia_processos_para_planilha_desconhecida(tmp_path, monkeypatch):
@@ -80,7 +81,8 @@ def test_nao_inicia_processos_para_planilha_desconhecida(tmp_path, monkeypatch):
         pytest.fail("não deve iniciar o gerenciador")
 
     monkeypatch.setattr(acompanhamento, "gerenciar", proibido)
-    assert acompanhamento.main(["2026", "2", "--data-path", str(tmp_path)]) == 1
+    monkeypatch.delitem(acompanhamento.PLANILHAS, (2022, 1))
+    assert acompanhamento.main(["2022", "1", "--data-path", str(tmp_path)]) == 1
     assert not list(tmp_path.iterdir())
 
 
