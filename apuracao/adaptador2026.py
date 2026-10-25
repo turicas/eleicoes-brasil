@@ -127,6 +127,8 @@ class Apuracao2026(Apuracao):
                 self._numero(eleitorado, "te", "e.te"),
                 self._numero(eleitorado, "esa", "e.esa"),
                 self._numero(eleitorado, "esnt", "e.esnt", opcional=True),
+                instalado=self._numero(eleitorado, "esi", "e.esi", opcional=True),
+                abstencoes=self._numero(eleitorado, "a", "e.a", opcional=True),
             ),
             votos=Votos(
                 total=self._numero(votos, "tv", "v.tv"),

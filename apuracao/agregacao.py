@@ -118,6 +118,8 @@ def somar_presidente(resultados: list[Resultado]) -> Resultado:
             total=sum(resultado.eleitorado.total for resultado in fontes),
             apurado=sum(resultado.eleitorado.apurado for resultado in fontes),
             nao_totalizado=_soma([resultado.eleitorado.nao_totalizado for resultado in fontes]),
+            instalado=_soma([resultado.eleitorado.instalado for resultado in fontes]),
+            abstencoes=_soma([resultado.eleitorado.abstencoes for resultado in fontes]),
         ),
         votos=votos,
         candidatos=candidatos,

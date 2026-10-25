@@ -40,6 +40,8 @@ class Eleitorado:
     total: int
     apurado: int
     nao_totalizado: int | None = None
+    instalado: int | None = None
+    abstencoes: int | None = None
 
 
 @dataclass(frozen=True)

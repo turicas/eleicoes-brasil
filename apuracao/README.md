@@ -284,8 +284,14 @@ Fonte da estrutura dos pedidos: [Google Sheets - gráficos](https://developers.g
 
 A tabela `PresidentePorUF` reúne as 27 UFs e o exterior (`ZZ`), com região,
 sigla, urnas apuradas/totais e percentual, eleitorado apurado/total e percentual,
-percentuais de Lula e Flávio e seus votos absolutos. "Urnas apuradas" corresponde
-às seções apuradas do TSE (`s.sa`), não às seções totalizadas (`s.st`).
+percentuais de Lula e Flávio e seus votos absolutos, além de abstenção, votos nulos
+e brancos em números absolutos e percentuais. Os cabeçalhos usam iniciais maiúsculas
+e quebras de linha, como `Urnas\nApuradas` e `Votos\nNulos %`.
+"Urnas apuradas" corresponde às seções apuradas do TSE (`s.sa`), não às seções
+totalizadas (`s.st`). Abstenção usa `e.a / e.esi`, isto é, ausentes sobre o eleitorado
+das seções instaladas, e não sobre todo o eleitorado da UF. Nulos e brancos usam
+respectivamente `v.tvn / v.tv` e `v.vb / v.tv`; nulos incluem os nulos técnicos.
+As mesmas colunas e denominadores permitem comparar primeiro e segundo turnos.
 A ordenação é alfabética por região e depois por sigla; `ZZ` fica na região "Exterior".
 Percentuais sem denominador e votação ainda não liberada ficam vazios, sem inventar zeros.
 

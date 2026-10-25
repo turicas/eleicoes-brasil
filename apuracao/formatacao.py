@@ -134,7 +134,21 @@ def pedidos_formatacao(
         )
         return pedidos
     if nome == "PresidentePorUF":
-        formato(0, 1, 0, total_colunas, {"textFormat": {"bold": True}}, "userEnteredFormat.textFormat.bold")
+        formato(
+            0,
+            1,
+            0,
+            total_colunas,
+            {"textFormat": {"bold": True}, "wrapStrategy": "WRAP", "verticalAlignment": "MIDDLE"},
+            "userEnteredFormat.textFormat.bold,userEnteredFormat.wrapStrategy,userEnteredFormat.verticalAlignment",
+        )
+        pedidos.append(
+            {
+                "autoResizeDimensions": {
+                    "dimensions": {"sheetId": identificador, "dimension": "ROWS", "startIndex": 0, "endIndex": 1}
+                }
+            }
+        )
         formato(
             1,
             total_linhas,
@@ -143,7 +157,7 @@ def pedidos_formatacao(
             {"numberFormat": {"type": "NUMBER", "pattern": "#,##0"}},
             "userEnteredFormat.numberFormat",
         )
-        for coluna in (4, 7, 8, 9):
+        for coluna in (4, 7, 8, 9, 13, 15, 17):
             formato(
                 1,
                 total_linhas,

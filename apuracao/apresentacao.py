@@ -193,16 +193,22 @@ def tabela_presidente_por_uf(resultados: list[Resultado]) -> TabelaPlanilha:
         [
             "Região",
             "UF",
-            "Urnas apuradas",
-            "Urnas totais",
-            "Urnas apuradas %",
-            "Eleitorado apurado",
-            "Eleitorado total",
-            "Eleitorado apurado %",
+            "Urnas\nApuradas",
+            "Urnas\nTotais",
+            "Urnas\nApuradas %",
+            "Eleitorado\nApurado",
+            "Eleitorado\nTotal",
+            "Eleitorado\nApurado %",
             "% LULA",
             "% FLÁVIO",
-            "Votos LULA",
-            "Votos FLÁVIO",
+            "Votos\nLULA",
+            "Votos\nFLÁVIO",
+            "Abstenção\nTotal",
+            "Abstenção\n%",
+            "Votos\nNulos",
+            "Votos\nNulos %",
+            "Votos\nBrancos",
+            "Votos\nBrancos %",
         ]
     ]
     contexto = resultados[0].contexto if resultados else None
@@ -235,6 +241,10 @@ def tabela_presidente_por_uf(resultados: list[Resultado]) -> TabelaPlanilha:
             if candidato is not None and resultado.divulgacao_liberada and resultado.votos.validos:
                 percentual = float(candidato.percentual) if candidato.percentual is not None else None
             percentuais.append(percentual)
+        divulgada = resultado.divulgacao_liberada
+        total_votos = resultado.votos.total
+        nulos = resultado.votos.nulos if divulgada else None
+        brancos = resultado.votos.brancos if divulgada else None
         linhas.append(
             [
                 _REGIOES_POR_UF[sigla],
@@ -247,10 +257,20 @@ def tabela_presidente_por_uf(resultados: list[Resultado]) -> TabelaPlanilha:
                 eleitorado.apurado / eleitorado.total if eleitorado.total else None,
                 *percentuais,
                 *votos,
+                eleitorado.abstencoes,
+                (
+                    eleitorado.abstencoes / eleitorado.instalado
+                    if eleitorado.abstencoes is not None and eleitorado.instalado
+                    else None
+                ),
+                nulos,
+                nulos / total_votos if nulos is not None and total_votos else None,
+                brancos,
+                brancos / total_votos if brancos is not None and total_votos else None,
             ]
         )
     linhas[1:] = sorted(linhas[1:], key=lambda linha: (linha[0], linha[1]))
-    return TabelaPlanilha("PresidentePorUF", linhas, (4, 7, 8, 9))
+    return TabelaPlanilha("PresidentePorUF", linhas, (4, 7, 8, 9, 13, 15, 17))
 
 
 def _identidade(candidato: Candidato) -> str:

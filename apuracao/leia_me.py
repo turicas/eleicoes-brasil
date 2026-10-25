@@ -103,7 +103,7 @@ def tabela_leia_me(
         linhas.append(
             [
                 "PresidentePorUF:",
-                "Votos presidenciais e cobertura das 27 UFs e do exterior (ZZ), em ordem alfabética por região e sigla. Atualiza pelas fontes regionais mesmo quando o nacional é escolhido. Urnas apuradas são seções apuradas do TSE (s.sa).",
+                "Votos presidenciais, cobertura, abstenção, nulos e brancos das 27 UFs e do exterior (ZZ), em ordem alfabética por região e sigla. Atualiza pelas fontes regionais mesmo quando o nacional é escolhido. Urnas apuradas são seções apuradas do TSE (s.sa). Abstenção usa o eleitorado das seções instaladas; nulos e brancos usam o total de votos.",
             ]
         )
     if governadores:

@@ -304,3 +304,16 @@ def test_ordem_entre_agrupamentos(contexto, dados):
 def test_percentual_json_numerico(contexto, dados):
     dados["carg"][0]["agr"][0]["par"][0]["cand"][0]["pvapn"] = 30.76923
     assert Apuracao2026(contexto).ler(dados).candidatos[0].percentual == Decimal("0.3076923")
+
+
+def test_abstencao_e_eleitorado_instalado(contexto, dados):
+    dados["e"].update({"a": "40", "esi": "160"})
+    resultado = Apuracao2026(contexto).ler(dados)
+    assert resultado.eleitorado.abstencoes == 40
+    assert resultado.eleitorado.instalado == 160
+
+
+def test_ausencia_de_abstencao_e_preservada(contexto, dados):
+    resultado = Apuracao2026(contexto).ler(dados)
+    assert resultado.eleitorado.abstencoes is None
+    assert resultado.eleitorado.instalado is None
